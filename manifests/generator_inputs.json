@@ -1,0 +1,99 @@
+{
+  "run": {
+    "project_name": "Testing_FourHeads",
+    "fps": 2,
+    "resolution": { "width": 1920, "height": 1080 },
+    "render_engine": "BLENDER_EEVEE", 
+    "samples": 64,
+    "output_dir": "../renders",
+    "audio_sample_rate": 48000,
+    "seed": 42
+  },
+  "characters": {
+    "MediatorB": {
+      "name": "Michael",
+      "typecast": {
+        "voice_name": "Logan",
+        "voice_id": "tc_6791c4a4c79515dea68b4a75",
+        "languages": ["English", "Spanish", "Korean", "Japanese", "Chinese (Mandarin)", "Vietnamese"]
+      },
+      "blender": {
+        "gender": "M",
+        "skin_hex": "643E33",
+        "hair_hex": "2A2417",
+        "selectors": {
+          "hair": "hair",
+          "shirt": "sweater_boy",
+          "pants": "black_pants"
+        }
+      }
+    },
+    "MediatorA": {
+      "name": "Emily",
+      "typecast": {
+        "voice_name": "Tina",
+        "voice_id": "tc_6347828cd3835443f0fcd572",
+        "languages": ["English", "Spanish", "Korean", "Japanese", "Chinese (Mandarin)", "Vietnamese"]
+      },
+      "blender": {
+        "gender": "F",
+        "skin_hex": "FD9D6F",
+        "hair_hex": "261F1B",
+        "selectors": {
+          "hair": "hair.014",
+          "shirt": "geo_girl_sweater",
+          "pants": "slacks_pants_girl"
+        }
+      }
+    },
+    "Disputant1": {
+      "name": "Caleb",
+      "typecast": {
+        "voice_name": "Placeholder",
+        "voice_id": "tc_6791c4c4bbcdc04afd3fde2f",
+        "languages": ["English"]
+      },
+      "blender": {
+        "gender": "M",
+        "skin_hex": "B9725F",
+        "hair_hex": "9B8755",
+        "selectors": {
+          "hair": "hair.009",
+          "shirt": "sweater_boy",
+          "pants": "black_pants"
+        }
+      }
+    },
+    "Disputant2": {
+      "name": "Aria",
+      "typecast": {
+        "voice_name": "Placeholder",
+        "voice_id": "tc_6763aa69e0158fa7fe2ecdd2",
+        "languages": ["English"]
+      },
+      "blender": {
+        "gender": "F",
+        "skin_hex": "FD9D6F",
+        "hair_hex": "846D5E",
+        "selectors": {
+          "hair": "hair.019",
+          "shirt": "geo_girl_sweater",
+          "pants": "slacks_pants_girl"
+        }
+      }
+    }
+  },
+  "blender_mapping": {
+    "root_collections": ["Disputant1", "MediatorA", "MediatorB", "Disputant2"],
+    "role_prefix": {
+      "MediatorA": "mA_",
+      "MediatorB": "mB_",
+      "Disputant1": "d1_",
+      "Disputant2": "d2_"
+    },
+    "selector_resolution": "name_exact_or_prefix",
+    "notes": "Under each root collection, enable exactly one child object/collection per selector key (hair, shirt, pants). Name matching is exact; if not found, a prefix match will be attempted. Avoid relying on collection order; use names or add custom properties."
+  }
+}
+
+

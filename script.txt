@@ -1,0 +1,394 @@
+TITLE: Caleb Ward & Aria Lopez
+PROJECT: Mock Scenario
+VERSION: 11/06/2025
+DISPUTANT 1 NAME: Caleb Ward
+DISPUTANT 2 NAME: Aria Lopez
+MEDIATOR A NAME: Emily Johnson
+MEDIATOR B NAME: Michael NELSON
+CONFLICT DESCRIPTION: Caleb and Aria argued over their seats in the classroom, and both refused to move.
+WRITE DOWN WHAT DISPUTANT 1 SAYS HAPPENED: Caleb says that Aria was making insulting comments about him.
+WRITE DOWN WHAT DISPUTANT 2 SAYS HAPPENED: Aria says that Caleb took the seat she usually sits in during music class.
+WRITE DOWN WHAT DISPUTANT 1 FELT AND WHEN: Caleb felt embarrassed when Aria called him the mean name.
+WRITE DOWN WHAT DISPUTANT 2 FELT AND WHEN: Aria felt frustrated when Caleb took her usual seat.
+WRITE DOWN WHAT DISPUTANT 1 WANTS: Caleb wants to not be insulted in front of his classmates.
+WRITE DOWN WHAT DISPUTANT 2 WANTS: Aria wants to be able to sit next to her friends during music class.
+WRITE SOMETHING REALISTIC DISPUTANT 1 COULD GET: Something realistic that Caleb could get is to not be insulted by Aria.
+WRITE SOMETHING REALISTIC DISPUTANT 2 COULD GET: (captured during dialogue below)
+AGREEMENT LINE 1: Caleb agrees to always let Aria sit in the seat they argued about, next to her friends, in music class.
+AGREEMENT LINE 2: Aria agrees to not say mean things about Caleb or to insult him.
+AGREEMENT LINE 3 (OPTIONAL): Both Caleb and Aria agree to sit on opposite sides of the classroom in music class to avoid future conflicts.
+
+INT. SCHOOL HALLWAY - DAY
+
+### P: PRESENT YOURSELF AND PEER MEDIATION
+
+[PAUSE]
+[PAUSE]
+
+MEDIATOR A (EMILY JOHNSON)
+{emotion=normal intensity=1.0 tempo=1.04}
+Hi! You’ve both been asked to participate in a peer mediation. It’s meant to help you, and you’re not in trouble. I’ll explain more in a bit. Please follow me.
+
+DISPUTANT 1 (CALEB WARD)
+{emotion=normal intensity=1.0 tempo=1.0}
+Okay. 
+
+DISPUTANT 2 (ARIA LOPEZ)
+{emotion=normal intensity=1.0 tempo=1.0}
+Okay. 
+
+MEDIATOR A (EMILY JOHNSON)
+{emotion=happy intensity=0.4 tempo=1.04}
+Hello! My name is Emily and this is Michael. What are your names?
+
+DISPUTANT 1 (CALEB WARD)
+{emotion=normal intensity=1.0 tempo=1.0}
+I’m Caleb.
+
+DISPUTANT 2 (ARIA LOPEZ)
+{emotion=normal intensity=1.0 tempo=1.0}
+I’m Aria.
+
+MEDIATOR A (EMILY JOHNSON)
+{emotion=normal intensity=1.0 tempo=0.98}
+This is peer mediation, where students talk things through and solve conflicts without adults.
+
+MEDIATOR A (EMILY JOHNSON)
+{emotion=normal intensity=1.0 tempo=0.98}
+As peer mediators, we won’t share anything you say here with other students.
+[PAUSE]
+[ProcessFormSwap]
+[PAUSE]
+[PAUSE]
+
+MEDIATOR B (MICHAEL NELSON)
+{emotion=normal intensity=1.0 tempo=1.0}
+It sounds like you had a disagreement, and we’re here to help you work through it.
+
+MEDIATOR B (MICHAEL NELSON)
+{emotion=normal intensity=1.0 tempo=1.0}
+We’ll listen to both of your sides. We won’t take sides, but we’ll help you agree on a solution.
+
+MEDIATOR B (MICHAEL NELSON)
+{emotion=normal intensity=1.0 tempo=1.0}
+Most students prefer talking it out here, rather than going to the office. Want to try it out?
+
+DISPUTANT 1 (CALEB WARD)
+{emotion=normal intensity=1.0 tempo=1.0}
+Yeah.
+
+DISPUTANT 2 (ARIA LOPEZ)
+{emotion=normal intensity=1.0 tempo=1.0}
+Sure.
+[PAUSE]
+[ProcessFormSwap]
+[PAUSE]
+[PAUSE]
+
+### E: EXPLAIN THE RULES
+
+MEDIATOR A (EMILY JOHNSON)
+{emotion=normal intensity=1.0 tempo=1.0}
+So for us to have a good mediation, there are some rules we all need to follow.
+
+MEDIATOR A (EMILY JOHNSON)
+{emotion=normal intensity=1.0 tempo=0.98}
+The first rule is the confidentiality rule, and that's for us mediators. We won’t share what you say with other students.
+[PAUSE]
+[ProcessFormSwap]
+[PAUSE]
+[PAUSE]
+
+MEDIATOR B (MICHAEL NELSON)
+{emotion=normal intensity=1.0 tempo=1.1}
+A rule for you both is the One Mic rule. If the other person is speaking, wait for them to finish.
+
+MEDIATOR B (MICHAEL NELSON)
+{emotion=normal intensity=1.0 tempo=1.1}
+The Respect rule says that all of us need to respect each other. Do you both agree to the rules?
+
+DISPUTANT 1 (CALEB WARD)
+{emotion=normal intensity=1.0 tempo=1.0}
+Yeah that's okay.
+
+DISPUTANT 2 (ARIA LOPEZ)
+{emotion=normal intensity=1.0 tempo=1.0}
+Yeah.
+[PAUSE]
+[ProcessFormSwap]
+[PAUSE]
+[PAUSE]
+
+### A: ASK BOTH SIDES TO SHARE
+
+MEDIATOR A (EMILY JOHNSON)
+{emotion=normal intensity=1.0 tempo=1.0}
+Okay. We heard that you argued over your seats in the classroom, and both refused to move. Caleb, can you share first about what happened?
+
+DISPUTANT 1 (CALEB WARD)
+{emotion=normal intensity=1.0 tempo=1.0}
+In music, I sat down, and Aria started saying stuff about me. Like, a mean name. I didn’t want to move after that.
+
+MEDIATOR A (EMILY JOHNSON)
+{emotion=normal intensity=1.0 tempo=0.98}
+So what I’m hearing is you sat down in music class, Aria said a mean name toward you, and you didn't want to move. Did I get that right?
+
+DISPUTANT 1 (CALEB WARD)
+{emotion=sad intensity=0.8 tempo=0.98}
+Yeah, that’s right. 
+[PAUSE]
+
+[OVERLAY1]
+[ProcessFormSwap]
+[PAUSE]
+[PAUSE]
+
+MEDIATOR B (MICHAEL NELSON)
+{emotion=normal intensity=1.0 tempo=1.1}
+Aria, could you please share what happened, from your point of view?
+
+DISPUTANT 2 (ARIA LOPEZ)
+{emotion=normal intensity=1.0 tempo=1.0}
+Yeah, that seat is where I usually sit with my friends. Caleb took it, and I asked him to move, and he wouldn’t, so I got mad.
+
+MEDIATOR B (MICHAEL NELSON)
+{emotion=normal intensity=1.0 tempo=1.1}
+So you’re saying that’s your usual spot near your friends, Caleb sat there, you asked him to switch, and when he didn’t, you felt mad. Is that accurate?
+
+DISPUTANT 2 (ARIA LOPEZ)
+{emotion=normal intensity=1.0 tempo=1.0}
+Yeah.
+[PAUSE]
+
+[OVERLAY2]
+[ProcessFormSwap]
+[PAUSE]
+[PAUSE]
+
+MEDIATOR A (EMILY JOHNSON)
+{emotion=normal intensity=1.0 tempo=0.98}
+Caleb, how did you feel when Aria called you the mean name?
+
+DISPUTANT 1 (CALEB WARD)
+{emotion=sad intensity=1.0 tempo=0.96}
+Umm... embarrassed. People were looking. It felt bad. 
+[PAUSE]
+
+[OVERLAY3]
+[ProcessFormSwap]
+[PAUSE]
+[PAUSE]
+
+MEDIATOR B (MICHAEL NELSON)
+{emotion=normal intensity=1.0 tempo=1.1}
+And Aria, how did you feel when you saw Caleb sitting in the seat you usually use?
+
+DISPUTANT 2 (ARIA LOPEZ)
+{emotion=normal intensity=1.0 tempo=1.0}
+I felt frustrated. My friends were already there. 
+[PAUSE]
+
+[OVERLAY4]
+[ProcessFormSwap]
+[PAUSE]
+[PAUSE]
+
+MEDIATOR A (EMILY JOHNSON)
+{emotion=normal intensity=1.0 tempo=1.0}
+Caleb, what bothered you the most in this situation?
+
+DISPUTANT 1 (CALEB WARD)
+{emotion=normal intensity=1.0 tempo=1.0}
+Being called a mean name in front of everyone. That was the worst part.
+[PAUSE]
+
+MEDIATOR A (EMILY JOHNSON)
+{emotion=normal intensity=1.0 tempo=0.98}
+What do you want to be different between you two after today?
+
+DISPUTANT 1 (CALEB WARD)
+{emotion=normal intensity=1.0 tempo=1.0}
+I want her to not call me names or say mean stuff.
+[PAUSE]
+
+MEDIATOR A (EMILY JOHNSON)
+{emotion=normal intensity=1.0 tempo=0.98}
+It sounds like what you want is to not be insulted in front of your classmates. Is that right?
+
+DISPUTANT 1 (CALEB WARD)
+{emotion=happy intensity=0.2 tempo=1.0}
+Yeah.
+[PAUSE]
+
+[OVERLAY5]
+[ProcessFormSwap]
+[PAUSE]
+[PAUSE]
+
+MEDIATOR B (MICHAEL NELSON)
+{emotion=normal intensity=1.0 tempo=1.1}
+Aria, what bothered you the most in this situation?
+
+DISPUTANT 2 (ARIA LOPEZ)
+{emotion=normal intensity=1.0 tempo=1.0}
+Not being able to sit with my friends like I usually do.
+[PAUSE]
+
+MEDIATOR B (MICHAEL NELSON)
+{emotion=normal intensity=1.0 tempo=1.1}
+What do you want to be different between you two after today?
+
+DISPUTANT 2 (ARIA LOPEZ)
+{emotion=normal intensity=1.0 tempo=1.0}
+I want to sit next to my friends during music without it turning into a fight.
+[PAUSE]
+
+MEDIATOR B (MICHAEL NELSON)
+{emotion=normal intensity=1.0 tempo=1.1}
+So it sounds like you want to keep your usual seat near your friends, without arguing. Is that right?
+
+DISPUTANT 2 (ARIA LOPEZ)
+{emotion=happy intensity=0.1 tempo=1.02}
+Yeah that's right.
+[PAUSE]
+
+[OVERLAY6]
+[ProcessFormSwap]
+[PAUSE]
+[PAUSE]
+
+### C: CREATE A WIN-WIN SOLUTION
+
+MEDIATOR A (EMILY JOHNSON)
+{emotion=normal intensity=1.0 tempo=1.0}
+Okay, we started this mediation because we heard that you argued over your seats and both refused to move.
+
+MEDIATOR A (EMILY JOHNSON)
+{emotion=normal intensity=1.0 tempo=1.0}
+Our goal now is to work together to find a solution so that this conflict doesn’t happen again.
+
+MEDIATOR A (EMILY JOHNSON)
+{emotion=normal intensity=1.0 tempo=1.0}
+We’re going to create a win-win solution, which means you both will get something you want.
+[PAUSE]
+[ProcessFormSwap]
+[PAUSE]
+[PAUSE]
+
+MEDIATOR B (MICHAEL NELSON)
+{emotion=normal intensity=1.0 tempo=1.1}
+Caleb, it seems like you want not to be insulted in front of your classmates.
+
+MEDIATOR B (MICHAEL NELSON)
+{emotion=normal intensity=1.0 tempo=1.1}
+Aria, it seems like you want to sit next to your friends during music.
+
+MEDIATOR B (MICHAEL NELSON)
+{emotion=normal intensity=1.0 tempo=1.1}
+What are some ways you can both get something you want?
+[PAUSE]
+
+DISPUTANT 2 (ARIA LOPEZ)
+{emotion=normal intensity=1.0 tempo=1.0}
+Umm... He could let me have that seat near my friends.
+
+DISPUTANT 1 (CALEB WARD)
+{emotion=normal intensity=1.0 tempo=1.0}
+Yeah, I want her to not say mean things about me.
+
+MEDIATOR A (EMILY JOHNSON)
+{emotion=normal intensity=1.0 tempo=0.98}
+Okay, and what could help prevent future arguments?
+
+DISPUTANT 1 (CALEB WARD)
+{emotion=normal intensity=1.0 tempo=1.0}
+Maybe we could just sit on different sides, so we don't bother each other again.
+
+DISPUTANT 2 (ARIA LOPEZ)
+{emotion=happy intensity=0.1 tempo=1.04}
+I’m fine with that if I can still sit on the side with my friends.
+
+MEDIATOR B (MICHAEL NELSON)
+{emotion=normal intensity=1.0 tempo=1.1}
+So a realistic thing Caleb could get is that Aria wouldn't insult him. And a realistic thing Aria could get is getting to sit next to her friends during music... Does that match what you both want?
+
+DISPUTANT 1 (CALEB WARD)
+{emotion=happy intensity=0.1 tempo=1.02}
+Yeah.
+
+DISPUTANT 2 (ARIA LOPEZ)
+{emotion=happy intensity=0.1 tempo=1.02}
+Yes.
+[PAUSE]
+
+
+[OVERLAY7]
+[ProcessFormSwap]
+[PAUSE]
+[PAUSE]
+
+
+### E: ESTABLISH AN AGREEMENT
+
+
+MEDIATOR A (EMILY JOHNSON)
+{emotion=normal intensity=1.0 tempo=1.0}
+Okay, while Michael writes down the agreement, how do you feel after going through this mediation?
+
+DISPUTANT 1 (CALEB WARD)
+{emotion=happy intensity=0.1 tempo=1.0}
+Better. I don't want to fight so that's good.
+
+DISPUTANT 2 (ARIA LOPEZ)
+{emotion=happy intensity=0.1 tempo=1.02}
+Yeah, it's good, I feel better.
+
+MEDIATOR A (EMILY JOHNSON)
+{emotion=normal intensity=1.0 tempo=0.98}
+Is there anything else you want to say to the other person?
+
+DISPUTANT 2 (ARIA LOPEZ)
+{emotion=normal intensity=1.0 tempo=1.0}
+I won’t say mean stuff anymore. I just want to sit with my group.
+
+DISPUTANT 1 (CALEB WARD)
+{emotion=normal intensity=1.0 tempo=1.0}
+That's okay. I’ll let you have that seat.
+[PAUSE]
+
+MEDIATOR B (MICHAEL NELSON)
+{emotion=normal intensity=1.0 tempo=1.1}
+Okay, I’m going to read the agreement out loud.
+
+MEDIATOR B (MICHAEL NELSON)
+{emotion=normal intensity=1.0 tempo=1.1}
+Caleb agrees to always let Aria sit in the seat next to her friends in music class.
+
+MEDIATOR B (MICHAEL NELSON)
+{emotion=normal intensity=1.0 tempo=1.1}
+Aria agrees to not say mean things about Caleb or to insult him.
+
+MEDIATOR B (MICHAEL NELSON)
+{emotion=normal intensity=1.0 tempo=1.1}
+And Both Caleb and Aria agree to sit on opposite sides of the classroom in music class so they don't fight in the future.
+[PAUSE]
+
+MEDIATOR B (MICHAEL NELSON)
+{emotion=normal intensity=1.0 tempo=1.1}
+Do you both agree to this?
+
+DISPUTANT 1 (CALEB WARD)
+{emotion=happy intensity=0.2 tempo=1.04}
+Yeah I agree.
+
+DISPUTANT 2 (ARIA LOPEZ)
+{emotion=happy intensity=0.1 tempo=1.04}
+I agree.
+
+MEDIATOR A (EMILY JOHNSON)
+{emotion=happy intensity=0.3 tempo=1.04}
+Okay, great. Now we’ll have you both sign, and we’re done. Thanks for working on this together.
+[PAUSE]
+[PAUSE]
+[PAUSE]
+[PAUSE]

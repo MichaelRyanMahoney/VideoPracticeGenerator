@@ -1,0 +1,26 @@
+{
+  "blender_binary": "/Applications/Blender.app/Contents/MacOS/Blender",
+  "default_character_blend": "assets/DefaultCharacter.blend",
+  "base_scene_blend": "scenes/base_scene.blend",
+  "generator_inputs_json": "manifests/generator_inputs.json",
+  "script_txt": "script.txt",
+  "manifest_csv_out": "manifests/lines.csv",
+  "voice_map_json": "manifests/typecast_voices.json",
+  "director_json_out": "director_visemes.json",
+  "out_video": "out/blender_render.mp4",
+  "background_image": "",
+  "cleanup_temp": true,
+  "run_generate_characters": true,
+  "run_export_characters": true,
+  "export_characters_output_dir": "out/exports/characters",
+  "export_image_width": 1200,
+  "export_file_prefix": "Char",
+  "hdri_path": "assets/brown_photostudio_02_4k.hdr",
+  "hdri_strength": 0.7,
+  "force_tts": false,
+  "force_whisper": false,
+  "skip_render": false,
+  "skip_mux": false
+}
+
+

@@ -25,16 +25,19 @@ def create_job():
         script.save(jdir / "inputs" / "script.txt")
     if gen:
         gen.save(jdir / "inputs" / "generator_inputs.json")
+    # Initialize status and start background job
+    from .jobs import start_job  # local import to avoid circulars in WSGI reload
     (jdir / "status.json").write_text(json.dumps({"jobId": job_id, "status": "queued"}))
-    return jsonify(jobId=job_id, status="queued")
+    start_job(job_id)
+    return jsonify(jobId=job_id, status="queued", dataDir=str(jdir))
 
 @app.get("/jobs/<job_id>")
-def get_job(job_id: string := str):
-    jdir = job_dir(job_id)
-    sp = jdir / "status.json"
-    if not sp.exists():
+def get_job(job_id: str):
+    from .jobs import read_status
+    status = read_status(job_id)
+    if status.get("status") == "unknown":
         return jsonify(error="not found"), 404
-    return jsonify(json.loads(sp.read_text()))
+    return jsonify(status)
 
 if __name__ == "__main__":
     # Dev server; in container we'll run gunicorn

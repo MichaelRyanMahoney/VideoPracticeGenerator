@@ -1,0 +1,4746 @@
+{
+  "project": "FourHeadDemo",
+  "fps": 24,
+  "render": {
+    "resolution": [
+      1920,
+      1080
+    ],
+    "engine": "BLENDER_EEVEE",
+    "output": "out/demo.mp4"
+  },
+  "stage": {
+    "start_mediator": "A",
+    "fade_disputants_sec": 1.0
+  },
+  "beats": [
+    {
+      "type": "pause",
+      "tc_in": "00:00:00.000",
+      "duration": 0.5
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:00.500",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:01.000",
+      "char": "MediatorA",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORA_001.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 1.221
+        },
+        {
+          "p": "viseme_O",
+          "t": 1.773
+        },
+        {
+          "p": "viseme_PP",
+          "t": 2.15
+        },
+        {
+          "p": "viseme_O",
+          "t": 2.241
+        },
+        {
+          "p": "viseme_PP",
+          "t": 2.386
+        },
+        {
+          "p": "viseme_I",
+          "t": 2.467
+        },
+        {
+          "p": "viseme_aa",
+          "t": 2.708
+        },
+        {
+          "p": "viseme_O",
+          "t": 2.849
+        },
+        {
+          "p": "viseme_PP",
+          "t": 3.07
+        },
+        {
+          "p": "viseme_I",
+          "t": 3.351
+        },
+        {
+          "p": "viseme_aa",
+          "t": 3.662
+        },
+        {
+          "p": "viseme_PP",
+          "t": 3.788
+        },
+        {
+          "p": "viseme_I",
+          "t": 3.899
+        },
+        {
+          "p": "viseme_PP",
+          "t": 4.165
+        },
+        {
+          "p": "viseme_E",
+          "t": 4.466
+        },
+        {
+          "p": "viseme_I",
+          "t": 5.149
+        },
+        {
+          "p": "viseme_PP",
+          "t": 5.32
+        },
+        {
+          "p": "viseme_E",
+          "t": 5.4
+        },
+        {
+          "p": "viseme_O",
+          "t": 5.491
+        },
+        {
+          "p": "viseme_E",
+          "t": 5.681
+        },
+        {
+          "p": "viseme_O",
+          "t": 5.883
+        },
+        {
+          "p": "viseme_aa",
+          "t": 6.375
+        },
+        {
+          "p": "viseme_O",
+          "t": 6.526
+        },
+        {
+          "p": "viseme_aa",
+          "t": 6.716
+        },
+        {
+          "p": "viseme_I",
+          "t": 6.847
+        },
+        {
+          "p": "viseme_aa",
+          "t": 7.078
+        },
+        {
+          "p": "viseme_I",
+          "t": 7.851
+        },
+        {
+          "p": "viseme_PP",
+          "t": 8.062
+        },
+        {
+          "p": "viseme_E",
+          "t": 8.244
+        },
+        {
+          "p": "viseme_PP",
+          "t": 8.419
+        },
+        {
+          "p": "viseme_O",
+          "t": 8.51
+        },
+        {
+          "p": "viseme_I",
+          "t": 8.655
+        },
+        {
+          "p": "viseme_aa",
+          "t": 8.746
+        },
+        {
+          "p": "viseme_PP",
+          "t": 8.866
+        },
+        {
+          "p": "viseme_I",
+          "t": 8.967
+        },
+        {
+          "p": "viseme_PP",
+          "t": 9.388
+        },
+        {
+          "p": "viseme_I",
+          "t": 9.489
+        },
+        {
+          "p": "viseme_FF",
+          "t": 9.675
+        },
+        {
+          "p": "viseme_aa",
+          "t": 9.826
+        },
+        {
+          "p": "viseme_PP",
+          "t": 10.037
+        },
+        {
+          "p": "viseme_I",
+          "t": 10.228
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:10.803",
+      "char": "Disputant1",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT1_002.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 11.363
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:12.403",
+      "char": "Disputant2",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT2_003.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 12.913
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:13.903",
+      "char": "MediatorA",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORA_004.wav",
+      "visemes": [
+        {
+          "p": "viseme_O",
+          "t": 14.164
+        },
+        {
+          "p": "viseme_E",
+          "t": 14.945
+        },
+        {
+          "p": "viseme_I",
+          "t": 15.282
+        },
+        {
+          "p": "viseme_E",
+          "t": 15.533
+        },
+        {
+          "p": "viseme_aa",
+          "t": 15.805
+        },
+        {
+          "p": "viseme_I",
+          "t": 15.982
+        },
+        {
+          "p": "viseme_PP",
+          "t": 16.268
+        },
+        {
+          "p": "viseme_E",
+          "t": 16.449
+        },
+        {
+          "p": "viseme_aa",
+          "t": 16.952
+        },
+        {
+          "p": "viseme_O",
+          "t": 17.214
+        },
+        {
+          "p": "viseme_E",
+          "t": 17.667
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:18.489",
+      "char": "Disputant1",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT1_005.wav",
+      "visemes": [
+        {
+          "p": "viseme_I",
+          "t": 18.714
+        },
+        {
+          "p": "viseme_E",
+          "t": 19.45
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:20.339",
+      "char": "Disputant2",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT2_006.wav",
+      "visemes": [
+        {
+          "p": "viseme_I",
+          "t": 20.607
+        },
+        {
+          "p": "viseme_aa",
+          "t": 21.42
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:22.239",
+      "char": "MediatorA",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORA_007.wav",
+      "visemes": [
+        {
+          "p": "viseme_TH",
+          "t": 22.31
+        },
+        {
+          "p": "viseme_I",
+          "t": 22.451
+        },
+        {
+          "p": "viseme_PP",
+          "t": 22.799
+        },
+        {
+          "p": "viseme_I",
+          "t": 22.95
+        },
+        {
+          "p": "viseme_PP",
+          "t": 23.267
+        },
+        {
+          "p": "viseme_E",
+          "t": 23.63
+        },
+        {
+          "p": "viseme_SS",
+          "t": 24.541
+        },
+        {
+          "p": "viseme_O",
+          "t": 24.753
+        },
+        {
+          "p": "viseme_TH",
+          "t": 25.237
+        },
+        {
+          "p": "viseme_I",
+          "t": 25.347
+        },
+        {
+          "p": "viseme_TH",
+          "t": 25.544
+        },
+        {
+          "p": "viseme_O",
+          "t": 25.665
+        },
+        {
+          "p": "viseme_aa",
+          "t": 25.846
+        },
+        {
+          "p": "viseme_SS",
+          "t": 25.982
+        },
+        {
+          "p": "viseme_aa",
+          "t": 26.093
+        },
+        {
+          "p": "viseme_TH",
+          "t": 26.793
+        },
+        {
+          "p": "viseme_E",
+          "t": 26.955
+        },
+        {
+          "p": "viseme_aa",
+          "t": 27.468
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:28.301",
+      "char": "MediatorA",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORA_008.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 28.432
+        },
+        {
+          "p": "viseme_PP",
+          "t": 28.734
+        },
+        {
+          "p": "viseme_I",
+          "t": 28.835
+        },
+        {
+          "p": "viseme_PP",
+          "t": 29.113
+        },
+        {
+          "p": "viseme_I",
+          "t": 29.446
+        },
+        {
+          "p": "viseme_O",
+          "t": 30.248
+        },
+        {
+          "p": "viseme_CH",
+          "t": 30.43
+        },
+        {
+          "p": "viseme_E",
+          "t": 30.531
+        },
+        {
+          "p": "viseme_O",
+          "t": 31.106
+        },
+        {
+          "p": "viseme_SS",
+          "t": 31.257
+        },
+        {
+          "p": "viseme_E",
+          "t": 31.358
+        },
+        {
+          "p": "viseme_I",
+          "t": 31.52
+        },
+        {
+          "p": "viseme_aa",
+          "t": 32.004
+        },
+        {
+          "p": "viseme_SS",
+          "t": 32.347
+        },
+        {
+          "p": "viseme_O",
+          "t": 32.69
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:33.341",
+      "duration": 0.5
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:33.841",
+      "duration": 0.5
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:34.341",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:34.841",
+      "char": "MediatorB",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORB_009.wav",
+      "visemes": [
+        {
+          "p": "viseme_I",
+          "t": 35.002
+        },
+        {
+          "p": "viseme_SS",
+          "t": 35.31
+        },
+        {
+          "p": "viseme_E",
+          "t": 35.441
+        },
+        {
+          "p": "viseme_O",
+          "t": 35.768
+        },
+        {
+          "p": "viseme_aa",
+          "t": 35.949
+        },
+        {
+          "p": "viseme_SS",
+          "t": 36.296
+        },
+        {
+          "p": "viseme_I",
+          "t": 36.628
+        },
+        {
+          "p": "viseme_aa",
+          "t": 37.349
+        },
+        {
+          "p": "viseme_E",
+          "t": 37.55
+        },
+        {
+          "p": "viseme_I",
+          "t": 37.762
+        },
+        {
+          "p": "viseme_O",
+          "t": 37.922
+        },
+        {
+          "p": "viseme_E",
+          "t": 38.084
+        },
+        {
+          "p": "viseme_O",
+          "t": 38.255
+        },
+        {
+          "p": "viseme_E",
+          "t": 38.456
+        },
+        {
+          "p": "viseme_TH",
+          "t": 38.653
+        },
+        {
+          "p": "viseme_O",
+          "t": 38.784
+        },
+        {
+          "p": "viseme_I",
+          "t": 39.06
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:39.691",
+      "char": "MediatorB",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORB_010.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 39.912
+        },
+        {
+          "p": "viseme_I",
+          "t": 40.314
+        },
+        {
+          "p": "viseme_O",
+          "t": 40.545
+        },
+        {
+          "p": "viseme_PP",
+          "t": 40.706
+        },
+        {
+          "p": "viseme_O",
+          "t": 40.806
+        },
+        {
+          "p": "viseme_aa",
+          "t": 40.927
+        },
+        {
+          "p": "viseme_O",
+          "t": 41.078
+        },
+        {
+          "p": "viseme_SS",
+          "t": 41.309
+        },
+        {
+          "p": "viseme_E",
+          "t": 41.49
+        },
+        {
+          "p": "viseme_I",
+          "t": 42.324
+        },
+        {
+          "p": "viseme_O",
+          "t": 42.535
+        },
+        {
+          "p": "viseme_E",
+          "t": 42.816
+        },
+        {
+          "p": "viseme_SS",
+          "t": 43.057
+        },
+        {
+          "p": "viseme_E",
+          "t": 43.238
+        },
+        {
+          "p": "viseme_aa",
+          "t": 44.041
+        },
+        {
+          "p": "viseme_E",
+          "t": 44.212
+        },
+        {
+          "p": "viseme_O",
+          "t": 44.624
+        },
+        {
+          "p": "viseme_I",
+          "t": 44.906
+        },
+        {
+          "p": "viseme_aa",
+          "t": 45.247
+        },
+        {
+          "p": "viseme_SS",
+          "t": 45.589
+        },
+        {
+          "p": "viseme_O",
+          "t": 45.971
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:46.642",
+      "char": "MediatorB",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORB_011.wav",
+      "visemes": [
+        {
+          "p": "viseme_PP",
+          "t": 46.762
+        },
+        {
+          "p": "viseme_O",
+          "t": 47.004
+        },
+        {
+          "p": "viseme_SS",
+          "t": 47.256
+        },
+        {
+          "p": "viseme_O",
+          "t": 47.437
+        },
+        {
+          "p": "viseme_FF",
+          "t": 47.663
+        },
+        {
+          "p": "viseme_E",
+          "t": 47.814
+        },
+        {
+          "p": "viseme_O",
+          "t": 48.121
+        },
+        {
+          "p": "viseme_I",
+          "t": 48.394
+        },
+        {
+          "p": "viseme_E",
+          "t": 48.544
+        },
+        {
+          "p": "viseme_I",
+          "t": 48.736
+        },
+        {
+          "p": "viseme_aa",
+          "t": 49.259
+        },
+        {
+          "p": "viseme_aa",
+          "t": 49.793
+        },
+        {
+          "p": "viseme_O",
+          "t": 49.984
+        },
+        {
+          "p": "viseme_aa",
+          "t": 50.306
+        },
+        {
+          "p": "viseme_O",
+          "t": 50.618
+        },
+        {
+          "p": "viseme_aa",
+          "t": 51.555
+        },
+        {
+          "p": "viseme_O",
+          "t": 51.706
+        },
+        {
+          "p": "viseme_E",
+          "t": 51.887
+        },
+        {
+          "p": "viseme_I",
+          "t": 52.048
+        },
+        {
+          "p": "viseme_E",
+          "t": 52.37
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:53.041",
+      "char": "Disputant1",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT1_012.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 53.552
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:54.541",
+      "char": "Disputant2",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT2_013.wav",
+      "visemes": [
+        {
+          "p": "viseme_CH",
+          "t": 54.809
+        },
+        {
+          "p": "viseme_O",
+          "t": 55.345
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:56.091",
+      "duration": 0.5
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:56.591",
+      "duration": 0.5
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:57.091",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:57.591",
+      "char": "MediatorA",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORA_014.wav",
+      "visemes": [
+        {
+          "p": "viseme_SS",
+          "t": 57.662
+        },
+        {
+          "p": "viseme_O",
+          "t": 57.803
+        },
+        {
+          "p": "viseme_O",
+          "t": 58.004
+        },
+        {
+          "p": "viseme_aa",
+          "t": 58.155
+        },
+        {
+          "p": "viseme_O",
+          "t": 58.256
+        },
+        {
+          "p": "viseme_aa",
+          "t": 58.397
+        },
+        {
+          "p": "viseme_O",
+          "t": 58.659
+        },
+        {
+          "p": "viseme_PP",
+          "t": 58.976
+        },
+        {
+          "p": "viseme_E",
+          "t": 59.288
+        },
+        {
+          "p": "viseme_TH",
+          "t": 59.621
+        },
+        {
+          "p": "viseme_E",
+          "t": 59.853
+        },
+        {
+          "p": "viseme_aa",
+          "t": 60.049
+        },
+        {
+          "p": "viseme_aa",
+          "t": 60.23
+        },
+        {
+          "p": "viseme_O",
+          "t": 60.451
+        },
+        {
+          "p": "viseme_I",
+          "t": 60.663
+        },
+        {
+          "p": "viseme_O",
+          "t": 60.834
+        },
+        {
+          "p": "viseme_I",
+          "t": 61.006
+        },
+        {
+          "p": "viseme_O",
+          "t": 61.146
+        },
+        {
+          "p": "viseme_FF",
+          "t": 61.393
+        },
+        {
+          "p": "viseme_aa",
+          "t": 61.705
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:62.341",
+      "char": "MediatorA",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORA_015.wav",
+      "visemes": [
+        {
+          "p": "viseme_TH",
+          "t": 62.387
+        },
+        {
+          "p": "viseme_aa",
+          "t": 62.477
+        },
+        {
+          "p": "viseme_FF",
+          "t": 62.638
+        },
+        {
+          "p": "viseme_E",
+          "t": 62.789
+        },
+        {
+          "p": "viseme_O",
+          "t": 63.066
+        },
+        {
+          "p": "viseme_I",
+          "t": 63.337
+        },
+        {
+          "p": "viseme_aa",
+          "t": 63.453
+        },
+        {
+          "p": "viseme_CH",
+          "t": 63.8
+        },
+        {
+          "p": "viseme_aa",
+          "t": 64.343
+        },
+        {
+          "p": "viseme_O",
+          "t": 64.796
+        },
+        {
+          "p": "viseme_aa",
+          "t": 65.298
+        },
+        {
+          "p": "viseme_TH",
+          "t": 65.435
+        },
+        {
+          "p": "viseme_aa",
+          "t": 65.545
+        },
+        {
+          "p": "viseme_O",
+          "t": 65.746
+        },
+        {
+          "p": "viseme_aa",
+          "t": 65.932
+        },
+        {
+          "p": "viseme_PP",
+          "t": 66.239
+        },
+        {
+          "p": "viseme_I",
+          "t": 66.551
+        },
+        {
+          "p": "viseme_O",
+          "t": 67.29
+        },
+        {
+          "p": "viseme_CH",
+          "t": 67.482
+        },
+        {
+          "p": "viseme_E",
+          "t": 67.582
+        },
+        {
+          "p": "viseme_aa",
+          "t": 67.713
+        },
+        {
+          "p": "viseme_O",
+          "t": 67.853
+        },
+        {
+          "p": "viseme_E",
+          "t": 68.059
+        },
+        {
+          "p": "viseme_I",
+          "t": 68.195
+        },
+        {
+          "p": "viseme_aa",
+          "t": 68.437
+        },
+        {
+          "p": "viseme_SS",
+          "t": 68.829
+        },
+        {
+          "p": "viseme_O",
+          "t": 69.212
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:69.882",
+      "duration": 0.5
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:70.382",
+      "duration": 0.5
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:70.882",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:71.382",
+      "char": "MediatorB",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORB_016.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 71.523
+        },
+        {
+          "p": "viseme_O",
+          "t": 71.825
+        },
+        {
+          "p": "viseme_O",
+          "t": 72.04
+        },
+        {
+          "p": "viseme_PP",
+          "t": 72.342
+        },
+        {
+          "p": "viseme_O",
+          "t": 72.452
+        },
+        {
+          "p": "viseme_I",
+          "t": 72.689
+        },
+        {
+          "p": "viseme_aa",
+          "t": 72.904
+        },
+        {
+          "p": "viseme_PP",
+          "t": 73.232
+        },
+        {
+          "p": "viseme_I",
+          "t": 73.352
+        },
+        {
+          "p": "viseme_O",
+          "t": 73.563
+        },
+        {
+          "p": "viseme_I",
+          "t": 74.266
+        },
+        {
+          "p": "viseme_aa",
+          "t": 74.376
+        },
+        {
+          "p": "viseme_PP",
+          "t": 74.704
+        },
+        {
+          "p": "viseme_E",
+          "t": 74.834
+        },
+        {
+          "p": "viseme_I",
+          "t": 74.979
+        },
+        {
+          "p": "viseme_PP",
+          "t": 75.14
+        },
+        {
+          "p": "viseme_I",
+          "t": 75.341
+        },
+        {
+          "p": "viseme_E",
+          "t": 75.954
+        },
+        {
+          "p": "viseme_O",
+          "t": 76.145
+        },
+        {
+          "p": "viseme_E",
+          "t": 76.296
+        },
+        {
+          "p": "viseme_O",
+          "t": 76.406
+        },
+        {
+          "p": "viseme_FF",
+          "t": 76.647
+        },
+        {
+          "p": "viseme_I",
+          "t": 76.969
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:77.610",
+      "char": "MediatorB",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORB_017.wav",
+      "visemes": [
+        {
+          "p": "viseme_TH",
+          "t": 77.685
+        },
+        {
+          "p": "viseme_aa",
+          "t": 77.835
+        },
+        {
+          "p": "viseme_PP",
+          "t": 78.047
+        },
+        {
+          "p": "viseme_E",
+          "t": 78.237
+        },
+        {
+          "p": "viseme_O",
+          "t": 78.484
+        },
+        {
+          "p": "viseme_SS",
+          "t": 78.735
+        },
+        {
+          "p": "viseme_E",
+          "t": 78.855
+        },
+        {
+          "p": "viseme_TH",
+          "t": 79.006
+        },
+        {
+          "p": "viseme_aa",
+          "t": 79.146
+        },
+        {
+          "p": "viseme_O",
+          "t": 79.448
+        },
+        {
+          "p": "viseme_aa",
+          "t": 79.579
+        },
+        {
+          "p": "viseme_I",
+          "t": 79.93
+        },
+        {
+          "p": "viseme_O",
+          "t": 80.071
+        },
+        {
+          "p": "viseme_PP",
+          "t": 80.222
+        },
+        {
+          "p": "viseme_E",
+          "t": 80.382
+        },
+        {
+          "p": "viseme_I",
+          "t": 80.583
+        },
+        {
+          "p": "viseme_aa",
+          "t": 80.804
+        },
+        {
+          "p": "viseme_O",
+          "t": 81.578
+        },
+        {
+          "p": "viseme_PP",
+          "t": 81.859
+        },
+        {
+          "p": "viseme_O",
+          "t": 81.959
+        },
+        {
+          "p": "viseme_I",
+          "t": 82.211
+        },
+        {
+          "p": "viseme_O",
+          "t": 82.412
+        },
+        {
+          "p": "viseme_aa",
+          "t": 82.532
+        },
+        {
+          "p": "viseme_O",
+          "t": 82.874
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:83.655",
+      "char": "Disputant1",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT1_018.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 83.892
+        },
+        {
+          "p": "viseme_TH",
+          "t": 84.241
+        },
+        {
+          "p": "viseme_aa",
+          "t": 84.344
+        },
+        {
+          "p": "viseme_E",
+          "t": 84.827
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:85.655",
+      "char": "Disputant2",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT2_019.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 86.166
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:87.155",
+      "duration": 0.5
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:87.655",
+      "duration": 0.5
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:88.155",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:88.655",
+      "char": "MediatorA",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORA_020.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 88.916
+        },
+        {
+          "p": "viseme_I",
+          "t": 89.648
+        },
+        {
+          "p": "viseme_E",
+          "t": 89.869
+        },
+        {
+          "p": "viseme_aa",
+          "t": 90.129
+        },
+        {
+          "p": "viseme_O",
+          "t": 90.24
+        },
+        {
+          "p": "viseme_aa",
+          "t": 90.561
+        },
+        {
+          "p": "viseme_O",
+          "t": 90.862
+        },
+        {
+          "p": "viseme_SS",
+          "t": 91.343
+        },
+        {
+          "p": "viseme_I",
+          "t": 91.463
+        },
+        {
+          "p": "viseme_aa",
+          "t": 91.709
+        },
+        {
+          "p": "viseme_PP",
+          "t": 92.747
+        },
+        {
+          "p": "viseme_O",
+          "t": 92.868
+        },
+        {
+          "p": "viseme_FF",
+          "t": 93.108
+        },
+        {
+          "p": "viseme_O",
+          "t": 93.309
+        },
+        {
+          "p": "viseme_PP",
+          "t": 93.654
+        },
+        {
+          "p": "viseme_O",
+          "t": 93.785
+        },
+        {
+          "p": "viseme_E",
+          "t": 94.593
+        },
+        {
+          "p": "viseme_aa",
+          "t": 95.184
+        },
+        {
+          "p": "viseme_O",
+          "t": 95.335
+        },
+        {
+          "p": "viseme_CH",
+          "t": 95.465
+        },
+        {
+          "p": "viseme_E",
+          "t": 95.565
+        },
+        {
+          "p": "viseme_FF",
+          "t": 95.746
+        },
+        {
+          "p": "viseme_E",
+          "t": 95.886
+        },
+        {
+          "p": "viseme_PP",
+          "t": 96.107
+        },
+        {
+          "p": "viseme_E",
+          "t": 96.207
+        },
+        {
+          "p": "viseme_aa",
+          "t": 96.388
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:97.680",
+      "char": "Disputant1",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT1_021.wav",
+      "visemes": [
+        {
+          "p": "viseme_I",
+          "t": 97.861
+        },
+        {
+          "p": "viseme_PP",
+          "t": 98.232
+        },
+        {
+          "p": "viseme_O",
+          "t": 98.453
+        },
+        {
+          "p": "viseme_E",
+          "t": 98.884
+        },
+        {
+          "p": "viseme_SS",
+          "t": 99.089
+        },
+        {
+          "p": "viseme_aa",
+          "t": 99.22
+        },
+        {
+          "p": "viseme_E",
+          "t": 99.506
+        },
+        {
+          "p": "viseme_aa",
+          "t": 99.968
+        },
+        {
+          "p": "viseme_SS",
+          "t": 100.905
+        },
+        {
+          "p": "viseme_aa",
+          "t": 101.056
+        },
+        {
+          "p": "viseme_SS",
+          "t": 101.256
+        },
+        {
+          "p": "viseme_E",
+          "t": 101.427
+        },
+        {
+          "p": "viseme_SS",
+          "t": 101.643
+        },
+        {
+          "p": "viseme_aa",
+          "t": 101.824
+        },
+        {
+          "p": "viseme_PP",
+          "t": 102.029
+        },
+        {
+          "p": "viseme_E",
+          "t": 102.14
+        },
+        {
+          "p": "viseme_PP",
+          "t": 102.35
+        },
+        {
+          "p": "viseme_I",
+          "t": 102.461
+        },
+        {
+          "p": "viseme_E",
+          "t": 103.299
+        },
+        {
+          "p": "viseme_aa",
+          "t": 103.86
+        },
+        {
+          "p": "viseme_PP",
+          "t": 104.075
+        },
+        {
+          "p": "viseme_I",
+          "t": 104.226
+        },
+        {
+          "p": "viseme_E",
+          "t": 104.563
+        },
+        {
+          "p": "viseme_I",
+          "t": 105.476
+        },
+        {
+          "p": "viseme_aa",
+          "t": 105.666
+        },
+        {
+          "p": "viseme_O",
+          "t": 105.776
+        },
+        {
+          "p": "viseme_PP",
+          "t": 105.932
+        },
+        {
+          "p": "viseme_O",
+          "t": 106.062
+        },
+        {
+          "p": "viseme_aa",
+          "t": 106.318
+        },
+        {
+          "p": "viseme_TH",
+          "t": 106.589
+        },
+        {
+          "p": "viseme_aa",
+          "t": 106.83
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:107.430",
+      "char": "MediatorA",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORA_022.wav",
+      "visemes": [
+        {
+          "p": "viseme_SS",
+          "t": 107.505
+        },
+        {
+          "p": "viseme_O",
+          "t": 107.656
+        },
+        {
+          "p": "viseme_aa",
+          "t": 107.842
+        },
+        {
+          "p": "viseme_I",
+          "t": 108.022
+        },
+        {
+          "p": "viseme_O",
+          "t": 108.945
+        },
+        {
+          "p": "viseme_SS",
+          "t": 109.246
+        },
+        {
+          "p": "viseme_aa",
+          "t": 109.347
+        },
+        {
+          "p": "viseme_E",
+          "t": 109.528
+        },
+        {
+          "p": "viseme_I",
+          "t": 109.698
+        },
+        {
+          "p": "viseme_PP",
+          "t": 109.843
+        },
+        {
+          "p": "viseme_O",
+          "t": 110.014
+        },
+        {
+          "p": "viseme_aa",
+          "t": 110.31
+        },
+        {
+          "p": "viseme_SS",
+          "t": 111.308
+        },
+        {
+          "p": "viseme_E",
+          "t": 111.399
+        },
+        {
+          "p": "viseme_aa",
+          "t": 111.504
+        },
+        {
+          "p": "viseme_PP",
+          "t": 111.644
+        },
+        {
+          "p": "viseme_I",
+          "t": 111.765
+        },
+        {
+          "p": "viseme_E",
+          "t": 111.966
+        },
+        {
+          "p": "viseme_O",
+          "t": 112.267
+        },
+        {
+          "p": "viseme_aa",
+          "t": 112.879
+        },
+        {
+          "p": "viseme_O",
+          "t": 113.21
+        },
+        {
+          "p": "viseme_I",
+          "t": 113.421
+        },
+        {
+          "p": "viseme_aa",
+          "t": 113.662
+        },
+        {
+          "p": "viseme_O",
+          "t": 113.822
+        },
+        {
+          "p": "viseme_PP",
+          "t": 113.998
+        },
+        {
+          "p": "viseme_O",
+          "t": 114.128
+        },
+        {
+          "p": "viseme_I",
+          "t": 114.756
+        },
+        {
+          "p": "viseme_E",
+          "t": 114.896
+        },
+        {
+          "p": "viseme_aa",
+          "t": 115.297
+        },
+        {
+          "p": "viseme_E",
+          "t": 115.659
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:116.400",
+      "char": "Disputant1",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT1_023.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 116.634
+        },
+        {
+          "p": "viseme_TH",
+          "t": 117.165
+        },
+        {
+          "p": "viseme_aa",
+          "t": 117.267
+        },
+        {
+          "p": "viseme_E",
+          "t": 117.665
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:118.430",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:118.930",
+      "char": "MediatorB",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORB_024.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 119.243
+        },
+        {
+          "p": "viseme_O",
+          "t": 120.031
+        },
+        {
+          "p": "viseme_PP",
+          "t": 120.329
+        },
+        {
+          "p": "viseme_I",
+          "t": 120.46
+        },
+        {
+          "p": "viseme_CH",
+          "t": 120.612
+        },
+        {
+          "p": "viseme_E",
+          "t": 120.703
+        },
+        {
+          "p": "viseme_aa",
+          "t": 120.86
+        },
+        {
+          "p": "viseme_aa",
+          "t": 121.829
+        },
+        {
+          "p": "viseme_O",
+          "t": 121.951
+        },
+        {
+          "p": "viseme_PP",
+          "t": 122.092
+        },
+        {
+          "p": "viseme_E",
+          "t": 122.193
+        },
+        {
+          "p": "viseme_aa",
+          "t": 122.314
+        },
+        {
+          "p": "viseme_FF",
+          "t": 122.465
+        },
+        {
+          "p": "viseme_O",
+          "t": 122.667
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:123.248",
+      "char": "Disputant2",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT2_025.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 123.53
+        },
+        {
+          "p": "viseme_TH",
+          "t": 123.917
+        },
+        {
+          "p": "viseme_aa",
+          "t": 124.007
+        },
+        {
+          "p": "viseme_SS",
+          "t": 124.179
+        },
+        {
+          "p": "viseme_I",
+          "t": 124.269
+        },
+        {
+          "p": "viseme_E",
+          "t": 124.535
+        },
+        {
+          "p": "viseme_O",
+          "t": 124.947
+        },
+        {
+          "p": "viseme_I",
+          "t": 125.359
+        },
+        {
+          "p": "viseme_E",
+          "t": 125.676
+        },
+        {
+          "p": "viseme_FF",
+          "t": 125.852
+        },
+        {
+          "p": "viseme_E",
+          "t": 126.033
+        },
+        {
+          "p": "viseme_O",
+          "t": 127.169
+        },
+        {
+          "p": "viseme_I",
+          "t": 127.36
+        },
+        {
+          "p": "viseme_aa",
+          "t": 127.581
+        },
+        {
+          "p": "viseme_E",
+          "t": 127.691
+        },
+        {
+          "p": "viseme_aa",
+          "t": 127.953
+        },
+        {
+          "p": "viseme_I",
+          "t": 128.134
+        },
+        {
+          "p": "viseme_O",
+          "t": 128.274
+        },
+        {
+          "p": "viseme_PP",
+          "t": 128.456
+        },
+        {
+          "p": "viseme_O",
+          "t": 128.616
+        },
+        {
+          "p": "viseme_aa",
+          "t": 128.878
+        },
+        {
+          "p": "viseme_I",
+          "t": 129.109
+        },
+        {
+          "p": "viseme_O",
+          "t": 129.37
+        },
+        {
+          "p": "viseme_O",
+          "t": 130.069
+        },
+        {
+          "p": "viseme_E",
+          "t": 130.184
+        },
+        {
+          "p": "viseme_aa",
+          "t": 130.325
+        },
+        {
+          "p": "viseme_PP",
+          "t": 130.561
+        },
+        {
+          "p": "viseme_aa",
+          "t": 130.833
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:131.448",
+      "char": "MediatorB",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORB_026.wav",
+      "visemes": [
+        {
+          "p": "viseme_SS",
+          "t": 131.529
+        },
+        {
+          "p": "viseme_O",
+          "t": 131.689
+        },
+        {
+          "p": "viseme_SS",
+          "t": 132.126
+        },
+        {
+          "p": "viseme_E",
+          "t": 132.277
+        },
+        {
+          "p": "viseme_TH",
+          "t": 132.503
+        },
+        {
+          "p": "viseme_aa",
+          "t": 132.764
+        },
+        {
+          "p": "viseme_O",
+          "t": 132.994
+        },
+        {
+          "p": "viseme_PP",
+          "t": 133.587
+        },
+        {
+          "p": "viseme_aa",
+          "t": 133.727
+        },
+        {
+          "p": "viseme_I",
+          "t": 133.938
+        },
+        {
+          "p": "viseme_O",
+          "t": 134.099
+        },
+        {
+          "p": "viseme_FF",
+          "t": 134.28
+        },
+        {
+          "p": "viseme_E",
+          "t": 134.44
+        },
+        {
+          "p": "viseme_SS",
+          "t": 135.62
+        },
+        {
+          "p": "viseme_aa",
+          "t": 135.73
+        },
+        {
+          "p": "viseme_TH",
+          "t": 135.891
+        },
+        {
+          "p": "viseme_E",
+          "t": 135.981
+        },
+        {
+          "p": "viseme_O",
+          "t": 136.639
+        },
+        {
+          "p": "viseme_aa",
+          "t": 136.86
+        },
+        {
+          "p": "viseme_I",
+          "t": 137.01
+        },
+        {
+          "p": "viseme_O",
+          "t": 137.121
+        },
+        {
+          "p": "viseme_SS",
+          "t": 137.297
+        },
+        {
+          "p": "viseme_I",
+          "t": 137.467
+        },
+        {
+          "p": "viseme_aa",
+          "t": 138.095
+        },
+        {
+          "p": "viseme_E",
+          "t": 138.255
+        },
+        {
+          "p": "viseme_I",
+          "t": 138.416
+        },
+        {
+          "p": "viseme_O",
+          "t": 139.34
+        },
+        {
+          "p": "viseme_FF",
+          "t": 139.591
+        },
+        {
+          "p": "viseme_E",
+          "t": 139.691
+        },
+        {
+          "p": "viseme_PP",
+          "t": 139.897
+        },
+        {
+          "p": "viseme_aa",
+          "t": 140.048
+        },
+        {
+          "p": "viseme_I",
+          "t": 140.655
+        },
+        {
+          "p": "viseme_aa",
+          "t": 140.831
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:141.948",
+      "char": "Disputant2",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT2_027.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 142.459
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:143.448",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:143.948",
+      "char": "MediatorA",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORA_028.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 144.231
+        },
+        {
+          "p": "viseme_I",
+          "t": 145.169
+        },
+        {
+          "p": "viseme_O",
+          "t": 145.321
+        },
+        {
+          "p": "viseme_FF",
+          "t": 145.472
+        },
+        {
+          "p": "viseme_I",
+          "t": 145.573
+        },
+        {
+          "p": "viseme_E",
+          "t": 145.755
+        },
+        {
+          "p": "viseme_aa",
+          "t": 146.088
+        },
+        {
+          "p": "viseme_O",
+          "t": 146.36
+        },
+        {
+          "p": "viseme_aa",
+          "t": 146.693
+        },
+        {
+          "p": "viseme_PP",
+          "t": 146.83
+        },
+        {
+          "p": "viseme_I",
+          "t": 146.941
+        },
+        {
+          "p": "viseme_E",
+          "t": 147.349
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:148.122",
+      "char": "Disputant1",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT1_029.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 148.957
+        },
+        {
+          "p": "viseme_PP",
+          "t": 150.145
+        },
+        {
+          "p": "viseme_E",
+          "t": 150.81
+        },
+        {
+          "p": "viseme_PP",
+          "t": 151.237
+        },
+        {
+          "p": "viseme_I",
+          "t": 151.388
+        },
+        {
+          "p": "viseme_E",
+          "t": 151.625
+        },
+        {
+          "p": "viseme_O",
+          "t": 151.967
+        },
+        {
+          "p": "viseme_I",
+          "t": 152.712
+        },
+        {
+          "p": "viseme_FF",
+          "t": 153.377
+        },
+        {
+          "p": "viseme_E",
+          "t": 153.498
+        },
+        {
+          "p": "viseme_PP",
+          "t": 153.885
+        },
+        {
+          "p": "viseme_aa",
+          "t": 154.258
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:154.924",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:155.424",
+      "char": "MediatorB",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORB_030.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 155.585
+        },
+        {
+          "p": "viseme_E",
+          "t": 156.661
+        },
+        {
+          "p": "viseme_I",
+          "t": 156.802
+        },
+        {
+          "p": "viseme_O",
+          "t": 156.942
+        },
+        {
+          "p": "viseme_FF",
+          "t": 157.088
+        },
+        {
+          "p": "viseme_I",
+          "t": 157.199
+        },
+        {
+          "p": "viseme_E",
+          "t": 157.365
+        },
+        {
+          "p": "viseme_O",
+          "t": 157.506
+        },
+        {
+          "p": "viseme_O",
+          "t": 157.702
+        },
+        {
+          "p": "viseme_E",
+          "t": 157.969
+        },
+        {
+          "p": "viseme_SS",
+          "t": 158.27
+        },
+        {
+          "p": "viseme_I",
+          "t": 158.371
+        },
+        {
+          "p": "viseme_aa",
+          "t": 158.587
+        },
+        {
+          "p": "viseme_SS",
+          "t": 158.713
+        },
+        {
+          "p": "viseme_I",
+          "t": 158.814
+        },
+        {
+          "p": "viseme_O",
+          "t": 159.045
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:160.651",
+      "char": "Disputant2",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT2_031.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 160.823
+        },
+        {
+          "p": "viseme_FF",
+          "t": 161.102
+        },
+        {
+          "p": "viseme_E",
+          "t": 161.193
+        },
+        {
+          "p": "viseme_FF",
+          "t": 161.466
+        },
+        {
+          "p": "viseme_aa",
+          "t": 161.759
+        },
+        {
+          "p": "viseme_PP",
+          "t": 162.108
+        },
+        {
+          "p": "viseme_E",
+          "t": 162.432
+        },
+        {
+          "p": "viseme_FF",
+          "t": 162.716
+        },
+        {
+          "p": "viseme_E",
+          "t": 162.837
+        },
+        {
+          "p": "viseme_TH",
+          "t": 163.601
+        },
+        {
+          "p": "viseme_E",
+          "t": 163.914
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:164.551",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:165.051",
+      "char": "MediatorA",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORA_032.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 165.355
+        },
+        {
+          "p": "viseme_aa",
+          "t": 166.023
+        },
+        {
+          "p": "viseme_PP",
+          "t": 166.235
+        },
+        {
+          "p": "viseme_aa",
+          "t": 166.418
+        },
+        {
+          "p": "viseme_O",
+          "t": 166.61
+        },
+        {
+          "p": "viseme_aa",
+          "t": 166.772
+        },
+        {
+          "p": "viseme_PP",
+          "t": 166.873
+        },
+        {
+          "p": "viseme_O",
+          "t": 166.994
+        },
+        {
+          "p": "viseme_I",
+          "t": 167.137
+        },
+        {
+          "p": "viseme_I",
+          "t": 167.288
+        },
+        {
+          "p": "viseme_CH",
+          "t": 167.612
+        },
+        {
+          "p": "viseme_E",
+          "t": 168.118
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:168.851",
+      "char": "Disputant1",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT1_033.wav",
+      "visemes": [
+        {
+          "p": "viseme_PP",
+          "t": 168.987
+        },
+        {
+          "p": "viseme_I",
+          "t": 169.258
+        },
+        {
+          "p": "viseme_O",
+          "t": 169.635
+        },
+        {
+          "p": "viseme_aa",
+          "t": 169.826
+        },
+        {
+          "p": "viseme_PP",
+          "t": 170.279
+        },
+        {
+          "p": "viseme_I",
+          "t": 170.44
+        },
+        {
+          "p": "viseme_E",
+          "t": 170.812
+        },
+        {
+          "p": "viseme_I",
+          "t": 171.083
+        },
+        {
+          "p": "viseme_FF",
+          "t": 171.279
+        },
+        {
+          "p": "viseme_aa",
+          "t": 171.39
+        },
+        {
+          "p": "viseme_E",
+          "t": 171.837
+        },
+        {
+          "p": "viseme_TH",
+          "t": 172.722
+        },
+        {
+          "p": "viseme_aa",
+          "t": 172.823
+        },
+        {
+          "p": "viseme_aa",
+          "t": 173.34
+        },
+        {
+          "p": "viseme_E",
+          "t": 173.607
+        },
+        {
+          "p": "viseme_PP",
+          "t": 173.999
+        },
+        {
+          "p": "viseme_aa",
+          "t": 174.28
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:174.901",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:175.401",
+      "char": "MediatorA",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORA_034.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 175.533
+        },
+        {
+          "p": "viseme_O",
+          "t": 175.725
+        },
+        {
+          "p": "viseme_aa",
+          "t": 175.967
+        },
+        {
+          "p": "viseme_O",
+          "t": 176.078
+        },
+        {
+          "p": "viseme_I",
+          "t": 176.214
+        },
+        {
+          "p": "viseme_PP",
+          "t": 176.749
+        },
+        {
+          "p": "viseme_I",
+          "t": 176.9
+        },
+        {
+          "p": "viseme_O",
+          "t": 177.068
+        },
+        {
+          "p": "viseme_aa",
+          "t": 177.481
+        },
+        {
+          "p": "viseme_E",
+          "t": 177.986
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:178.809",
+      "char": "Disputant1",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT1_035.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 179.0
+        },
+        {
+          "p": "viseme_aa",
+          "t": 179.342
+        },
+        {
+          "p": "viseme_E",
+          "t": 179.604
+        },
+        {
+          "p": "viseme_O",
+          "t": 179.805
+        },
+        {
+          "p": "viseme_aa",
+          "t": 180.157
+        },
+        {
+          "p": "viseme_O",
+          "t": 180.63
+        },
+        {
+          "p": "viseme_I",
+          "t": 180.962
+        },
+        {
+          "p": "viseme_E",
+          "t": 181.364
+        },
+        {
+          "p": "viseme_O",
+          "t": 182.139
+        },
+        {
+          "p": "viseme_SS",
+          "t": 182.325
+        },
+        {
+          "p": "viseme_E",
+          "t": 182.516
+        },
+        {
+          "p": "viseme_PP",
+          "t": 182.777
+        },
+        {
+          "p": "viseme_I",
+          "t": 183.029
+        },
+        {
+          "p": "viseme_SS",
+          "t": 183.481
+        },
+        {
+          "p": "viseme_aa",
+          "t": 183.813
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:184.459",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:184.959",
+      "char": "MediatorA",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORA_036.wav",
+      "visemes": [
+        {
+          "p": "viseme_I",
+          "t": 185.07
+        },
+        {
+          "p": "viseme_SS",
+          "t": 185.307
+        },
+        {
+          "p": "viseme_E",
+          "t": 185.438
+        },
+        {
+          "p": "viseme_aa",
+          "t": 185.776
+        },
+        {
+          "p": "viseme_O",
+          "t": 185.917
+        },
+        {
+          "p": "viseme_aa",
+          "t": 186.128
+        },
+        {
+          "p": "viseme_I",
+          "t": 186.35
+        },
+        {
+          "p": "viseme_O",
+          "t": 186.491
+        },
+        {
+          "p": "viseme_aa",
+          "t": 186.693
+        },
+        {
+          "p": "viseme_I",
+          "t": 186.889
+        },
+        {
+          "p": "viseme_SS",
+          "t": 187.091
+        },
+        {
+          "p": "viseme_aa",
+          "t": 187.323
+        },
+        {
+          "p": "viseme_I",
+          "t": 187.539
+        },
+        {
+          "p": "viseme_FF",
+          "t": 187.661
+        },
+        {
+          "p": "viseme_aa",
+          "t": 187.741
+        },
+        {
+          "p": "viseme_O",
+          "t": 187.963
+        },
+        {
+          "p": "viseme_aa",
+          "t": 188.376
+        },
+        {
+          "p": "viseme_I",
+          "t": 189.112
+        },
+        {
+          "p": "viseme_aa",
+          "t": 189.283
+        },
+        {
+          "p": "viseme_E",
+          "t": 189.625
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:190.357",
+      "char": "Disputant1",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT1_037.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 190.843
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:191.807",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:192.307",
+      "char": "MediatorB",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORB_038.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 192.631
+        },
+        {
+          "p": "viseme_PP",
+          "t": 193.739
+        },
+        {
+          "p": "viseme_aa",
+          "t": 193.891
+        },
+        {
+          "p": "viseme_O",
+          "t": 194.047
+        },
+        {
+          "p": "viseme_aa",
+          "t": 194.194
+        },
+        {
+          "p": "viseme_PP",
+          "t": 194.295
+        },
+        {
+          "p": "viseme_O",
+          "t": 194.427
+        },
+        {
+          "p": "viseme_I",
+          "t": 194.573
+        },
+        {
+          "p": "viseme_I",
+          "t": 194.725
+        },
+        {
+          "p": "viseme_CH",
+          "t": 194.993
+        },
+        {
+          "p": "viseme_E",
+          "t": 195.428
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:196.126",
+      "char": "Disputant2",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT2_039.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 196.348
+        },
+        {
+          "p": "viseme_PP",
+          "t": 196.655
+        },
+        {
+          "p": "viseme_I",
+          "t": 196.746
+        },
+        {
+          "p": "viseme_E",
+          "t": 196.953
+        },
+        {
+          "p": "viseme_O",
+          "t": 197.124
+        },
+        {
+          "p": "viseme_SS",
+          "t": 197.275
+        },
+        {
+          "p": "viseme_I",
+          "t": 197.356
+        },
+        {
+          "p": "viseme_E",
+          "t": 197.709
+        },
+        {
+          "p": "viseme_FF",
+          "t": 197.936
+        },
+        {
+          "p": "viseme_E",
+          "t": 198.128
+        },
+        {
+          "p": "viseme_O",
+          "t": 198.909
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:200.176",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:200.676",
+      "char": "MediatorB",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORB_040.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 200.827
+        },
+        {
+          "p": "viseme_O",
+          "t": 201.019
+        },
+        {
+          "p": "viseme_aa",
+          "t": 201.221
+        },
+        {
+          "p": "viseme_O",
+          "t": 201.312
+        },
+        {
+          "p": "viseme_I",
+          "t": 201.443
+        },
+        {
+          "p": "viseme_PP",
+          "t": 201.923
+        },
+        {
+          "p": "viseme_I",
+          "t": 202.075
+        },
+        {
+          "p": "viseme_O",
+          "t": 202.272
+        },
+        {
+          "p": "viseme_aa",
+          "t": 202.847
+        },
+        {
+          "p": "viseme_E",
+          "t": 203.474
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:204.266",
+      "char": "Disputant2",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT2_041.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 204.407
+        },
+        {
+          "p": "viseme_aa",
+          "t": 204.69
+        },
+        {
+          "p": "viseme_O",
+          "t": 204.821
+        },
+        {
+          "p": "viseme_I",
+          "t": 205.018
+        },
+        {
+          "p": "viseme_E",
+          "t": 205.204
+        },
+        {
+          "p": "viseme_O",
+          "t": 205.366
+        },
+        {
+          "p": "viseme_E",
+          "t": 205.532
+        },
+        {
+          "p": "viseme_FF",
+          "t": 205.739
+        },
+        {
+          "p": "viseme_E",
+          "t": 205.901
+        },
+        {
+          "p": "viseme_O",
+          "t": 206.142
+        },
+        {
+          "p": "viseme_PP",
+          "t": 206.414
+        },
+        {
+          "p": "viseme_O",
+          "t": 206.636
+        },
+        {
+          "p": "viseme_TH",
+          "t": 207.257
+        },
+        {
+          "p": "viseme_E",
+          "t": 207.429
+        },
+        {
+          "p": "viseme_I",
+          "t": 207.594
+        },
+        {
+          "p": "viseme_E",
+          "t": 207.816
+        },
+        {
+          "p": "viseme_O",
+          "t": 208.089
+        },
+        {
+          "p": "viseme_aa",
+          "t": 208.24
+        },
+        {
+          "p": "viseme_FF",
+          "t": 208.503
+        },
+        {
+          "p": "viseme_E",
+          "t": 208.825
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:209.466",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:209.966",
+      "char": "MediatorB",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORB_042.wav",
+      "visemes": [
+        {
+          "p": "viseme_SS",
+          "t": 210.047
+        },
+        {
+          "p": "viseme_O",
+          "t": 210.208
+        },
+        {
+          "p": "viseme_I",
+          "t": 210.379
+        },
+        {
+          "p": "viseme_SS",
+          "t": 210.51
+        },
+        {
+          "p": "viseme_E",
+          "t": 210.63
+        },
+        {
+          "p": "viseme_O",
+          "t": 210.922
+        },
+        {
+          "p": "viseme_aa",
+          "t": 211.023
+        },
+        {
+          "p": "viseme_O",
+          "t": 211.133
+        },
+        {
+          "p": "viseme_I",
+          "t": 211.254
+        },
+        {
+          "p": "viseme_O",
+          "t": 211.425
+        },
+        {
+          "p": "viseme_SS",
+          "t": 212.029
+        },
+        {
+          "p": "viseme_I",
+          "t": 212.129
+        },
+        {
+          "p": "viseme_O",
+          "t": 212.461
+        },
+        {
+          "p": "viseme_FF",
+          "t": 212.663
+        },
+        {
+          "p": "viseme_E",
+          "t": 212.824
+        },
+        {
+          "p": "viseme_TH",
+          "t": 213.437
+        },
+        {
+          "p": "viseme_E",
+          "t": 213.578
+        },
+        {
+          "p": "viseme_aa",
+          "t": 213.94
+        },
+        {
+          "p": "viseme_I",
+          "t": 214.815
+        },
+        {
+          "p": "viseme_aa",
+          "t": 215.022
+        },
+        {
+          "p": "viseme_E",
+          "t": 215.369
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:216.080",
+      "char": "Disputant2",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT2_043.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 216.376
+        },
+        {
+          "p": "viseme_TH",
+          "t": 216.81
+        },
+        {
+          "p": "viseme_aa",
+          "t": 216.923
+        },
+        {
+          "p": "viseme_E",
+          "t": 217.306
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:218.051",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:218.551",
+      "char": "MediatorA",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORA_044.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 218.832
+        },
+        {
+          "p": "viseme_I",
+          "t": 219.455
+        },
+        {
+          "p": "viseme_SS",
+          "t": 219.661
+        },
+        {
+          "p": "viseme_aa",
+          "t": 219.831
+        },
+        {
+          "p": "viseme_I",
+          "t": 220.057
+        },
+        {
+          "p": "viseme_PP",
+          "t": 220.333
+        },
+        {
+          "p": "viseme_E",
+          "t": 220.645
+        },
+        {
+          "p": "viseme_PP",
+          "t": 221.243
+        },
+        {
+          "p": "viseme_O",
+          "t": 221.363
+        },
+        {
+          "p": "viseme_I",
+          "t": 221.534
+        },
+        {
+          "p": "viseme_E",
+          "t": 221.715
+        },
+        {
+          "p": "viseme_aa",
+          "t": 221.916
+        },
+        {
+          "p": "viseme_O",
+          "t": 222.026
+        },
+        {
+          "p": "viseme_aa",
+          "t": 222.348
+        },
+        {
+          "p": "viseme_O",
+          "t": 222.659
+        },
+        {
+          "p": "viseme_SS",
+          "t": 223.156
+        },
+        {
+          "p": "viseme_I",
+          "t": 223.327
+        },
+        {
+          "p": "viseme_aa",
+          "t": 223.814
+        },
+        {
+          "p": "viseme_PP",
+          "t": 223.955
+        },
+        {
+          "p": "viseme_O",
+          "t": 224.075
+        },
+        {
+          "p": "viseme_FF",
+          "t": 224.296
+        },
+        {
+          "p": "viseme_O",
+          "t": 224.497
+        },
+        {
+          "p": "viseme_PP",
+          "t": 224.914
+        },
+        {
+          "p": "viseme_O",
+          "t": 225.185
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:225.801",
+      "char": "MediatorA",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORA_045.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 225.932
+        },
+        {
+          "p": "viseme_O",
+          "t": 226.254
+        },
+        {
+          "p": "viseme_E",
+          "t": 226.566
+        },
+        {
+          "p": "viseme_I",
+          "t": 226.838
+        },
+        {
+          "p": "viseme_O",
+          "t": 226.959
+        },
+        {
+          "p": "viseme_E",
+          "t": 227.13
+        },
+        {
+          "p": "viseme_O",
+          "t": 227.725
+        },
+        {
+          "p": "viseme_FF",
+          "t": 227.866
+        },
+        {
+          "p": "viseme_E",
+          "t": 227.966
+        },
+        {
+          "p": "viseme_aa",
+          "t": 228.088
+        },
+        {
+          "p": "viseme_SS",
+          "t": 228.269
+        },
+        {
+          "p": "viseme_O",
+          "t": 228.531
+        },
+        {
+          "p": "viseme_SS",
+          "t": 228.823
+        },
+        {
+          "p": "viseme_O",
+          "t": 229.065
+        },
+        {
+          "p": "viseme_aa",
+          "t": 229.331
+        },
+        {
+          "p": "viseme_I",
+          "t": 229.528
+        },
+        {
+          "p": "viseme_aa",
+          "t": 229.841
+        },
+        {
+          "p": "viseme_O",
+          "t": 230.204
+        },
+        {
+          "p": "viseme_aa",
+          "t": 230.516
+        },
+        {
+          "p": "viseme_E",
+          "t": 230.959
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:231.701",
+      "char": "MediatorA",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORA_046.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 231.832
+        },
+        {
+          "p": "viseme_O",
+          "t": 232.093
+        },
+        {
+          "p": "viseme_E",
+          "t": 232.506
+        },
+        {
+          "p": "viseme_aa",
+          "t": 232.727
+        },
+        {
+          "p": "viseme_I",
+          "t": 233.089
+        },
+        {
+          "p": "viseme_SS",
+          "t": 233.492
+        },
+        {
+          "p": "viseme_O",
+          "t": 233.734
+        },
+        {
+          "p": "viseme_I",
+          "t": 234.317
+        },
+        {
+          "p": "viseme_PP",
+          "t": 234.544
+        },
+        {
+          "p": "viseme_I",
+          "t": 234.634
+        },
+        {
+          "p": "viseme_O",
+          "t": 234.79
+        },
+        {
+          "p": "viseme_PP",
+          "t": 234.946
+        },
+        {
+          "p": "viseme_O",
+          "t": 235.036
+        },
+        {
+          "p": "viseme_I",
+          "t": 235.213
+        },
+        {
+          "p": "viseme_E",
+          "t": 235.384
+        },
+        {
+          "p": "viseme_SS",
+          "t": 235.575
+        },
+        {
+          "p": "viseme_aa",
+          "t": 235.716
+        },
+        {
+          "p": "viseme_O",
+          "t": 235.887
+        },
+        {
+          "p": "viseme_aa",
+          "t": 236.229
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:236.951",
+      "duration": 0.5
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:237.451",
+      "duration": 0.5
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:237.951",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:238.451",
+      "char": "MediatorB",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORB_047.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 238.742
+        },
+        {
+          "p": "viseme_I",
+          "t": 239.587
+        },
+        {
+          "p": "viseme_SS",
+          "t": 239.738
+        },
+        {
+          "p": "viseme_I",
+          "t": 239.858
+        },
+        {
+          "p": "viseme_E",
+          "t": 240.04
+        },
+        {
+          "p": "viseme_O",
+          "t": 240.18
+        },
+        {
+          "p": "viseme_aa",
+          "t": 240.331
+        },
+        {
+          "p": "viseme_O",
+          "t": 240.784
+        },
+        {
+          "p": "viseme_I",
+          "t": 240.925
+        },
+        {
+          "p": "viseme_SS",
+          "t": 241.12
+        },
+        {
+          "p": "viseme_aa",
+          "t": 241.352
+        },
+        {
+          "p": "viseme_I",
+          "t": 241.618
+        },
+        {
+          "p": "viseme_aa",
+          "t": 241.875
+        },
+        {
+          "p": "viseme_O",
+          "t": 242.061
+        },
+        {
+          "p": "viseme_aa",
+          "t": 242.584
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:243.496",
+      "char": "MediatorB",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORB_048.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 243.829
+        },
+        {
+          "p": "viseme_I",
+          "t": 244.675
+        },
+        {
+          "p": "viseme_SS",
+          "t": 244.801
+        },
+        {
+          "p": "viseme_I",
+          "t": 244.912
+        },
+        {
+          "p": "viseme_E",
+          "t": 245.078
+        },
+        {
+          "p": "viseme_O",
+          "t": 245.209
+        },
+        {
+          "p": "viseme_aa",
+          "t": 245.34
+        },
+        {
+          "p": "viseme_O",
+          "t": 245.431
+        },
+        {
+          "p": "viseme_I",
+          "t": 245.602
+        },
+        {
+          "p": "viseme_E",
+          "t": 245.773
+        },
+        {
+          "p": "viseme_O",
+          "t": 245.934
+        },
+        {
+          "p": "viseme_FF",
+          "t": 246.247
+        },
+        {
+          "p": "viseme_E",
+          "t": 246.388
+        },
+        {
+          "p": "viseme_O",
+          "t": 246.63
+        },
+        {
+          "p": "viseme_PP",
+          "t": 246.941
+        },
+        {
+          "p": "viseme_O",
+          "t": 247.264
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:247.905",
+      "char": "MediatorB",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORB_049.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 248.067
+        },
+        {
+          "p": "viseme_aa",
+          "t": 248.496
+        },
+        {
+          "p": "viseme_E",
+          "t": 248.734
+        },
+        {
+          "p": "viseme_O",
+          "t": 248.996
+        },
+        {
+          "p": "viseme_aa",
+          "t": 249.178
+        },
+        {
+          "p": "viseme_PP",
+          "t": 249.37
+        },
+        {
+          "p": "viseme_O",
+          "t": 249.471
+        },
+        {
+          "p": "viseme_E",
+          "t": 249.643
+        },
+        {
+          "p": "viseme_SS",
+          "t": 249.835
+        },
+        {
+          "p": "viseme_aa",
+          "t": 249.976
+        },
+        {
+          "p": "viseme_O",
+          "t": 250.148
+        },
+        {
+          "p": "viseme_aa",
+          "t": 250.541
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:251.314",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:251.814",
+      "char": "Disputant2",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT2_050.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 252.309
+        },
+        {
+          "p": "viseme_I",
+          "t": 252.884
+        },
+        {
+          "p": "viseme_O",
+          "t": 253.075
+        },
+        {
+          "p": "viseme_E",
+          "t": 253.247
+        },
+        {
+          "p": "viseme_I",
+          "t": 253.393
+        },
+        {
+          "p": "viseme_aa",
+          "t": 253.529
+        },
+        {
+          "p": "viseme_aa",
+          "t": 253.741
+        },
+        {
+          "p": "viseme_SS",
+          "t": 253.948
+        },
+        {
+          "p": "viseme_I",
+          "t": 254.059
+        },
+        {
+          "p": "viseme_E",
+          "t": 254.412
+        },
+        {
+          "p": "viseme_FF",
+          "t": 254.71
+        },
+        {
+          "p": "viseme_E",
+          "t": 255.093
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:255.764",
+      "char": "Disputant1",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT1_051.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 255.997
+        },
+        {
+          "p": "viseme_E",
+          "t": 256.875
+        },
+        {
+          "p": "viseme_aa",
+          "t": 257.057
+        },
+        {
+          "p": "viseme_E",
+          "t": 257.289
+        },
+        {
+          "p": "viseme_O",
+          "t": 257.471
+        },
+        {
+          "p": "viseme_aa",
+          "t": 257.733
+        },
+        {
+          "p": "viseme_SS",
+          "t": 258.016
+        },
+        {
+          "p": "viseme_E",
+          "t": 258.117
+        },
+        {
+          "p": "viseme_PP",
+          "t": 258.289
+        },
+        {
+          "p": "viseme_I",
+          "t": 258.491
+        },
+        {
+          "p": "viseme_TH",
+          "t": 258.769
+        },
+        {
+          "p": "viseme_I",
+          "t": 258.921
+        },
+        {
+          "p": "viseme_PP",
+          "t": 259.142
+        },
+        {
+          "p": "viseme_E",
+          "t": 259.274
+        },
+        {
+          "p": "viseme_PP",
+          "t": 259.536
+        },
+        {
+          "p": "viseme_I",
+          "t": 259.768
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:260.364",
+      "char": "MediatorA",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORA_052.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 260.617
+        },
+        {
+          "p": "viseme_aa",
+          "t": 261.305
+        },
+        {
+          "p": "viseme_O",
+          "t": 261.689
+        },
+        {
+          "p": "viseme_E",
+          "t": 261.911
+        },
+        {
+          "p": "viseme_FF",
+          "t": 262.18
+        },
+        {
+          "p": "viseme_E",
+          "t": 262.372
+        },
+        {
+          "p": "viseme_FF",
+          "t": 262.62
+        },
+        {
+          "p": "viseme_O",
+          "t": 262.842
+        },
+        {
+          "p": "viseme_aa",
+          "t": 263.429
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:264.283",
+      "char": "Disputant1",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT1_053.wav",
+      "visemes": [
+        {
+          "p": "viseme_PP",
+          "t": 264.409
+        },
+        {
+          "p": "viseme_E",
+          "t": 264.66
+        },
+        {
+          "p": "viseme_I",
+          "t": 264.867
+        },
+        {
+          "p": "viseme_O",
+          "t": 265.017
+        },
+        {
+          "p": "viseme_CH",
+          "t": 265.148
+        },
+        {
+          "p": "viseme_aa",
+          "t": 265.229
+        },
+        {
+          "p": "viseme_SS",
+          "t": 265.415
+        },
+        {
+          "p": "viseme_I",
+          "t": 265.506
+        },
+        {
+          "p": "viseme_aa",
+          "t": 265.662
+        },
+        {
+          "p": "viseme_I",
+          "t": 265.924
+        },
+        {
+          "p": "viseme_SS",
+          "t": 266.241
+        },
+        {
+          "p": "viseme_E",
+          "t": 266.452
+        },
+        {
+          "p": "viseme_SS",
+          "t": 266.844
+        },
+        {
+          "p": "viseme_O",
+          "t": 266.935
+        },
+        {
+          "p": "viseme_I",
+          "t": 267.101
+        },
+        {
+          "p": "viseme_O",
+          "t": 267.312
+        },
+        {
+          "p": "viseme_PP",
+          "t": 267.589
+        },
+        {
+          "p": "viseme_aa",
+          "t": 267.76
+        },
+        {
+          "p": "viseme_I",
+          "t": 267.946
+        },
+        {
+          "p": "viseme_aa",
+          "t": 268.168
+        },
+        {
+          "p": "viseme_E",
+          "t": 268.641
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:269.433",
+      "char": "Disputant2",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT2_054.wav",
+      "visemes": [
+        {
+          "p": "viseme_I",
+          "t": 269.665
+        },
+        {
+          "p": "viseme_FF",
+          "t": 270.032
+        },
+        {
+          "p": "viseme_E",
+          "t": 270.143
+        },
+        {
+          "p": "viseme_I",
+          "t": 270.279
+        },
+        {
+          "p": "viseme_TH",
+          "t": 270.4
+        },
+        {
+          "p": "viseme_aa",
+          "t": 270.481
+        },
+        {
+          "p": "viseme_I",
+          "t": 270.632
+        },
+        {
+          "p": "viseme_E",
+          "t": 270.743
+        },
+        {
+          "p": "viseme_aa",
+          "t": 270.874
+        },
+        {
+          "p": "viseme_SS",
+          "t": 271.045
+        },
+        {
+          "p": "viseme_I",
+          "t": 271.166
+        },
+        {
+          "p": "viseme_SS",
+          "t": 271.348
+        },
+        {
+          "p": "viseme_I",
+          "t": 271.429
+        },
+        {
+          "p": "viseme_aa",
+          "t": 271.58
+        },
+        {
+          "p": "viseme_aa",
+          "t": 271.752
+        },
+        {
+          "p": "viseme_SS",
+          "t": 271.892
+        },
+        {
+          "p": "viseme_E",
+          "t": 272.013
+        },
+        {
+          "p": "viseme_I",
+          "t": 272.164
+        },
+        {
+          "p": "viseme_E",
+          "t": 272.352
+        },
+        {
+          "p": "viseme_FF",
+          "t": 272.628
+        },
+        {
+          "p": "viseme_E",
+          "t": 273.011
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:273.683",
+      "char": "MediatorB",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORB_055.wav",
+      "visemes": [
+        {
+          "p": "viseme_SS",
+          "t": 273.768
+        },
+        {
+          "p": "viseme_O",
+          "t": 273.939
+        },
+        {
+          "p": "viseme_aa",
+          "t": 274.094
+        },
+        {
+          "p": "viseme_I",
+          "t": 274.385
+        },
+        {
+          "p": "viseme_TH",
+          "t": 274.696
+        },
+        {
+          "p": "viseme_I",
+          "t": 274.797
+        },
+        {
+          "p": "viseme_E",
+          "t": 275.047
+        },
+        {
+          "p": "viseme_O",
+          "t": 275.298
+        },
+        {
+          "p": "viseme_E",
+          "t": 275.479
+        },
+        {
+          "p": "viseme_I",
+          "t": 275.739
+        },
+        {
+          "p": "viseme_aa",
+          "t": 276.001
+        },
+        {
+          "p": "viseme_O",
+          "t": 276.682
+        },
+        {
+          "p": "viseme_I",
+          "t": 277.024
+        },
+        {
+          "p": "viseme_aa",
+          "t": 278.117
+        },
+        {
+          "p": "viseme_I",
+          "t": 278.529
+        },
+        {
+          "p": "viseme_TH",
+          "t": 278.85
+        },
+        {
+          "p": "viseme_I",
+          "t": 278.95
+        },
+        {
+          "p": "viseme_aa",
+          "t": 279.201
+        },
+        {
+          "p": "viseme_O",
+          "t": 279.462
+        },
+        {
+          "p": "viseme_E",
+          "t": 279.652
+        },
+        {
+          "p": "viseme_I",
+          "t": 279.923
+        },
+        {
+          "p": "viseme_E",
+          "t": 280.204
+        },
+        {
+          "p": "viseme_O",
+          "t": 280.375
+        },
+        {
+          "p": "viseme_SS",
+          "t": 280.505
+        },
+        {
+          "p": "viseme_I",
+          "t": 280.586
+        },
+        {
+          "p": "viseme_E",
+          "t": 280.746
+        },
+        {
+          "p": "viseme_O",
+          "t": 280.907
+        },
+        {
+          "p": "viseme_E",
+          "t": 281.057
+        },
+        {
+          "p": "viseme_FF",
+          "t": 281.238
+        },
+        {
+          "p": "viseme_E",
+          "t": 281.379
+        },
+        {
+          "p": "viseme_O",
+          "t": 281.609
+        },
+        {
+          "p": "viseme_PP",
+          "t": 281.996
+        },
+        {
+          "p": "viseme_O",
+          "t": 282.447
+        },
+        {
+          "p": "viseme_aa",
+          "t": 282.763
+        },
+        {
+          "p": "viseme_aa",
+          "t": 282.979
+        },
+        {
+          "p": "viseme_PP",
+          "t": 283.114
+        },
+        {
+          "p": "viseme_aa",
+          "t": 283.275
+        },
+        {
+          "p": "viseme_O",
+          "t": 283.615
+        },
+        {
+          "p": "viseme_PP",
+          "t": 283.761
+        },
+        {
+          "p": "viseme_O",
+          "t": 283.852
+        },
+        {
+          "p": "viseme_aa",
+          "t": 284.238
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:284.978",
+      "char": "Disputant1",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT1_056.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 285.454
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:286.410",
+      "char": "Disputant2",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT2_057.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 286.935
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:287.939",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:288.439",
+      "char": "MediatorA",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORA_058.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 288.721
+        },
+        {
+          "p": "viseme_PP",
+          "t": 289.834
+        },
+        {
+          "p": "viseme_E",
+          "t": 290.005
+        },
+        {
+          "p": "viseme_aa",
+          "t": 290.74
+        },
+        {
+          "p": "viseme_I",
+          "t": 291.058
+        },
+        {
+          "p": "viseme_E",
+          "t": 291.642
+        },
+        {
+          "p": "viseme_O",
+          "t": 291.773
+        },
+        {
+          "p": "viseme_FF",
+          "t": 292.014
+        },
+        {
+          "p": "viseme_I",
+          "t": 292.115
+        },
+        {
+          "p": "viseme_aa",
+          "t": 292.367
+        },
+        {
+          "p": "viseme_O",
+          "t": 292.649
+        },
+        {
+          "p": "viseme_TH",
+          "t": 292.835
+        },
+        {
+          "p": "viseme_O",
+          "t": 292.926
+        },
+        {
+          "p": "viseme_TH",
+          "t": 293.031
+        },
+        {
+          "p": "viseme_I",
+          "t": 293.112
+        },
+        {
+          "p": "viseme_PP",
+          "t": 293.48
+        },
+        {
+          "p": "viseme_E",
+          "t": 293.933
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:294.639",
+      "char": "Disputant1",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT1_059.wav",
+      "visemes": [
+        {
+          "p": "viseme_PP",
+          "t": 294.775
+        },
+        {
+          "p": "viseme_E",
+          "t": 295.048
+        },
+        {
+          "p": "viseme_O",
+          "t": 296.244
+        },
+        {
+          "p": "viseme_aa",
+          "t": 296.426
+        },
+        {
+          "p": "viseme_O",
+          "t": 296.527
+        },
+        {
+          "p": "viseme_FF",
+          "t": 296.673
+        },
+        {
+          "p": "viseme_E",
+          "t": 296.784
+        },
+        {
+          "p": "viseme_O",
+          "t": 296.976
+        },
+        {
+          "p": "viseme_TH",
+          "t": 297.092
+        },
+        {
+          "p": "viseme_aa",
+          "t": 297.193
+        },
+        {
+          "p": "viseme_O",
+          "t": 297.607
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:298.389",
+      "char": "Disputant2",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT2_060.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 298.653
+        },
+        {
+          "p": "viseme_I",
+          "t": 299.079
+        },
+        {
+          "p": "viseme_O",
+          "t": 299.323
+        },
+        {
+          "p": "viseme_E",
+          "t": 299.475
+        },
+        {
+          "p": "viseme_FF",
+          "t": 300.241
+        },
+        {
+          "p": "viseme_I",
+          "t": 300.332
+        },
+        {
+          "p": "viseme_PP",
+          "t": 300.566
+        },
+        {
+          "p": "viseme_E",
+          "t": 300.86
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:301.487",
+      "char": "MediatorA",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORA_061.wav",
+      "visemes": [
+        {
+          "p": "viseme_I",
+          "t": 301.598
+        },
+        {
+          "p": "viseme_E",
+          "t": 301.856
+        },
+        {
+          "p": "viseme_O",
+          "t": 302.679
+        },
+        {
+          "p": "viseme_aa",
+          "t": 302.841
+        },
+        {
+          "p": "viseme_O",
+          "t": 302.982
+        },
+        {
+          "p": "viseme_E",
+          "t": 303.189
+        },
+        {
+          "p": "viseme_O",
+          "t": 303.325
+        },
+        {
+          "p": "viseme_aa",
+          "t": 303.466
+        },
+        {
+          "p": "viseme_PP",
+          "t": 303.961
+        },
+        {
+          "p": "viseme_E",
+          "t": 304.264
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:304.895",
+      "char": "Disputant2",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT2_062.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 305.047
+        },
+        {
+          "p": "viseme_O",
+          "t": 305.36
+        },
+        {
+          "p": "viseme_SS",
+          "t": 305.562
+        },
+        {
+          "p": "viseme_E",
+          "t": 305.643
+        },
+        {
+          "p": "viseme_PP",
+          "t": 305.819
+        },
+        {
+          "p": "viseme_I",
+          "t": 306.011
+        },
+        {
+          "p": "viseme_SS",
+          "t": 306.213
+        },
+        {
+          "p": "viseme_aa",
+          "t": 306.345
+        },
+        {
+          "p": "viseme_PP",
+          "t": 306.541
+        },
+        {
+          "p": "viseme_O",
+          "t": 306.723
+        },
+        {
+          "p": "viseme_E",
+          "t": 306.844
+        },
+        {
+          "p": "viseme_aa",
+          "t": 307.667
+        },
+        {
+          "p": "viseme_O",
+          "t": 307.935
+        },
+        {
+          "p": "viseme_I",
+          "t": 308.132
+        },
+        {
+          "p": "viseme_E",
+          "t": 308.465
+        },
+        {
+          "p": "viseme_O",
+          "t": 308.773
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:309.495",
+      "char": "Disputant1",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT1_063.wav",
+      "visemes": [
+        {
+          "p": "viseme_TH",
+          "t": 309.607
+        },
+        {
+          "p": "viseme_aa",
+          "t": 309.829
+        },
+        {
+          "p": "viseme_E",
+          "t": 310.173
+        },
+        {
+          "p": "viseme_I",
+          "t": 310.799
+        },
+        {
+          "p": "viseme_E",
+          "t": 310.971
+        },
+        {
+          "p": "viseme_O",
+          "t": 311.123
+        },
+        {
+          "p": "viseme_aa",
+          "t": 311.335
+        },
+        {
+          "p": "viseme_TH",
+          "t": 311.482
+        },
+        {
+          "p": "viseme_aa",
+          "t": 311.573
+        },
+        {
+          "p": "viseme_SS",
+          "t": 311.841
+        },
+        {
+          "p": "viseme_I",
+          "t": 312.124
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:312.745",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:313.245",
+      "char": "MediatorB",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORB_064.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 313.529
+        },
+        {
+          "p": "viseme_I",
+          "t": 314.439
+        },
+        {
+          "p": "viseme_O",
+          "t": 314.641
+        },
+        {
+          "p": "viseme_E",
+          "t": 314.985
+        },
+        {
+          "p": "viseme_aa",
+          "t": 315.178
+        },
+        {
+          "p": "viseme_I",
+          "t": 315.471
+        },
+        {
+          "p": "viseme_E",
+          "t": 315.805
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:316.882",
+      "char": "MediatorB",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORB_065.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 317.133
+        },
+        {
+          "p": "viseme_I",
+          "t": 317.606
+        },
+        {
+          "p": "viseme_O",
+          "t": 317.888
+        },
+        {
+          "p": "viseme_E",
+          "t": 318.37
+        },
+        {
+          "p": "viseme_aa",
+          "t": 318.683
+        },
+        {
+          "p": "viseme_I",
+          "t": 318.999
+        },
+        {
+          "p": "viseme_aa",
+          "t": 319.2
+        },
+        {
+          "p": "viseme_SS",
+          "t": 319.336
+        },
+        {
+          "p": "viseme_I",
+          "t": 319.457
+        },
+        {
+          "p": "viseme_E",
+          "t": 319.98
+        },
+        {
+          "p": "viseme_O",
+          "t": 320.141
+        },
+        {
+          "p": "viseme_E",
+          "t": 320.272
+        },
+        {
+          "p": "viseme_FF",
+          "t": 320.458
+        },
+        {
+          "p": "viseme_E",
+          "t": 320.609
+        },
+        {
+          "p": "viseme_I",
+          "t": 320.765
+        },
+        {
+          "p": "viseme_PP",
+          "t": 320.915
+        },
+        {
+          "p": "viseme_O",
+          "t": 321.056
+        },
+        {
+          "p": "viseme_aa",
+          "t": 321.489
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:322.291",
+      "char": "MediatorB",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORB_066.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 322.594
+        },
+        {
+          "p": "viseme_I",
+          "t": 323.139
+        },
+        {
+          "p": "viseme_O",
+          "t": 323.422
+        },
+        {
+          "p": "viseme_aa",
+          "t": 323.594
+        },
+        {
+          "p": "viseme_E",
+          "t": 323.831
+        },
+        {
+          "p": "viseme_PP",
+          "t": 323.968
+        },
+        {
+          "p": "viseme_I",
+          "t": 324.089
+        },
+        {
+          "p": "viseme_TH",
+          "t": 324.245
+        },
+        {
+          "p": "viseme_I",
+          "t": 324.356
+        },
+        {
+          "p": "viseme_PP",
+          "t": 324.518
+        },
+        {
+          "p": "viseme_E",
+          "t": 324.609
+        },
+        {
+          "p": "viseme_O",
+          "t": 325.493
+        },
+        {
+          "p": "viseme_I",
+          "t": 325.907
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:326.973",
+      "char": "MediatorB",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORB_067.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 327.123
+        },
+        {
+          "p": "viseme_O",
+          "t": 327.454
+        },
+        {
+          "p": "viseme_E",
+          "t": 327.716
+        },
+        {
+          "p": "viseme_aa",
+          "t": 327.967
+        },
+        {
+          "p": "viseme_I",
+          "t": 328.76
+        },
+        {
+          "p": "viseme_O",
+          "t": 328.931
+        },
+        {
+          "p": "viseme_I",
+          "t": 329.091
+        },
+        {
+          "p": "viseme_aa",
+          "t": 329.202
+        },
+        {
+          "p": "viseme_SS",
+          "t": 329.819
+        },
+        {
+          "p": "viseme_E",
+          "t": 329.929
+        },
+        {
+          "p": "viseme_aa",
+          "t": 330.045
+        },
+        {
+          "p": "viseme_aa",
+          "t": 330.151
+        },
+        {
+          "p": "viseme_I",
+          "t": 330.959
+        },
+        {
+          "p": "viseme_PP",
+          "t": 331.12
+        },
+        {
+          "p": "viseme_O",
+          "t": 331.26
+        },
+        {
+          "p": "viseme_aa",
+          "t": 331.501
+        },
+        {
+          "p": "viseme_O",
+          "t": 332.274
+        },
+        {
+          "p": "viseme_E",
+          "t": 332.41
+        },
+        {
+          "p": "viseme_O",
+          "t": 332.525
+        },
+        {
+          "p": "viseme_FF",
+          "t": 332.726
+        },
+        {
+          "p": "viseme_E",
+          "t": 332.826
+        },
+        {
+          "p": "viseme_I",
+          "t": 332.957
+        },
+        {
+          "p": "viseme_aa",
+          "t": 333.063
+        },
+        {
+          "p": "viseme_FF",
+          "t": 333.268
+        },
+        {
+          "p": "viseme_O",
+          "t": 333.569
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:334.200",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:334.700",
+      "char": "MediatorB",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORB_068.wav",
+      "visemes": [
+        {
+          "p": "viseme_O",
+          "t": 334.832
+        },
+        {
+          "p": "viseme_PP",
+          "t": 335.218
+        },
+        {
+          "p": "viseme_O",
+          "t": 335.361
+        },
+        {
+          "p": "viseme_I",
+          "t": 335.635
+        },
+        {
+          "p": "viseme_O",
+          "t": 335.817
+        },
+        {
+          "p": "viseme_TH",
+          "t": 336.036
+        },
+        {
+          "p": "viseme_I",
+          "t": 336.311
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:336.927",
+      "char": "Disputant1",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT1_069.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 337.151
+        },
+        {
+          "p": "viseme_E",
+          "t": 337.905
+        },
+        {
+          "p": "viseme_I",
+          "t": 338.342
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:339.158",
+      "char": "Disputant2",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/DISPUTANT2_070.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 339.373
+        },
+        {
+          "p": "viseme_I",
+          "t": 340.039
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:340.908",
+      "char": "MediatorA",
+      "audio": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/audio/MEDIATORA_071.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 341.149
+        },
+        {
+          "p": "viseme_aa",
+          "t": 342.485
+        },
+        {
+          "p": "viseme_O",
+          "t": 342.625
+        },
+        {
+          "p": "viseme_PP",
+          "t": 342.761
+        },
+        {
+          "p": "viseme_O",
+          "t": 342.852
+        },
+        {
+          "p": "viseme_SS",
+          "t": 343.057
+        },
+        {
+          "p": "viseme_E",
+          "t": 343.218
+        },
+        {
+          "p": "viseme_aa",
+          "t": 343.7
+        },
+        {
+          "p": "viseme_E",
+          "t": 343.861
+        },
+        {
+          "p": "viseme_aa",
+          "t": 344.132
+        },
+        {
+          "p": "viseme_TH",
+          "t": 344.474
+        },
+        {
+          "p": "viseme_aa",
+          "t": 344.815
+        },
+        {
+          "p": "viseme_O",
+          "t": 345.117
+        },
+        {
+          "p": "viseme_E",
+          "t": 345.347
+        },
+        {
+          "p": "viseme_aa",
+          "t": 345.579
+        },
+        {
+          "p": "viseme_I",
+          "t": 345.755
+        },
+        {
+          "p": "viseme_E",
+          "t": 346.201
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:347.033",
+      "duration": 0.5
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:347.533",
+      "duration": 0.5
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:348.033",
+      "duration": 0.5
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:348.533",
+      "duration": 0.5
+    }
+  ]
+}

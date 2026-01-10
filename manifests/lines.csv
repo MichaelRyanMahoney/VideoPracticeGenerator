@@ -1,0 +1,72 @@
+id,speaker,audio,transcript,emotion_preset,emotion_intensity,tempo,pitch,volume
+001,MediatorA,audio/MEDIATORA_001.wav,"Hi! You’ve both been asked to participate in a peer mediation. It’s meant to help you, and you’re not in trouble. I’ll explain more in a bit. Please follow me.",normal,1.0,1.04,0,100
+002,Disputant1,audio/DISPUTANT1_002.wav,Okay.,normal,1.0,1.0,0,100
+003,Disputant2,audio/DISPUTANT2_003.wav,Okay.,normal,1.0,1.0,0,100
+004,MediatorA,audio/MEDIATORA_004.wav,Hello! My name is Emily and this is Michael. What are your names?,happy,0.4,1.04,0,100
+005,Disputant1,audio/DISPUTANT1_005.wav,I’m Caleb.,normal,1.0,1.0,0,100
+006,Disputant2,audio/DISPUTANT2_006.wav,I’m Aria.,normal,1.0,1.0,0,100
+007,MediatorA,audio/MEDIATORA_007.wav,"This is peer mediation, where students talk things through and solve conflicts without adults.",normal,1.0,0.98,0,100
+008,MediatorA,audio/MEDIATORA_008.wav,"As peer mediators, we won’t share anything you say here with other students.",normal,1.0,0.98,0,100
+009,MediatorB,audio/MEDIATORB_009.wav,"It sounds like you had a disagreement, and we’re here to help you work through it.",normal,1.0,1.0,0,100
+010,MediatorB,audio/MEDIATORB_010.wav,"We’ll listen to both of your sides. We won’t take sides, but we’ll help you agree on a solution.",normal,1.0,1.0,0,100
+011,MediatorB,audio/MEDIATORB_011.wav,"Most students prefer talking it out here, rather than going to the office. Want to try it out?",normal,1.0,1.0,0,100
+012,Disputant1,audio/DISPUTANT1_012.wav,Yeah.,normal,1.0,1.0,0,100
+013,Disputant2,audio/DISPUTANT2_013.wav,Sure.,normal,1.0,1.0,0,100
+014,MediatorA,audio/MEDIATORA_014.wav,"So for us to have a good mediation, there are some rules we all need to follow.",normal,1.0,1.0,0,100
+015,MediatorA,audio/MEDIATORA_015.wav,"The first rule is the confidentiality rule, and that's for us mediators. We won’t share what you say with other students.",normal,1.0,0.98,0,100
+016,MediatorB,audio/MEDIATORB_016.wav,"A rule for you both is the One Mic rule. If the other person is speaking, wait for them to finish.",normal,1.0,1.1,0,100
+017,MediatorB,audio/MEDIATORB_017.wav,The Respect rule says that all of us need to respect each other. Do you both agree to the rules?,normal,1.0,1.1,0,100
+018,Disputant1,audio/DISPUTANT1_018.wav,Yeah that's okay.,normal,1.0,1.0,0,100
+019,Disputant2,audio/DISPUTANT2_019.wav,Yeah.,normal,1.0,1.0,0,100
+020,MediatorA,audio/MEDIATORA_020.wav,"Okay. We heard that you argued over your seats in the classroom, and both refused to move. Caleb, can you share first about what happened?",normal,1.0,1.0,0,100
+021,Disputant1,audio/DISPUTANT1_021.wav,"In music, I sat down, and Aria started saying stuff about me. Like, a mean name. I didn’t want to move after that.",normal,1.0,1.0,0,100
+022,MediatorA,audio/MEDIATORA_022.wav,"So what I’m hearing is you sat down in music class, Aria said a mean name toward you, and you didn't want to move. Did I get that right?",normal,1.0,0.98,0,100
+023,Disputant1,audio/DISPUTANT1_023.wav,"Yeah, that’s right.",sad,0.8,0.98,0,100
+024,MediatorB,audio/MEDIATORB_024.wav,"Aria, could you please share what happened, from your point of view?",normal,1.0,1.1,0,100
+025,Disputant2,audio/DISPUTANT2_025.wav,"Yeah, that seat is where I usually sit with my friends. Caleb took it, and I asked him to move, and he wouldn’t, so I got mad.",normal,1.0,1.0,0,100
+026,MediatorB,audio/MEDIATORB_026.wav,"So you’re saying that’s your usual spot near your friends, Caleb sat there, you asked him to switch, and when he didn’t, you felt mad. Is that accurate?",normal,1.0,1.1,0,100
+027,Disputant2,audio/DISPUTANT2_027.wav,Yeah.,normal,1.0,1.0,0,100
+028,MediatorA,audio/MEDIATORA_028.wav,"Caleb, how did you feel when Aria called you the mean name?",normal,1.0,0.98,0,100
+029,Disputant1,audio/DISPUTANT1_029.wav,Umm... embarrassed. People were looking. It felt bad.,sad,1.0,0.96,0,100
+030,MediatorB,audio/MEDIATORB_030.wav,"And Aria, how did you feel when you saw Caleb sitting in the seat you usually use?",normal,1.0,1.1,0,100
+031,Disputant2,audio/DISPUTANT2_031.wav,I felt frustrated. My friends were already there.,normal,1.0,1.0,0,100
+032,MediatorA,audio/MEDIATORA_032.wav,"Caleb, what bothered you the most in this situation?",normal,1.0,1.0,0,100
+033,Disputant1,audio/DISPUTANT1_033.wav,Being called a mean name in front of everyone. That was the worst part.,normal,1.0,1.0,0,100
+034,MediatorA,audio/MEDIATORA_034.wav,What do you want to be different between you two after today?,normal,1.0,0.98,0,100
+035,Disputant1,audio/DISPUTANT1_035.wav,I want her to not call me names or say mean stuff.,normal,1.0,1.0,0,100
+036,MediatorA,audio/MEDIATORA_036.wav,It sounds like what you want is to not be insulted in front of your classmates. Is that right?,normal,1.0,0.98,0,100
+037,Disputant1,audio/DISPUTANT1_037.wav,Yeah.,happy,0.2,1.0,0,100
+038,MediatorB,audio/MEDIATORB_038.wav,"Aria, what bothered you the most in this situation?",normal,1.0,1.1,0,100
+039,Disputant2,audio/DISPUTANT2_039.wav,Not being able to sit with my friends like I usually do.,normal,1.0,1.0,0,100
+040,MediatorB,audio/MEDIATORB_040.wav,What do you want to be different between you two after today?,normal,1.0,1.1,0,100
+041,Disputant2,audio/DISPUTANT2_041.wav,I want to sit next to my friends during music without it turning into a fight.,normal,1.0,1.0,0,100
+042,MediatorB,audio/MEDIATORB_042.wav,"So it sounds like you want to keep your usual seat near your friends, without arguing. Is that right?",normal,1.0,1.1,0,100
+043,Disputant2,audio/DISPUTANT2_043.wav,Yeah that's right.,happy,0.1,1.02,0,100
+044,MediatorA,audio/MEDIATORA_044.wav,"Okay, we started this mediation because we heard that you argued over your seats and both refused to move.",normal,1.0,1.0,0,100
+045,MediatorA,audio/MEDIATORA_045.wav,Our goal now is to work together to find a solution so that this conflict doesn’t happen again.,normal,1.0,1.0,0,100
+046,MediatorA,audio/MEDIATORA_046.wav,"We’re going to create a win-win solution, which means you both will get something you want.",normal,1.0,1.0,0,100
+047,MediatorB,audio/MEDIATORB_047.wav,"Caleb, it seems like you want not to be insulted in front of your classmates.",normal,1.0,1.1,0,100
+048,MediatorB,audio/MEDIATORB_048.wav,"Aria, it seems like you want to sit next to your friends during music.",normal,1.0,1.1,0,100
+049,MediatorB,audio/MEDIATORB_049.wav,What are some ways you can both get something you want?,normal,1.0,1.1,0,100
+050,Disputant2,audio/DISPUTANT2_050.wav,Umm... He could let me have that seat near my friends.,normal,1.0,1.0,0,100
+051,Disputant1,audio/DISPUTANT1_051.wav,"Yeah, I want her to not say mean things about me.",normal,1.0,1.0,0,100
+052,MediatorA,audio/MEDIATORA_052.wav,"Okay, and what could help prevent future arguments?",normal,1.0,0.98,0,100
+053,Disputant1,audio/DISPUTANT1_053.wav,"Maybe we could just sit on different sides, so we don't bother each other again.",normal,1.0,1.0,0,100
+054,Disputant2,audio/DISPUTANT2_054.wav,I’m fine with that if I can still sit on the side with my friends.,happy,0.1,1.04,0,100
+055,MediatorB,audio/MEDIATORB_055.wav,So a realistic thing Caleb could get is that Aria wouldn't insult him. And a realistic thing Aria could get is getting to sit next to her friends during music... Does that match what you both want?,normal,1.0,1.1,0,100
+056,Disputant1,audio/DISPUTANT1_056.wav,Yeah.,happy,0.1,1.02,0,100
+057,Disputant2,audio/DISPUTANT2_057.wav,Yes.,happy,0.1,1.02,0,100
+058,MediatorA,audio/MEDIATORA_058.wav,"Okay, while Michael writes down the agreement, how do you feel after going through this mediation?",normal,1.0,1.0,0,100
+059,Disputant1,audio/DISPUTANT1_059.wav,Better. I don't want to fight so that's good.,happy,0.1,1.0,0,100
+060,Disputant2,audio/DISPUTANT2_060.wav,"Yeah, it's good, I feel better.",happy,0.1,1.02,0,100
+061,MediatorA,audio/MEDIATORA_061.wav,Is there anything else you want to say to the other person?,normal,1.0,0.98,0,100
+062,Disputant2,audio/DISPUTANT2_062.wav,I won’t say mean stuff anymore. I just want to sit with my group.,normal,1.0,1.0,0,100
+063,Disputant1,audio/DISPUTANT1_063.wav,That's okay. I’ll let you have that seat.,normal,1.0,1.0,0,100
+064,MediatorB,audio/MEDIATORB_064.wav,"Okay, I’m going to read the agreement out loud.",normal,1.0,1.1,0,100
+065,MediatorB,audio/MEDIATORB_065.wav,Caleb agrees to always let Aria sit in the seat next to her friends in music class.,normal,1.0,1.1,0,100
+066,MediatorB,audio/MEDIATORB_066.wav,Aria agrees to not say mean things about Caleb or to insult him.,normal,1.0,1.1,0,100
+067,MediatorB,audio/MEDIATORB_067.wav,And Both Caleb and Aria agree to sit on opposite sides of the classroom in music class so they don't fight in the future.,normal,1.0,1.1,0,100
+068,MediatorB,audio/MEDIATORB_068.wav,Do you both agree to this?,normal,1.0,1.1,0,100
+069,Disputant1,audio/DISPUTANT1_069.wav,Yeah I agree.,happy,0.2,1.04,0,100
+070,Disputant2,audio/DISPUTANT2_070.wav,I agree.,happy,0.1,1.04,0,100
+071,MediatorA,audio/MEDIATORA_071.wav,"Okay, great. Now we’ll have you both sign, and we’re done. Thanks for working on this together.",happy,0.3,1.04,0,100

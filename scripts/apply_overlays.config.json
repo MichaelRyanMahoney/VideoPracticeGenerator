@@ -1,0 +1,64 @@
+{
+  "script": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/script.txt",
+  "director": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/director_visemes.json",
+  "base": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/out/four_heads_demo.mp4",
+
+  "labels": true,
+  "labels_bubble": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/scenes/NameBubble.png",
+  "labels_fontfile": "/Users/michaelmahoney/Desktop/MediatorSPARK/assets/Inter-VariableFont_opsz,wght.ttf",
+
+  "pf_icon": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/scenes/ProcessFormIcon.png",
+  "pf_width": 200,
+  "pf_anim_sec": 0.5,
+
+  "overlay_image": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/scenes/VideoPauseOverlay1.png",
+  "duration": 12,
+  "fade": 0.5,
+  "overlay_alpha": 1,
+  "anchor": "prev_end",
+  "pre_roll_frames": 4,
+
+  "intro_bg": [
+    "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/scenes/SceneBackground1.png"
+  ],
+  "intro_duration": 5,
+  "intro_fontfile": "/Users/michaelmahoney/Desktop/MediatorSPARK/assets/Inter-VariableFont_opsz,wght.ttf",
+
+  "intro2": {
+    "bg": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/scenes/SceneBackground.png",
+    "title_slide": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/scenes/TitleSlide.png",
+    "title_duration": 2.0,
+    "title_fade": 0.5,
+    "fade": 0.5,
+    "placement": "camera",
+    "d_appear": 0.25,
+    "d_bubbles_delay": 1,
+    "conflict_after_d_bubbles": 4,
+    "conflict_text_duration": 8,
+    "m_appear_after_conflict": 1,
+    "m_bubbles_delay": 1,
+    "process_after_m_bubbles": 4,
+    "bubbles_delay": 0.6,
+    "intro_logo_scale": 0.8,
+    "process_form_overlay": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/scenes/ProcessFormReadyOverlay.png",
+    "process_form_duration": 6.5,
+    "char_width": 1400,
+    "chars": [
+      { "role": "d1", "image": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/renders/Char_01_D1.png", "appear": 0.5 },
+      { "role": "d2", "image": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/renders/Char_04_D2.png", "appear": 0.5 },
+      { "role": "ma", "image": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/renders/Char_02_MediatorA.png", "appear": 3.5 },
+      { "role": "mb", "image": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/renders/Char_03_MediatorB.png", "appear": 3.5 }
+    ]
+  },
+
+  "out": "/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/out/four_heads_demo_with_overlays.mp4",
+  "overlays": [
+    { "id": 1, "image": ".../assets/Overlay1.png", "duration": 12 },
+    { "id": 2, "image": ".../assets/Overlay2.png", "duration": 12 },
+    { "id": 3, "image": ".../assets/Overlay3.png", "duration": 6 },
+    { "id": 4, "image": ".../assets/Overlay4.png", "duration": 6 },
+    { "id": 5, "image": ".../assets/Overlay5.png", "duration": 8 },
+    { "id": 6, "image": ".../assets/Overlay6.png", "duration": 8 },
+    { "id": 7, "image": ".../assets/Overlay7.png", "duration": 25 }
+  ]
+}
