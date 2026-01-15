@@ -58,6 +58,20 @@ def _build_job_config(job_id: str) -> Path:
     # Optional: background image can be user-provided in inputs later
     # Leave other paths (blender_binary, assets/scenes) as repo defaults
 
+    # Environment overrides (useful in Docker/local)
+    blender_bin_env = os.environ.get("VPG_BLENDER_BIN")
+    if blender_bin_env:
+        cfg["blender_binary"] = blender_bin_env
+    if os.environ.get("VPG_SKIP_RENDER") == "1":
+        cfg["skip_render"] = True
+    if os.environ.get("VPG_SKIP_MUX") == "1":
+        cfg["skip_mux"] = True
+    if os.environ.get("VPG_SKIP_BLENDER") == "1":
+        # Disable all Blender-dependent steps
+        cfg["run_generate_characters"] = False
+        cfg["run_export_characters"] = False
+        cfg["skip_configure_roles"] = True
+
     job_cfg_path = jdir / "run.config.json"
     job_cfg_path.write_text(json.dumps(cfg))
     return job_cfg_path
@@ -67,7 +81,11 @@ def _run_orchestrator(job_id: str) -> None:
     project_root = Path(__file__).resolve().parents[1]
     jdir = job_dir(job_id)
     log_path = jdir / "job.log"
-    cfg_path = _build_job_config(job_id)
+    try:
+        cfg_path = _build_job_config(job_id)
+    except Exception as ex:
+        _write_status(job_id, "failed", {"error": f"config: {ex}"})
+        return
 
     cmd = [
         sys.executable,

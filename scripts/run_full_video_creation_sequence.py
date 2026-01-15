@@ -160,26 +160,29 @@ def main():
 
     # 2) Configure roles in scene per generator_inputs.json
     cfg_script = project_root / "scripts" / "blender_configure_roles_for_render.py"
-    if not cfg_script.exists():
-        raise SystemExit(f"Missing script: {cfg_script}")
-    cmd_cfg = [
-        str(blender_bin),
-        "-b",
-        str(tmp_scene),
-        "--python",
-        str(cfg_script),
-        "--",
-        "--config",
-        str(generator_inputs_json),
-        "--trace",
-        "--save",
-    ]
-    # Pass HDRI overrides from orchestrator config
-    if hdri_path_cfg:
-        cmd_cfg += ["--hdri_path", str(hdri_path_cfg)]
-    if hdri_strength_cfg is not None:
-        cmd_cfg += ["--hdri_strength", str(hdri_strength_cfg)]
-    run_cmd(cmd_cfg)
+    if bool(cfg.get("skip_configure_roles", False)):
+        print("[skip] Configure roles step per config (skip_configure_roles=True).")
+    else:
+        if not cfg_script.exists():
+            raise SystemExit(f"Missing script: {cfg_script}")
+        cmd_cfg = [
+            str(blender_bin),
+            "-b",
+            str(tmp_scene),
+            "--python",
+            str(cfg_script),
+            "--",
+            "--config",
+            str(generator_inputs_json),
+            "--trace",
+            "--save",
+        ]
+        # Pass HDRI overrides from orchestrator config
+        if hdri_path_cfg:
+            cmd_cfg += ["--hdri_path", str(hdri_path_cfg)]
+        if hdri_strength_cfg is not None:
+            cmd_cfg += ["--hdri_strength", str(hdri_strength_cfg)]
+        run_cmd(cmd_cfg)
 
     # 3) Build manifest CSV from script.txt
     parse_script_py = project_root / "scripts" / "parse_screenplay_to_manifest.py"

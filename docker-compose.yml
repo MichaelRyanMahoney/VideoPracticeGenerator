@@ -5,7 +5,13 @@ services:
       - "8000:8000"
     environment:
       - VPG_DATA_DIR=/data
+      # Local Mac: skip render/mux inside Docker, use this image on EC2 to render
+      - VPG_SKIP_RENDER=1
+      - VPG_SKIP_MUX=1
+      - VPG_BLENDER_BIN=/usr/local/blender/blender
+      - VPG_SKIP_BLENDER=1
     volumes:
+      - ./:/app
       - ./data:/data
 
 
