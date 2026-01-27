@@ -1,0 +1,19 @@
+services:
+  gpu_worker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.gpu
+      args:
+        INSTALL_WHISPERX: "1"
+    # Requires: NVIDIA drivers on host + nvidia-container-toolkit installed.
+    gpus: all
+    environment:
+      - AWS_REGION=${AWS_REGION:-us-east-1}
+      - VPG_DATA_DIR=/data
+      - VPG_BLENDER_BIN=/usr/local/bin/blender
+      # Optional: enable if you hit GL/context issues.
+      # - VPG_XVFB=1
+    volumes:
+      - ./:/app
+      - ./data:/data
+

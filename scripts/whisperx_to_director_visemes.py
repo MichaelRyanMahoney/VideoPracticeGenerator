@@ -3,8 +3,9 @@
 # Build a director.json that carries viseme events using your rig's viseme
 # shape key names (e.g., "viseme_PP","FF","TH","DD","kk","CH","SS","nn","RR","aa","E","I","O").
 #
-import argparse, json, wave, csv, re
+import argparse, json, wave, csv, re, os, tempfile
 from pathlib import Path
+import boto3
 
 import torch
 import whisperx
@@ -147,6 +148,41 @@ def select_visemes_for_word(word, t0, t1, g2p, strategy="onset_plus_vowel", max_
     return visemes
 
 def _load_allowed_roles(generator_inputs_path: str) -> set[str]:
+def _is_s3_uri(s: str) -> bool:
+    return isinstance(s, str) and s.startswith("s3://")
+
+
+def _s3_parse_uri(uri: str) -> tuple[str, str]:
+    assert uri.startswith("s3://"), f"Not an s3 uri: {uri}"
+    no = uri[5:]
+    bucket, key = no.split("/", 1)
+    return bucket, key
+
+
+def _s3_download(s3, uri: str, dest: Path) -> None:
+    b, k = _s3_parse_uri(uri)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    s3.download_file(b, k, str(dest))
+
+
+def _ensure_local_audio(audio_ref: str, cache_dir: Path, s3) -> str:
+    """
+    Return a local filesystem path to a WAV for whisperx alignment.
+    If audio_ref is s3://..., download into cache_dir (using audio_hash if present in filename).
+    """
+    if not _is_s3_uri(audio_ref):
+        return str(Path(audio_ref).resolve())
+    if s3 is None:
+        raise RuntimeError("Audio is s3:// but no boto3 client was provided")
+    # Deterministic cache name based on S3 key
+    _b, key = _s3_parse_uri(audio_ref)
+    safe_name = key.replace("/", "__")
+    local = cache_dir / safe_name
+    if not local.exists():
+        print(f"[s3] download {audio_ref} -> {local}")
+        _s3_download(s3, audio_ref, local)
+    return str(local.resolve())
+
     p = Path(generator_inputs_path)
     data = json.loads(p.read_text())
     roles = set((data.get("characters") or {}).keys())
@@ -154,7 +190,7 @@ def _load_allowed_roles(generator_inputs_path: str) -> set[str]:
         raise RuntimeError(f"No roles found in {generator_inputs_path}/characters")
     return roles
 
-def batch_mode(manifest_csv, generator_inputs_json, fps, out_path, gap_sec=0.35, strategy="onset_plus_vowel", max_events_per_word=2, min_event_gap_sec=0.08, collapse_adjacent=True):
+def batch_mode(manifest_csv, generator_inputs_json, fps, out_path, gap_sec=0.35, strategy="onset_plus_vowel", max_events_per_word=2, min_event_gap_sec=0.08, collapse_adjacent=True, audio_cache_dir: str = ""):
     align_model, metadata, device_align = load_aligner()
     g2p = G2p()
 
@@ -162,16 +198,23 @@ def batch_mode(manifest_csv, generator_inputs_json, fps, out_path, gap_sec=0.35,
     beats = []
     t_cursor = 0.0
 
+    s3 = boto3.client("s3", region_name=os.environ.get("AWS_REGION") or os.environ.get("AWS_DEFAULT_REGION"))
+    cache_dir = Path(audio_cache_dir) if audio_cache_dir else Path(tempfile.gettempdir()) / "vpg_audio_cache"
+    cache_dir.mkdir(parents=True, exist_ok=True)
+
     with open(manifest_csv, newline="") as f:
         rdr = csv.DictReader(f)
         for row in rdr:
             speaker = row["speaker"].strip()
             if speaker not in allowed_roles:
                 raise RuntimeError(f"Speaker '{speaker}' is not a valid role. Use one of: {sorted(allowed_roles)}")
-            audio = str(Path(row["audio"].strip()).resolve())
+            audio_ref = (row.get("audio") or "").strip()
+            if not audio_ref:
+                raise RuntimeError("Manifest row missing audio")
+            audio_local = _ensure_local_audio(audio_ref, cache_dir, s3 if _is_s3_uri(audio_ref) else None)
             transcript = row["transcript"].strip()
 
-            aligned = align_line(audio, transcript, align_model, metadata, device_align)
+            aligned = align_line(audio_local, transcript, align_model, metadata, device_align)
 
             words = []
             for seg in aligned.get("segments", []):
@@ -198,7 +241,8 @@ def batch_mode(manifest_csv, generator_inputs_json, fps, out_path, gap_sec=0.35,
             beats.append({
                 "tc_in": f"00:00:{t_cursor:06.3f}",
                 "char": speaker,
-                "audio": audio,
+                # Keep the audio reference as-is (local path or s3:// URI). Downstream workers can fetch if needed.
+                "audio": audio_ref,
                 "visemes": vis,
             })
 
@@ -285,7 +329,7 @@ def _parse_stage_from_script(script_path: str) -> tuple[dict, str, int]:
             i += 1
     return pauses_after, start_mediator, pauses_before_first
 
-def batch_mode_with_stage(manifest_csv, generator_inputs_json, fps, out_path, script_txt=None, gap_sec=0.5, strategy="onset_plus_vowel", max_events_per_word=2, min_event_gap_sec=0.08, collapse_adjacent=True, pause_seconds=0.5):
+def batch_mode_with_stage(manifest_csv, generator_inputs_json, fps, out_path, script_txt=None, gap_sec=0.5, strategy="onset_plus_vowel", max_events_per_word=2, min_event_gap_sec=0.08, collapse_adjacent=True, pause_seconds=0.5, audio_cache_dir: str = ""):
     align_model, metadata, device_align = load_aligner()
     g2p = G2p()
 
@@ -319,6 +363,10 @@ def batch_mode_with_stage(manifest_csv, generator_inputs_json, fps, out_path, sc
         except Exception:
             pass
 
+    s3 = boto3.client("s3", region_name=os.environ.get("AWS_REGION") or os.environ.get("AWS_DEFAULT_REGION"))
+    cache_dir = Path(audio_cache_dir) if audio_cache_dir else Path(tempfile.gettempdir()) / "vpg_audio_cache"
+    cache_dir.mkdir(parents=True, exist_ok=True)
+
     with open(manifest_csv, newline="") as f:
         rdr = csv.DictReader(f)
         speech_idx = 0  # counts only spoken lines (aligns [PAUSE]s from script)
@@ -327,7 +375,7 @@ def batch_mode_with_stage(manifest_csv, generator_inputs_json, fps, out_path, sc
             if speaker not in allowed_roles:
                 raise RuntimeError(f"Speaker '{speaker}' is not a valid role. Use one of: {sorted(allowed_roles)}")
             transcript = (row.get("transcript") or "").strip()
-            audio_raw = (row.get("audio") or "").strip()
+            audio_ref = (row.get("audio") or "").strip()
             # Allow explicit pauses in the manifest:
             # - speaker "PAUSE" or "BREAK"
             # - transcript contains [PAUSE]
@@ -351,11 +399,13 @@ def batch_mode_with_stage(manifest_csv, generator_inputs_json, fps, out_path, sc
                 # Do not increment speech_idx for pause rows
                 continue
 
-            audio = str(Path(audio_raw).resolve())
+            if not audio_ref:
+                raise RuntimeError("Manifest row missing audio")
+            audio_local = _ensure_local_audio(audio_ref, cache_dir, s3 if _is_s3_uri(audio_ref) else None)
 
-            aligned = align_line(audio, transcript, align_model, metadata, device_align)
+            aligned = align_line(audio_local, transcript, align_model, metadata, device_align)
             # Use actual WAV duration to space beats (prevents overlap eating pauses)
-            wav_dur = get_wav_duration_seconds(audio)
+            wav_dur = get_wav_duration_seconds(audio_local)
 
             words = []
             for seg in aligned.get("segments", []):
@@ -382,7 +432,7 @@ def batch_mode_with_stage(manifest_csv, generator_inputs_json, fps, out_path, sc
             beats.append({
                 "tc_in": f"00:00:{t_cursor:06.3f}",
                 "char": speaker,
-                "audio": audio,
+                "audio": audio_ref,
                 "visemes": vis,
             })
 
@@ -433,6 +483,7 @@ def main():
     ap.add_argument("--no_collapse_adjacent", action="store_true", help="Disable collapsing adjacent identical visemes")
     ap.add_argument("--script_txt", help="Optional path to script.txt to parse [PAUSE] and [SHOW MEDIATOR X] directives")
     ap.add_argument("--pause_seconds", type=float, default=0.5, help="Seconds to insert per [PAUSE] directive")
+    ap.add_argument("--audio_cache_dir", default="", help="Directory to cache downloaded audio when manifest uses s3:// URIs")
     args = ap.parse_args()
 
     # Use enhanced builder that incorporates stage directions from script (if provided)
@@ -447,7 +498,8 @@ def main():
         max_events_per_word=args.max_events_per_word,
         min_event_gap_sec=args.min_event_gap_sec,
         collapse_adjacent=(not args.no_collapse_adjacent),
-        pause_seconds=args.pause_seconds
+        pause_seconds=args.pause_seconds,
+        audio_cache_dir=args.audio_cache_dir,
     )
 
 if __name__ == "__main__":

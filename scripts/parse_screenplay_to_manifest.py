@@ -1,5 +1,5 @@
 # scripts/parse_screenplay_to_manifest.py
-import re, csv, argparse
+import re, csv, argparse, hashlib, json, os
 from pathlib import Path
 
 # Map variants (names or labels) to canonical ROLE KEYS
@@ -159,6 +159,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--in_txt", required=True)
     ap.add_argument("--out_csv", required=True)
+    ap.add_argument("--project_id", default="", help="Optional project id like Video-01. Used for stable S3 keying.")
+    ap.add_argument("--audio_s3_prefix", default="", help="Optional S3 prefix like s3://bucket/projects/Video-01/audio (no trailing slash required). If set, manifest audio will be written as S3 URIs.")
     args = ap.parse_args()
 
     text = Path(args.in_txt).read_text()
@@ -166,19 +168,76 @@ def main():
     entries = parse_script(lines)
 
     Path(args.out_csv).parent.mkdir(parents=True, exist_ok=True)
+    project_id = (args.project_id or "").strip()
+    audio_s3_prefix = (args.audio_s3_prefix or "").strip()
+    if audio_s3_prefix and not audio_s3_prefix.startswith("s3://"):
+        raise SystemExit("--audio_s3_prefix must be an s3:// URI")
+
+    # Optional: load generator_inputs.json (next to out_csv or in_txt folder) to include voice_id in hash
+    # This makes audio cache robust to voice changes.
+    voice_ids: dict[str, str] = {}
+    try:
+        # Prefer env override (useful in Batch) else look beside script/out_csv.
+        gen_path = os.environ.get("VPG_GENERATOR_INPUTS_JSON")
+        if gen_path:
+            gen_inputs_path = Path(gen_path)
+        else:
+            # Try sibling manifests/generator_inputs.json next to out_csv; else next to in_txt
+            out_dir = Path(args.out_csv).resolve().parent
+            cand1 = out_dir / "generator_inputs.json"
+            cand2 = out_dir.parent / "inputs" / "generator_inputs.json"
+            cand3 = Path(args.in_txt).resolve().parent / "generator_inputs.json"
+            gen_inputs_path = next((p for p in (cand1, cand2, cand3) if p.exists()), None)
+        if gen_inputs_path and Path(gen_inputs_path).exists():
+            gi = json.loads(Path(gen_inputs_path).read_text())
+            for role, conf in (gi.get("characters") or {}).items():
+                vid = ((conf.get("typecast") or {}).get("voice_id") or "").strip()
+                if vid:
+                    voice_ids[str(role)] = vid
+    except Exception:
+        voice_ids = {}
+
+    def audio_hash_for(role: str, transcript: str, attrs: dict) -> str:
+        vid = voice_ids.get(role, "")
+        payload = {
+            "v": 1,
+            "project_id": project_id,
+            "role": role,
+            "voice_id": vid,
+            "transcript": transcript,
+            # include the per-line delivery attrs so cache invalidates correctly
+            "emotion_preset": attrs.get("emotion_preset", "normal"),
+            "emotion_intensity": float(attrs.get("emotion_intensity", 1.0)),
+            "tempo": float(attrs.get("tempo", 1.0)),
+            "pitch": int(attrs.get("pitch", 0)),
+            "volume": int(attrs.get("volume", 100)),
+        }
+        raw = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        return hashlib.sha256(raw).hexdigest()
     with open(args.out_csv, "w", newline="") as f:
         w = csv.writer(f)
         w.writerow([
-            "id","speaker","audio","transcript",
+            "id",
+            "speaker",
+            "audio",        # either relative file path or s3:// uri (depending on args)
+            "audio_hash",   # sha256 of stable audio identity
+            "transcript",
             "emotion_preset","emotion_intensity","tempo","pitch","volume"
         ])
         for idx, (spk, txt, attrs) in enumerate(entries, start=1):
             rid = f"{idx:03d}"
-            audio = f"audio/{spk.upper()}_{rid}.wav"
+            ah = audio_hash_for(spk, txt, attrs)
+            if audio_s3_prefix:
+                # Store as audio/<hash>.wav (hash-only naming prevents renumber churn across edits)
+                audio = f"{audio_s3_prefix.rstrip('/')}/{ah}.wav"
+            else:
+                # Local default: keep legacy name for human readability, but include hash for caching/migration
+                audio = f"audio/{spk.upper()}_{rid}.wav"
             w.writerow([
                 rid,
                 spk,
                 audio,
+                ah,
                 txt,
                 attrs.get("emotion_preset","normal"),
                 attrs.get("emotion_intensity",1.0),

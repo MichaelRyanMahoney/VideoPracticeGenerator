@@ -13,7 +13,10 @@ import argparse
 import json
 import shlex
 import subprocess
+import os
+import tempfile
 from pathlib import Path
+import boto3
 
 
 def parse_timecode_to_seconds(tc: str) -> float:
@@ -130,6 +133,30 @@ def main():
 
     beats = data.get("beats", [])
     audio_offsets_ms: list[tuple[str, int]] = []
+
+    def is_s3(uri: str) -> bool:
+        return isinstance(uri, str) and uri.startswith("s3://")
+
+    def s3_parse(uri: str) -> tuple[str, str]:
+        assert uri.startswith("s3://")
+        no = uri[5:]
+        return no.split("/", 1)[0], no.split("/", 1)[1]
+
+    s3 = boto3.client("s3", region_name=os.environ.get("AWS_REGION") or os.environ.get("AWS_DEFAULT_REGION"))
+    dl_dir = Path(tempfile.mkdtemp(prefix="vpg_mux_audio_"))
+
+    def ensure_local_audio(audio_ref: str) -> Path:
+        if not is_s3(audio_ref):
+            return Path(audio_ref)
+        b, k = s3_parse(audio_ref)
+        safe = k.replace("/", "__")
+        dst = dl_dir / safe
+        if not dst.exists():
+            print(f"[s3] download {audio_ref} -> {dst}")
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            s3.download_file(b, k, str(dst))
+        return dst
+
     for b in beats:
         audio = (b.get("audio") or "").strip()
         if not audio:
@@ -137,12 +164,12 @@ def main():
         tc_in = b.get("tc_in") or "00:00:00.000"
         t_sec = parse_timecode_to_seconds(tc_in)
         delay_ms = int(round(t_sec * 1000.0))
-        p = Path(audio)
+        p = ensure_local_audio(audio)
         if not p.exists():
             # Skip missing audio with a notice; keep going
             print(f"[mux] Warning: missing audio file, skipping: {p}")
             continue
-        audio_offsets_ms.append((str(p), delay_ms))
+        audio_offsets_ms.append((str(p.resolve()), delay_ms))
 
     frames_pattern = str(Path(args.frames))
     out_mp4 = str(Path(args.out))

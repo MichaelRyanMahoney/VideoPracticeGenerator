@@ -31,6 +31,7 @@ CLI_FRAMES = False
 CLI_FRAME_START = None
 CLI_FRAME_END = None
 CLI_NO_CLEAN_FRAMES = False
+CLI_NO_AUDIO = False
 
 # Only animate these viseme keys (exact names on your shapekeys)
 ALLOWED_KEYS = set(OVR_VISEME_KEYS)
@@ -235,6 +236,46 @@ def tc_to_frame(tc, fps):
     h, m, s = tc.split(":")
     sec = float(h) * 3600 + float(m) * 60 + float(s)
     return int(round(sec * fps))
+
+
+def tc_to_seconds(tc: str) -> float:
+    try:
+        h, m, s = (tc or "00:00:00.000").split(":")
+        return float(h) * 3600 + float(m) * 60 + float(s)
+    except Exception:
+        return 0.0
+
+
+def estimate_timeline_end_seconds(beats: list, fallback_line_sec: float = 1.0) -> float:
+    """
+    Estimate end time when audio is not available/desired (e.g., distributed render workers).
+    We use:
+      - pause beats: tc_in + duration
+      - speech beats: max(tc_in + max(viseme.t), tc_in + fallback_line_sec)
+    """
+    end_s = 0.0
+    for b in beats or []:
+        tc_in = b.get("tc_in") or "00:00:00.000"
+        t0 = tc_to_seconds(tc_in)
+        if (b.get("type") or "").lower() == "pause" or not b.get("audio"):
+            try:
+                dur = float(b.get("duration", 1.0))
+            except Exception:
+                dur = 1.0
+            end_s = max(end_s, t0 + max(0.0, dur))
+            continue
+        # spoken beat
+        vmax = 0.0
+        try:
+            for ev in (b.get("visemes") or []):
+                try:
+                    vmax = max(vmax, float(ev.get("t", 0.0)))
+                except Exception:
+                    pass
+        except Exception:
+            vmax = 0.0
+        end_s = max(end_s, t0 + max(vmax - t0, fallback_line_sec))
+    return float(end_s)
 
 def ensure_seq():
     scn = bpy.context.scene
@@ -678,29 +719,34 @@ def main(director_path, outpath):
 
     # Lay audio strips and compute frame range
     total_end = 1
-    channel_for_char = {}
-    next_free_channel = 1
-    for b in beats:
-        # Handle explicit pause beats (no audio, no visemes); extend timeline only
-        if (b.get("type") or "").lower() == "pause" or not b.get("audio"):
+    if not CLI_NO_AUDIO:
+        channel_for_char = {}
+        next_free_channel = 1
+        for b in beats:
+            # Handle explicit pause beats (no audio, no visemes); extend timeline only
+            if (b.get("type") or "").lower() == "pause" or not b.get("audio"):
+                f_in = tc_to_frame(b["tc_in"], fps)
+                try:
+                    dur_f = int(round(float(b.get("duration", 1.0)) * fps))
+                except Exception:
+                    dur_f = int(round(1.0 * fps))
+                total_end = max(total_end, f_in + dur_f + 2)
+                continue
+            # Normal spoken beat with audio/visemes
+            char = b.get("char")
+            if not char or char not in char_map:
+                raise RuntimeError(f"Unknown or missing role '{char}' in beat")
             f_in = tc_to_frame(b["tc_in"], fps)
-            try:
-                dur_f = int(round(float(b.get("duration", 1.0)) * fps))
-            except Exception:
-                dur_f = int(round(1.0 * fps))
-            total_end = max(total_end, f_in + dur_f + 2)
-            continue
-        # Normal spoken beat with audio/visemes
-        char = b.get("char")
-        if not char or char not in char_map:
-            raise RuntimeError(f"Unknown or missing role '{char}' in beat")
-        f_in = tc_to_frame(b["tc_in"], fps)
-        if char not in channel_for_char:
-            channel_for_char[char] = next_free_channel
-            next_free_channel += 1
-        ch = channel_for_char[char]
-        snd = add_audio(b["audio"], frame_start=f_in, channel=ch)
-        total_end = max(total_end, f_in + snd.frame_final_duration + 2)
+            if char not in channel_for_char:
+                channel_for_char[char] = next_free_channel
+                next_free_channel += 1
+            ch = channel_for_char[char]
+            snd = add_audio(b["audio"], frame_start=f_in, channel=ch)
+            total_end = max(total_end, f_in + snd.frame_final_duration + 2)
+    else:
+        # Distributed render workers may not have audio locally; estimate timeline end from viseme times.
+        end_s = estimate_timeline_end_seconds(beats)
+        total_end = max(total_end, int(round(end_s * fps)) + 2)
 
     scene.frame_start = 1
     scene.frame_end = total_end
@@ -821,6 +867,7 @@ if __name__ == "__main__":
     ap.add_argument("--frame_start", type=int, help="Override scene.frame_start (chunked render).")
     ap.add_argument("--frame_end", type=int, help="Override scene.frame_end (chunked render).")
     ap.add_argument("--no_clean_frames", action="store_true", help="Do not delete existing frames in the output frames directory.")
+    ap.add_argument("--no_audio", action="store_true", help="Do not load audio into VSE; estimate timeline end from visemes instead (useful for distributed renders).")
     args = ap.parse_args(argv)
     if not args.out:
         project_root = Path(__file__).resolve().parent.parent
@@ -846,6 +893,7 @@ if __name__ == "__main__":
     CLI_FRAME_START = args.frame_start
     CLI_FRAME_END = args.frame_end
     CLI_NO_CLEAN_FRAMES = bool(args.no_clean_frames)
+    CLI_NO_AUDIO = bool(args.no_audio)
 
     # If CLI quality provided, inject into director JSON at runtime
     if args.quality:

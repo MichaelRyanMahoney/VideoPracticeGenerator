@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-import os, csv, json, argparse, requests, subprocess
+import os, csv, json, argparse, requests, subprocess, tempfile
 from pathlib import Path
+import boto3
 
 
 TYPECAST_API_URL = "https://api.typecast.ai/v1/text-to-speech"
@@ -133,6 +134,31 @@ def tts_typecast(api_key: str, voice_id: str, text: str, out_wav: Path,
         pass
 
 
+def _is_s3_uri(s: str) -> bool:
+    return isinstance(s, str) and s.startswith("s3://")
+
+
+def _s3_parse_uri(uri: str) -> tuple[str, str]:
+    assert uri.startswith("s3://"), f"Not an s3 uri: {uri}"
+    no = uri[5:]
+    b, k = no.split("/", 1)
+    return b, k
+
+
+def _s3_exists(s3, uri: str) -> bool:
+    b, k = _s3_parse_uri(uri)
+    try:
+        s3.head_object(Bucket=b, Key=k)
+        return True
+    except Exception:
+        return False
+
+
+def _s3_upload_file(s3, src: Path, uri: str) -> None:
+    b, k = _s3_parse_uri(uri)
+    s3.upload_file(str(src), b, k)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--manifest_csv", default=str(Path(__file__).resolve().parents[1] / "manifests/scene1.csv"))
@@ -170,10 +196,15 @@ def main():
         for row in rdr:
             rows.append(row)
 
+    s3 = boto3.client("s3", region_name=os.environ.get("AWS_REGION") or os.environ.get("AWS_DEFAULT_REGION")) if any(
+        (_is_s3_uri((r.get("audio") or "").strip()) for r in rows)
+    ) else None
+
     for row in rows:
         rid = row["id"].strip()
         speaker = row["speaker"].strip()
-        audio_out = Path(row["audio"].strip())
+        audio_raw = (row.get("audio") or "").strip()
+        audio_hash = (row.get("audio_hash") or "").strip()
         text = row["transcript"].strip()
 
         # Per-line overrides from CSV (fallback to internal defaults)
@@ -195,10 +226,22 @@ def main():
         except Exception:
             r_volume = DEFAULT_VOLUME
 
-        # Skip if exists
-        if audio_out.exists():
-            print(f"[skip] {rid} {speaker} -> {audio_out.name} (exists)")
-            continue
+        # Resolve audio destination
+        audio_is_s3 = _is_s3_uri(audio_raw)
+        if audio_is_s3:
+            if not s3:
+                raise SystemExit("audio is s3://... but boto3 client could not be created (missing AWS_REGION/AWS creds?)")
+            # Skip if already in S3
+            if _s3_exists(s3, audio_raw):
+                print(f"[skip] {rid} {speaker} -> {audio_hash or audio_raw} (s3 exists)")
+                continue
+            tmp_dir = Path(tempfile.mkdtemp(prefix="vpg_tts_"))
+            audio_out = tmp_dir / f"{audio_hash or (speaker + '_' + rid)}.wav"
+        else:
+            audio_out = Path(audio_raw)
+            if audio_out.exists():
+                print(f"[skip] {rid} {speaker} -> {audio_out.name} (exists)")
+                continue
 
         # Resolve voice id by speaker/role name with a few common variants
         vid = (
@@ -217,6 +260,12 @@ def main():
         tts_typecast(api_key, vid, text, audio_out,
                      emotion=r_emotion, emotion_intensity=r_intensity,
                      tempo=r_tempo, pitch=r_pitch, volume=r_volume)
+
+        # Upload if destination is S3
+        if audio_is_s3:
+            assert s3 is not None
+            print(f"[s3] upload -> {audio_raw}")
+            _s3_upload_file(s3, audio_out, audio_raw)
 
     print(f"Done. Generated {len(rows)} wav files via Typecast.")
 

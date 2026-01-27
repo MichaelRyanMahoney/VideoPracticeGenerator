@@ -1,0 +1,146 @@
+#!/usr/bin/env python3
+"""
+AWS Batch array-job entrypoint for parallel Blender rendering.
+
+It:
+  - Downloads director + generator_inputs from S3
+  - Computes total frame_end from director timeline (no audio required)
+  - Splits frames across array children and renders its shard via worker_render.py
+  - Uploads rendered PNG frames back to S3
+
+Expected environment:
+  - AWS_BATCH_JOB_ARRAY_INDEX set by Batch (0-based)
+  - VPG_RENDER_SHARDS or --shards (array size)
+"""
+
+import argparse
+import json
+import os
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+import boto3
+
+
+def s3_parse(uri: str) -> tuple[str, str]:
+    assert uri.startswith("s3://")
+    no = uri[5:]
+    return no.split("/", 1)[0], no.split("/", 1)[1]
+
+
+def s3_download(s3, uri: str, dest: Path) -> None:
+    b, k = s3_parse(uri)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    print(f"[s3] download {uri} -> {dest}")
+    s3.download_file(b, k, str(dest))
+
+
+def tc_to_seconds(tc: str) -> float:
+    try:
+        h, m, s = (tc or "00:00:00.000").split(":")
+        return float(h) * 3600 + float(m) * 60 + float(s)
+    except Exception:
+        return 0.0
+
+
+def estimate_end_seconds(director: dict) -> float:
+    beats = director.get("beats") or []
+    end_s = 0.0
+    for b in beats:
+        t0 = tc_to_seconds(b.get("tc_in") or "00:00:00.000")
+        if (b.get("type") or "").lower() == "pause":
+            try:
+                dur = float(b.get("duration", 1.0))
+            except Exception:
+                dur = 1.0
+            end_s = max(end_s, t0 + max(0.0, dur))
+            continue
+        vmax = 0.0
+        for ev in (b.get("visemes") or []):
+            try:
+                vmax = max(vmax, float(ev.get("t", 0.0)))
+            except Exception:
+                pass
+        # add a small tail so the last mouth close isn't cut off
+        end_s = max(end_s, max(vmax, t0) + 0.5)
+    return float(end_s)
+
+
+def run(cmd: list[str], cwd: Path | None = None) -> None:
+    print("[run]", " ".join(cmd))
+    res = subprocess.run(cmd, cwd=str(cwd) if cwd else None)
+    if res.returncode != 0:
+        raise SystemExit(res.returncode)
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--director_s3", required=True)
+    ap.add_argument("--generator_inputs_s3", required=True)
+    ap.add_argument("--frames_out_s3_prefix", required=True)
+    ap.add_argument("--shards", type=int, default=0, help="Total number of shards (array size). If 0, uses VPG_RENDER_SHARDS.")
+    ap.add_argument("--fps", type=int, default=0, help="Override FPS; if 0, use director fps or generator_inputs run.fps")
+    args = ap.parse_args()
+
+    shard_idx = int(os.environ.get("AWS_BATCH_JOB_ARRAY_INDEX", "0"))
+    shards = int(args.shards or os.environ.get("VPG_RENDER_SHARDS", "1"))
+    shards = max(1, shards)
+    if shard_idx < 0 or shard_idx >= shards:
+        raise SystemExit(f"Invalid shard index {shard_idx} for shards={shards}")
+
+    s3 = boto3.client("s3", region_name=os.environ.get("AWS_REGION") or os.environ.get("AWS_DEFAULT_REGION"))
+    work = Path(tempfile.mkdtemp(prefix="vpg_render_shard_"))
+    local_director = work / "director.json"
+    local_gen = work / "generator_inputs.json"
+    s3_download(s3, args.director_s3, local_director)
+    s3_download(s3, args.generator_inputs_s3, local_gen)
+
+    director = json.loads(local_director.read_text())
+    fps = None
+    if int(args.fps or 0) > 0:
+        fps = int(args.fps)
+    else:
+        try:
+            gi = json.loads(local_gen.read_text())
+            fps = int(((gi.get("run") or {}).get("fps")) or 0) or None
+        except Exception:
+            fps = None
+        if fps is None:
+            fps = int(director.get("fps", 24))
+    fps = int(fps or 24)
+
+    end_s = estimate_end_seconds(director)
+    total_frames = max(1, int(round(end_s * fps)) + 2)
+
+    # Split [1..total_frames] across shards
+    frames_per = (total_frames + shards - 1) // shards
+    frame_start = shard_idx * frames_per + 1
+    frame_end = min(total_frames, (shard_idx + 1) * frames_per)
+    if frame_start > frame_end:
+        print(f"[info] shard {shard_idx}: nothing to render (frame_start > frame_end). Exiting.")
+        return
+
+    print(f"[shard] idx={shard_idx}/{shards} fps={fps} end_s={end_s:.3f} total_frames={total_frames} range=[{frame_start},{frame_end}]")
+
+    # Delegate to worker_render (which runs Blender). It will upload PNGs to S3 prefix.
+    project_root = Path(__file__).resolve().parents[1]
+    worker = project_root / "scripts" / "worker_render.py"
+    run([
+        sys.executable,
+        str(worker),
+        "--director_s3", args.director_s3,
+        "--generator_inputs_s3", args.generator_inputs_s3,
+        "--frames_out_s3_prefix", args.frames_out_s3_prefix,
+        "--frame_start", str(int(frame_start)),
+        "--frame_end", str(int(frame_end)),
+        "--transparent",
+    ], cwd=project_root)
+
+    print("[batch_render_array_entrypoint] done.")
+
+
+if __name__ == "__main__":
+    main()
+

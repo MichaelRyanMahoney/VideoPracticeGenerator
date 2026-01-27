@@ -90,6 +90,7 @@ def main():
         "--out", str(out_video),
         "--frame_start", str(int(args.frame_start)),
         "--frame_end", str(int(args.frame_end)),
+        "--no_audio",
         "--no_clean_frames",
     ]
     if args.transparent:
