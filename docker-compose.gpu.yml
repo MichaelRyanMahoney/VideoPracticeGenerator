@@ -1,0 +1,21 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    # Requires: NVIDIA drivers on host + nvidia-container-toolkit installed.
+    # With Docker Compose v2+, this passes the GPU into the container.
+    gpus: all
+    environment:
+      - VPG_DATA_DIR=/data
+      - VPG_BLENDER_BIN=/usr/local/bin/blender
+      # On EC2/GPU we typically want full Blender pipeline enabled:
+      - VPG_SKIP_RENDER=0
+      - VPG_SKIP_MUX=0
+      - VPG_SKIP_BLENDER=0
+      # Optional: enable if you hit GL/context issues. Note: Xvfb may force software GL for Eevee.
+      # - VPG_XVFB=1
+    volumes:
+      - ./:/app
+      - ./data:/data
+

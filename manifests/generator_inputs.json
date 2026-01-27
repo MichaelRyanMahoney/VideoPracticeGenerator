@@ -3,8 +3,8 @@
     "project_name": "Testing_FourHeads",
     "fps": 2,
     "resolution": { "width": 1920, "height": 1080 },
-    "render_engine": "BLENDER_EEVEE", 
-    "samples": 64,
+    "render_engine": "CYCLES", 
+    "samples": 24,
     "output_dir": "../renders",
     "audio_sample_rate": 48000,
     "seed": 42

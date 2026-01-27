@@ -7,6 +7,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+import os
 
 
 def run_cmd(cmd: list[str], cwd: Path | None = None) -> None:
@@ -110,7 +111,8 @@ def main():
             raise SystemExit("default_character_blend not set in config.")
         if not Path(default_character_blend).exists():
             raise SystemExit(f"default_character_blend not found: {default_character_blend}")
-        cmd_gen = [
+        pre = ["xvfb-run", "-a", "-s", "-screen 0 1920x1080x24"] if os.environ.get("VPG_XVFB") == "1" else []
+        cmd_gen = pre + [
             str(blender_bin),
             "-b",
             str(default_character_blend),
@@ -133,7 +135,8 @@ def main():
     export_script = project_root / "scripts" / "blender_export_characters.py"
     if run_export_chars and export_script.exists():
         ensure_parent(export_chars_out_dir / "x")
-        cmd_export = [
+        pre = ["xvfb-run", "-a", "-s", "-screen 0 1920x1080x24"] if os.environ.get("VPG_XVFB") == "1" else []
+        cmd_export = pre + [
             str(blender_bin),
             "-b",
             str(tmp_scene),
@@ -165,7 +168,8 @@ def main():
     else:
         if not cfg_script.exists():
             raise SystemExit(f"Missing script: {cfg_script}")
-        cmd_cfg = [
+        pre = ["xvfb-run", "-a", "-s", "-screen 0 1920x1080x24"] if os.environ.get("VPG_XVFB") == "1" else []
+        cmd_cfg = pre + [
             str(blender_bin),
             "-b",
             str(tmp_scene),
@@ -250,7 +254,8 @@ def main():
         if not run_director_py.exists():
             raise SystemExit(f"Missing script: {run_director_py}")
         ensure_parent(out_video)
-        cmd_render = [
+        pre = ["xvfb-run", "-a", "-s", "-screen 0 1920x1080x24"] if os.environ.get("VPG_XVFB") == "1" else []
+        cmd_render = pre + [
             str(blender_bin),
             "-b",
             str(tmp_scene),

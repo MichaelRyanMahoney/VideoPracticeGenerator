@@ -34,6 +34,96 @@ except Exception as e:
     sys.exit(1)
 
 
+def _configure_cycles_gpu(samples: int | None = None) -> None:
+    """
+    Force Cycles with GPU (prefer OPTIX, fallback CUDA). Safe no-op if unavailable.
+    """
+    scene = bpy.context.scene
+    def _log_devices(tag: str) -> None:
+        try:
+            prefs = bpy.context.preferences
+            cprefs = prefs.addons["cycles"].preferences
+            devs = []
+            for d in getattr(cprefs, "devices", []) or []:
+                devs.append(
+                    {
+                        "name": getattr(d, "name", ""),
+                        "type": getattr(d, "type", ""),
+                        "use": bool(getattr(d, "use", False)),
+                    }
+                )
+            compute_type = getattr(cprefs, "compute_device_type", None)
+            scene_device = getattr(getattr(scene, "cycles", None), "device", None)
+            print(f"[cycles] {tag}: compute_device_type={compute_type} scene.cycles.device={scene_device} devices={devs}")
+        except Exception as ex:
+            print(f"[cycles] {tag}: (unable to log devices) {ex}")
+    print(f"[cycles] configure requested: samples={samples}")
+    # Blender 4.x uses render engines: ('BLENDER_EEVEE', 'BLENDER_WORKBENCH', 'CYCLES')
+    try:
+        scene.render.engine = "CYCLES"
+    except Exception as ex:
+        print(f"[cycles] ERROR: failed to set render engine to CYCLES: {ex}")
+        return
+    try:
+        prefs = bpy.context.preferences
+        cprefs = prefs.addons["cycles"].preferences
+        for backend in ("OPTIX", "CUDA"):
+            try:
+                cprefs.compute_device_type = backend
+                try:
+                    cprefs.get_devices()
+                except Exception:
+                    pass
+                # Enable only devices matching the chosen backend.
+                any_backend_device = False
+                for dev in getattr(cprefs, "devices", []) or []:
+                    use = bool(getattr(dev, "type", None) == backend)
+                    try:
+                        dev.use = use
+                    except Exception:
+                        pass
+                    if use:
+                        any_backend_device = True
+                # If Blender didn't expose any devices for this backend, try the next backend.
+                if not any_backend_device:
+                    _log_devices(f"backend={backend} has no matching devices; trying next backend")
+                    continue
+                try:
+                    scene.cycles.device = "GPU"
+                except Exception:
+                    pass
+                _log_devices(f"selected backend={backend}")
+                break
+            except Exception:
+                continue
+        if samples and samples > 0:
+            try:
+                scene.cycles.samples = int(samples)
+            except Exception:
+                pass
+        try:
+            scene.cycles.use_adaptive_sampling = True
+        except Exception:
+            pass
+        try:
+            print(f"[cycles] effective: engine={scene.render.engine} cycles.device={scene.cycles.device} cycles.samples={getattr(scene.cycles, 'samples', None)}")
+        except Exception:
+            pass
+        # Warn if we failed to enable any GPU devices (common when container/host lacks NVIDIA runtime)
+        try:
+            any_gpu = False
+            for d in getattr(cprefs, "devices", []) or []:
+                if getattr(d, "type", None) in ("OPTIX", "CUDA") and bool(getattr(d, "use", False)):
+                    any_gpu = True
+                    break
+            if not any_gpu:
+                _log_devices("WARNING no CUDA/OPTIX devices enabled; Cycles will likely render on CPU")
+        except Exception:
+            pass
+    except Exception as ex:
+        print(f"[cycles] ERROR: failed to configure Cycles GPU: {ex}")
+
+
 def set_transparent_render(image_width: int | None = None) -> None:
     scene = bpy.context.scene
     render = scene.render
@@ -208,6 +298,17 @@ def main(argv: list[str]) -> int:
     out_dir = Path(args.output_dir).resolve()
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    # Ensure Cycles GPU for still exports. Try to honor samples from generator_inputs_json if present.
+    desired_samples = None
+    try:
+        import json as _json
+        if args.generator_inputs_json:
+            _cfg = _json.loads(Path(args.generator_inputs_json).read_text())
+            desired_samples = int((_cfg.get("run") or {}).get("samples") or 0) or None
+    except Exception:
+        desired_samples = None
+    _configure_cycles_gpu(desired_samples)
+    # Re-apply transparent settings now that engine is set
     set_transparent_render(args.image_width or None)
 
     # Optionally set a specific camera

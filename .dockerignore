@@ -1,0 +1,11 @@
+.venv/
+data/
+out/
+nltk_data/
+__pycache__/
+.git/
+.DS_Store
+*.pyc
+*.mp4
+*.png
+*.blend1

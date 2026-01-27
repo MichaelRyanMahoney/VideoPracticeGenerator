@@ -28,6 +28,9 @@ CLI_VIEWPORT_RENDER = False
 CLI_NO_RENDER = False
 CLI_TRANSPARENT = False
 CLI_FRAMES = False
+CLI_FRAME_START = None
+CLI_FRAME_END = None
+CLI_NO_CLEAN_FRAMES = False
 
 # Only animate these viseme keys (exact names on your shapekeys)
 ALLOWED_KEYS = set(OVR_VISEME_KEYS)
@@ -369,6 +372,23 @@ def fade_object_materials(obj, frame_start, frame_end, from_alpha=0.0, to_alpha=
 def main(director_path, outpath):
     data = json.loads(Path(director_path).read_text())
     scene = bpy.context.scene
+    def _log_cycles_devices(tag: str) -> None:
+        try:
+            cprefs = bpy.context.preferences.addons["cycles"].preferences
+            devs = []
+            for d in getattr(cprefs, "devices", []) or []:
+                devs.append(
+                    {
+                        "name": getattr(d, "name", ""),
+                        "type": getattr(d, "type", ""),
+                        "use": bool(getattr(d, "use", False)),
+                    }
+                )
+            compute_type = getattr(cprefs, "compute_device_type", None)
+            scene_device = getattr(getattr(scene, "cycles", None), "device", None)
+            print(f"[cycles] {tag}: compute_device_type={compute_type} scene.cycles.device={scene_device} devices={devs}")
+        except Exception as ex:
+            print(f"[cycles] {tag}: (unable to log devices) {ex}")
 
     # Timing tunables (JSON-configurable and CLI-overridable)
     global LEAD_FRAMES, ATTACK_FRAMES, RELEASE_FRAMES, MIN_HOLD_FRAMES, MAX_OVERLAP_FRAMES, TIME_OFFSET_SEC
@@ -433,10 +453,109 @@ def main(director_path, outpath):
         scene.render.ffmpeg.audio_bitrate = 192000
         scene.render.ffmpeg.audio_channels = "STEREO"
 
-    # Select render engine (JSON or CLI): 'eevee' (default) or 'workbench'
-    engine_opt = (data.get("render", {}).get("engine") or CLI_ENGINE or "eevee").lower()
+    # Select render engine with precedence: CLI > generator_inputs.json > director JSON > default
+    # Normalize generator_inputs run.render_engine if provided
+    engine_from_gen = None
+    try:
+        project_root = Path(__file__).resolve().parent.parent
+        _gen_inputs_path = project_root / "manifests" / "generator_inputs.json"
+        if _gen_inputs_path.exists():
+            _gen_inputs = json.loads(_gen_inputs_path.read_text())
+            _run_cfg = _gen_inputs.get("run") or {}
+            _re = str(_run_cfg.get("render_engine") or "").strip().lower()
+            if _re in ("blender_eevee", "eevee"):
+                engine_from_gen = "eevee"
+            elif _re in ("blender_workbench", "workbench"):
+                engine_from_gen = "workbench"
+            elif _re in ("blender_cycles", "cycles"):
+                engine_from_gen = "cycles"
+    except Exception:
+        engine_from_gen = None
+    # Director JSON engine (if any)
+    engine_from_director = (data.get("render", {}).get("engine") or "").strip().lower()
+    if engine_from_director in ("blender_eevee",):
+        engine_from_director = "eevee"
+    elif engine_from_director in ("blender_workbench",):
+        engine_from_director = "workbench"
+    elif engine_from_director in ("blender_cycles",):
+        engine_from_director = "cycles"
+    # Compute final engine
+    engine_opt = (CLI_ENGINE or engine_from_gen or engine_from_director or "eevee")
+    engine_opt = engine_opt.lower()
     if engine_opt in ("workbench", "blender_workbench"):
         scene.render.engine = "BLENDER_WORKBENCH"
+    elif engine_opt in ("cycles", "blender_cycles"):
+        scene.render.engine = "CYCLES"
+        # Configure Cycles GPU (prefer OPTIX, fallback CUDA)
+        try:
+            # Pull run settings (samples) if available
+            project_root = Path(__file__).resolve().parent.parent
+            gen_inputs_path = project_root / "manifests" / "generator_inputs.json"
+            try:
+                gen_inputs = json.loads(gen_inputs_path.read_text())
+            except Exception:
+                gen_inputs = {}
+            run_cfg = gen_inputs.get("run") or {}
+            desired_samples = int(run_cfg.get("samples", 64))
+        except Exception:
+            desired_samples = 64
+        try:
+            prefs = bpy.context.preferences
+            cprefs = prefs.addons["cycles"].preferences
+            # Try OPTIX first
+            for backend in ("OPTIX", "CUDA"):
+                try:
+                    cprefs.compute_device_type = backend
+                    # Refresh devices
+                    try:
+                        cprefs.get_devices()
+                    except Exception:
+                        pass
+                    # Enable only devices matching the chosen backend.
+                    any_backend_device = False
+                    for dev in getattr(cprefs, "devices", []) or []:
+                        use = bool(getattr(dev, "type", None) == backend)
+                        try:
+                            dev.use = use
+                        except Exception:
+                            pass
+                        if use:
+                            any_backend_device = True
+                    # If Blender didn't expose any devices for this backend, try the next backend.
+                    if not any_backend_device:
+                        _log_cycles_devices(f"backend={backend} has no matching devices; trying next backend")
+                        continue
+                    try:
+                        scene.cycles.device = "GPU"
+                    except Exception:
+                        pass
+                    _log_cycles_devices(f"selected backend={backend}")
+                    break
+                except Exception:
+                    continue
+            # Samples
+            try:
+                scene.cycles.samples = int(desired_samples)
+            except Exception:
+                pass
+            # Adaptive can help
+            try:
+                scene.cycles.use_adaptive_sampling = True
+            except Exception:
+                pass
+            # Warn if we failed to enable any GPU devices (common when container/host lacks NVIDIA runtime)
+            try:
+                any_gpu = False
+                for d in getattr(cprefs, "devices", []) or []:
+                    if getattr(d, "type", None) in ("OPTIX", "CUDA") and bool(getattr(d, "use", False)):
+                        any_gpu = True
+                        break
+                if not any_gpu:
+                    _log_cycles_devices("WARNING no CUDA/OPTIX devices enabled; Cycles will likely render on CPU")
+            except Exception:
+                pass
+        except Exception as ex:
+            print(f"[cycles] Warning: failed to configure GPU devices: {ex}")
     else:
         scene.render.engine = "BLENDER_EEVEE"
 
@@ -585,6 +704,14 @@ def main(director_path, outpath):
 
     scene.frame_start = 1
     scene.frame_end = total_end
+    # CLI overrides for chunked rendering
+    try:
+        if CLI_FRAME_START is not None:
+            scene.frame_start = max(1, int(CLI_FRAME_START))
+        if CLI_FRAME_END is not None:
+            scene.frame_end = max(scene.frame_start, int(CLI_FRAME_END))
+    except Exception:
+        pass
 
     # Apply visemes
     for b in beats:
@@ -632,16 +759,17 @@ def main(director_path, outpath):
         # Write frames to out/<stem>_frames/<stem>_####.png
         out_p = Path(outpath)
         frames_dir = out_p.parent / f"{out_p.stem}_frames"
-        # Clean any existing PNG frames to avoid mixing old/new frames
-        try:
-            if frames_dir.exists():
-                for f in frames_dir.glob("*.png"):
-                    try:
-                        f.unlink()
-                    except Exception:
-                        pass
-        except Exception:
-            pass
+        # Clean any existing PNG frames to avoid mixing old/new frames unless disabled
+        if not CLI_NO_CLEAN_FRAMES:
+            try:
+                if frames_dir.exists():
+                    for f in frames_dir.glob("*.png"):
+                        try:
+                            f.unlink()
+                        except Exception:
+                            pass
+            except Exception:
+                pass
         frames_dir.mkdir(parents=True, exist_ok=True)
         scene.render.filepath = str(frames_dir / f"{out_p.stem}_####")
     else:
@@ -685,11 +813,14 @@ if __name__ == "__main__":
     ap.add_argument("--time_offset_sec", type=float)
     ap.add_argument("--smooth_factor", type=float)
     ap.add_argument("--quality", choices=["fast","full"], help="Override render quality preset")
-    ap.add_argument("--engine", choices=["eevee","workbench"], help="Render engine override (defaults to eevee)")
+    ap.add_argument("--engine", choices=["eevee","workbench","cycles"], help="Render engine override")
     ap.add_argument("--prepare_viewport_blend", help="Path to save a playback-ready .blend (visemes keyed, audio laid out).")
     ap.add_argument("--viewport_render", action="store_true", help="Use Viewport Render Animation (UI mode only; much faster).")
     ap.add_argument("--no_render", action="store_true", help="Prepare scene (and optional .blend) but do not render.")
     ap.add_argument("--transparent", action="store_true", help="Enable Film Transparent and render PNG RGBA frames (alpha-friendly).")
+    ap.add_argument("--frame_start", type=int, help="Override scene.frame_start (chunked render).")
+    ap.add_argument("--frame_end", type=int, help="Override scene.frame_end (chunked render).")
+    ap.add_argument("--no_clean_frames", action="store_true", help="Do not delete existing frames in the output frames directory.")
     args = ap.parse_args(argv)
     if not args.out:
         project_root = Path(__file__).resolve().parent.parent
@@ -712,6 +843,9 @@ if __name__ == "__main__":
     CLI_VIEWPORT_RENDER = bool(args.viewport_render)
     CLI_NO_RENDER = bool(args.no_render)
     CLI_TRANSPARENT = bool(args.transparent)
+    CLI_FRAME_START = args.frame_start
+    CLI_FRAME_END = args.frame_end
+    CLI_NO_CLEAN_FRAMES = bool(args.no_clean_frames)
 
     # If CLI quality provided, inject into director JSON at runtime
     if args.quality:
