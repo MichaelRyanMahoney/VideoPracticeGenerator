@@ -15,6 +15,7 @@ import time
 from pathlib import Path
 
 import boto3
+from botocore.exceptions import NoCredentialsError
 
 from .aws_pipeline import submit_full_job
 
@@ -29,12 +30,18 @@ def main():
     project_root = Path(__file__).resolve().parents[1]
 
     while True:
-        resp = sqs.receive_message(
-            QueueUrl=queue_url,
-            MaxNumberOfMessages=1,
-            WaitTimeSeconds=20,
-            VisibilityTimeout=600,
-        )
+        try:
+            resp = sqs.receive_message(
+                QueueUrl=queue_url,
+                MaxNumberOfMessages=1,
+                WaitTimeSeconds=20,
+                VisibilityTimeout=600,
+            )
+        except NoCredentialsError:
+            # Common first-run misconfig: instance has no IAM role / metadata not reachable from container.
+            print("[worker] No AWS credentials available (NoCredentialsError). Attach an IAM role to the EC2 instance and/or enable IMDS access. Retrying in 10s...")
+            time.sleep(10)
+            continue
         msgs = resp.get("Messages") or []
         if not msgs:
             continue
@@ -49,9 +56,23 @@ def main():
             submit_full_job(project_root, project_id, job_id, script_path, gen_path)
             sqs.delete_message(QueueUrl=queue_url, ReceiptHandle=receipt)
         except Exception as ex:
-            # Leave message for retry by letting visibility timeout expire.
+            # Hard failure: record it and delete the message to avoid infinite re-processing loops.
+            # (Retries should be handled via explicit re-submit or an SQS DLQ policy.)
+            try:
+                from .aws_pipeline import load_aws_config, job_paths, write_status
+
+                cfg = load_aws_config()
+                s3 = boto3.client("s3", region_name=cfg.region)
+                paths = job_paths(cfg, project_id, job_id)
+                write_status(s3, paths["status"], job_id, "failed", {"error": str(ex)})
+            except Exception:
+                pass
             print("[worker] error:", ex)
-            time.sleep(5)
+            try:
+                sqs.delete_message(QueueUrl=queue_url, ReceiptHandle=receipt)
+            except Exception:
+                pass
+            time.sleep(2)
 
 
 if __name__ == "__main__":

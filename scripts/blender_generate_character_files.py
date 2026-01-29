@@ -2,6 +2,9 @@ import json
 import sys
 from pathlib import Path
 import re
+import os
+import shutil
+import tempfile
 
 import bpy
 
@@ -23,15 +26,31 @@ def parse_args(default_base: Path) -> dict:
     while i < len(args):
         a = args[i]
         if a == "--config" and i + 1 < len(args):
-            opts["config"] = str(Path(args[i + 1]).expanduser().resolve())
+            p = Path(args[i + 1]).expanduser()
+            try:
+                p = p.resolve(strict=False)
+            except TypeError:
+                # Older Python may not support strict=
+                p = p.resolve()
+            opts["config"] = str(p)
             i += 2
             continue
         if a == "--source" and i + 1 < len(args):
-            opts["source"] = str(Path(args[i + 1]).expanduser().resolve())
+            p = Path(args[i + 1]).expanduser()
+            try:
+                p = p.resolve(strict=False)
+            except TypeError:
+                p = p.resolve()
+            opts["source"] = str(p)
             i += 2
             continue
         if a == "--outdir" and i + 1 < len(args):
-            opts["outdir"] = str(Path(args[i + 1]).expanduser().resolve())
+            p = Path(args[i + 1]).expanduser()
+            try:
+                p = p.resolve(strict=False)
+            except TypeError:
+                p = p.resolve()
+            opts["outdir"] = str(p)
             i += 2
             continue
         if a == "--dry-run":
@@ -39,7 +58,12 @@ def parse_args(default_base: Path) -> dict:
             i += 1
             continue
         if a == "--append-scene" and i + 1 < len(args):
-            opts["append_scene"] = str(Path(args[i + 1]).expanduser().resolve())
+            p = Path(args[i + 1]).expanduser()
+            try:
+                p = p.resolve(strict=False)
+            except TypeError:
+                p = p.resolve()
+            opts["append_scene"] = str(p)
             i += 2
             continue
         if a == "--scene-save":
@@ -47,7 +71,12 @@ def parse_args(default_base: Path) -> dict:
             i += 1
             continue
         if a == "--scene-save-as" and i + 1 < len(args):
-            opts["scene_save_as"] = str(Path(args[i + 1]).expanduser().resolve())
+            p = Path(args[i + 1]).expanduser()
+            try:
+                p = p.resolve(strict=False)
+            except TypeError:
+                p = p.resolve()
+            opts["scene_save_as"] = str(p)
             i += 2
             continue
         i += 1
@@ -456,12 +485,61 @@ def main():
             print("[DRY] Would save scene with appended characters.")
         else:
             if opts["scene_save_as"]:
-                print(f"[SAVE] Scene as: {opts['scene_save_as']}")
-                bpy.ops.wm.save_as_mainfile(filepath=opts["scene_save_as"], copy=False)
+                scene_save_as = Path(opts["scene_save_as"])
+                # Ensure destination directory exists; Blender will fail with a
+                # generic "No such file or directory" if it doesn't.
+                scene_save_as.parent.mkdir(parents=True, exist_ok=True)
+                print(f"[SAVE] Scene as: {scene_save_as}")
+                # Preflight: verify we can write to the directory from Python
+                try:
+                    can_write = os.access(str(scene_save_as.parent), os.W_OK)
+                    can_exec = os.access(str(scene_save_as.parent), os.X_OK)
+                    tmp_probe = scene_save_as.parent / ".vpg_write_probe"
+                    tmp_probe.write_text("ok", encoding="utf-8")
+                    tmp_probe.unlink(missing_ok=True)
+                    print(f"[SAVE] preflight ok: parent W_OK={can_write} X_OK={can_exec}")
+                except Exception as ex:
+                    print(f"[WARN] preflight write probe failed: {ex}")
+                try:
+                    # In headless Batch, it's safer to avoid any interactive overwrite checks.
+                    # Also, copy=True avoids some edge cases around moving/renaming the currently-open file.
+                try:
+                        bpy.ops.wm.save_as_mainfile(filepath=str(scene_save_as), copy=True, check_existing=False)
+                    except TypeError:
+                        bpy.ops.wm.save_as_mainfile(filepath=str(scene_save_as), copy=True)
+                except Exception as ex:
+                    print(f"[WARN] save_as_mainfile failed: {ex}")
+                    print(f"[WARN] scene_save_as exists? {scene_save_as.exists()} parent_dir={scene_save_as.parent} parent_exists={scene_save_as.parent.exists()}")
+                    # Fallback: save into outdir (already proven writable earlier), then copy into place.
+                    recovered = False
+                    try:
+                        outdir = Path(opts["outdir"])
+                        outdir.mkdir(parents=True, exist_ok=True)
+                        fallback = outdir / f"__prepared_scene_fallback_{scene_save_as.name}"
+                        print(f"[WARN] retry save -> {fallback}")
+                        try:
+                            bpy.ops.wm.save_as_mainfile(filepath=str(fallback), copy=True, check_existing=False)
+                        except TypeError:
+                            bpy.ops.wm.save_as_mainfile(filepath=str(fallback), copy=True)
+                        # Copy into final destination
+                        scene_save_as.parent.mkdir(parents=True, exist_ok=True)
+                        shutil.copy2(str(fallback), str(scene_save_as))
+                        print(f"[WARN] copied fallback scene -> {scene_save_as} size={scene_save_as.stat().st_size}")
+                        recovered = True
+                    except Exception as ex2:
+                        print(f"[WARN] fallback save/copy failed: {ex2}")
+                    if not recovered:
+                    raise
             elif opts["scene_save"]:
                 if bpy.data.filepath:
                     print(f"[SAVE] Scene in place: {bpy.data.filepath}")
-                    bpy.ops.wm.save_mainfile(filepath=bpy.data.filepath)
+                    try:
+                        bpy.ops.wm.save_mainfile(filepath=bpy.data.filepath)
+                    except Exception as ex:
+                        # Blender sometimes throws a confusing RuntimeError like "Error: Success"
+                        # even though the file may be writable. Fall back to save_as_mainfile.
+                        print(f"[WARN] save_mainfile failed ({ex}); retrying with save_as_mainfile...")
+                        bpy.ops.wm.save_as_mainfile(filepath=bpy.data.filepath, copy=False)
                 else:
                     print("[WARN] No scene path; use --scene-save-as.")
 

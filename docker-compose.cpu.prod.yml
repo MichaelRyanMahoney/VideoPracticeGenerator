@@ -1,0 +1,25 @@
+services:
+  api:
+    image: ${VPG_CPU_IMAGE}
+    env_file:
+      - ./config.env
+    environment:
+      # Ensure the CPU instance finalizes automatically after GPU render completes
+      - VPG_RUN_FINALIZE=1
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    volumes:
+      - ./data:/data
+
+  worker:
+    image: ${VPG_CPU_IMAGE}
+    env_file:
+      - ./config.env
+    environment:
+      - VPG_RUN_FINALIZE=1
+    command: ["python", "-m", "app.worker"]
+    restart: unless-stopped
+    volumes:
+      - ./data:/data
+

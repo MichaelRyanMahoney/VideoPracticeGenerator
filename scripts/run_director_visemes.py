@@ -5,6 +5,7 @@ sys.path.insert(0, str(_Path(__file__).parent.resolve()))
 
 import bpy, json, argparse, random
 from pathlib import Path
+import os
 from ovr_viseme_map import OVR_VISEME_KEYS
 
 # -----------------------
@@ -413,6 +414,19 @@ def fade_object_materials(obj, frame_start, frame_end, from_alpha=0.0, to_alpha=
 def main(director_path, outpath):
     data = json.loads(Path(director_path).read_text())
     scene = bpy.context.scene
+
+    # Prefer the job-provided generator inputs path if set (worker_render sets this),
+    # otherwise fall back to the repo default.
+    project_root = Path(__file__).resolve().parent.parent
+    _gen_inputs_env = (os.environ.get("VPG_GENERATOR_INPUTS_JSON") or os.environ.get("VPG_GENERATOR_INPUTS_JSON_PATH") or "").strip()
+    gen_inputs_path = Path(_gen_inputs_env).expanduser() if _gen_inputs_env else (project_root / "manifests" / "generator_inputs.json")
+    gen_inputs = {}
+    if gen_inputs_path.exists():
+        try:
+            gen_inputs = json.loads(gen_inputs_path.read_text())
+        except Exception:
+            gen_inputs = {}
+    print(f"[vpg] generator_inputs_path={gen_inputs_path} exists={gen_inputs_path.exists()}", flush=True)
     def _log_cycles_devices(tag: str) -> None:
         try:
             cprefs = bpy.context.preferences.addons["cycles"].preferences
@@ -498,18 +512,14 @@ def main(director_path, outpath):
     # Normalize generator_inputs run.render_engine if provided
     engine_from_gen = None
     try:
-        project_root = Path(__file__).resolve().parent.parent
-        _gen_inputs_path = project_root / "manifests" / "generator_inputs.json"
-        if _gen_inputs_path.exists():
-            _gen_inputs = json.loads(_gen_inputs_path.read_text())
-            _run_cfg = _gen_inputs.get("run") or {}
-            _re = str(_run_cfg.get("render_engine") or "").strip().lower()
-            if _re in ("blender_eevee", "eevee"):
-                engine_from_gen = "eevee"
-            elif _re in ("blender_workbench", "workbench"):
-                engine_from_gen = "workbench"
-            elif _re in ("blender_cycles", "cycles"):
-                engine_from_gen = "cycles"
+        _run_cfg = (gen_inputs.get("run") or {})
+        _re = str(_run_cfg.get("render_engine") or "").strip().lower()
+        if _re in ("blender_eevee", "eevee"):
+            engine_from_gen = "eevee"
+        elif _re in ("blender_workbench", "workbench"):
+            engine_from_gen = "workbench"
+        elif _re in ("blender_cycles", "cycles"):
+            engine_from_gen = "cycles"
     except Exception:
         engine_from_gen = None
     # Director JSON engine (if any)
@@ -530,16 +540,14 @@ def main(director_path, outpath):
         # Configure Cycles GPU (prefer OPTIX, fallback CUDA)
         try:
             # Pull run settings (samples) if available
-            project_root = Path(__file__).resolve().parent.parent
-            gen_inputs_path = project_root / "manifests" / "generator_inputs.json"
-            try:
-                gen_inputs = json.loads(gen_inputs_path.read_text())
-            except Exception:
-                gen_inputs = {}
             run_cfg = gen_inputs.get("run") or {}
             desired_samples = int(run_cfg.get("samples", 64))
+            denoise_enabled = bool(run_cfg.get("denoise", True))
+            denoiser_pref = str(run_cfg.get("denoiser", "OPTIX")).strip().upper()
         except Exception:
             desired_samples = 64
+            denoise_enabled = True
+            denoiser_pref = "OPTIX"
         try:
             prefs = bpy.context.preferences
             cprefs = prefs.addons["cycles"].preferences
@@ -579,6 +587,32 @@ def main(director_path, outpath):
                 scene.cycles.samples = int(desired_samples)
             except Exception:
                 pass
+            # Denoising (huge speedup at low samples). Prefer OPTIX on NVIDIA if available.
+            try:
+                # Blender typically stores denoising on the View Layer in Cycles.
+                vl = bpy.context.view_layer
+                if hasattr(vl, "cycles"):
+                    try:
+                        vl.cycles.use_denoising = bool(denoise_enabled)
+                    except Exception:
+                        pass
+                    if denoise_enabled:
+                        # Only set denoiser if the property exists (varies across versions)
+                        for target in (vl.cycles, scene.cycles):
+                            try:
+                                if hasattr(target, "denoiser"):
+                                    # OPTIX (fast on NVIDIA) or OPENIMAGEDENOISE
+                                    if denoiser_pref in ("OPTIX", "OPENIMAGEDENOISE"):
+                                        target.denoiser = denoiser_pref
+                            except Exception:
+                                pass
+            except Exception:
+                pass
+            # Reuse Cycles caches across frames; helps when rendering many frames.
+            try:
+                scene.render.use_persistent_data = True
+            except Exception:
+                pass
             # Adaptive can help
             try:
                 scene.cycles.use_adaptive_sampling = True
@@ -599,6 +633,7 @@ def main(director_path, outpath):
             print(f"[cycles] Warning: failed to configure GPU devices: {ex}")
     else:
         scene.render.engine = "BLENDER_EEVEE"
+    # We will print final engine/settings after we apply any generator_inputs overrides + quality preset.
 
     fps = int(data.get("fps", 24))
     scene.render.fps = fps
@@ -672,12 +707,8 @@ def main(director_path, outpath):
 
     # Characters setup (role-based; no backwards compatibility with name-based mapping)
     # Load role-to-prefix and genders from generator_inputs.json
-    project_root = Path(__file__).resolve().parent.parent
-    gen_inputs_path = project_root / "manifests" / "generator_inputs.json"
-    try:
-        gen_inputs = json.loads(gen_inputs_path.read_text())
-    except Exception as ex:
-        raise RuntimeError(f"Failed to read generator inputs at {gen_inputs_path}: {ex}")
+    if not gen_inputs:
+        raise RuntimeError(f"Failed to read generator inputs at {gen_inputs_path}")
     # Apply run settings (fps, resolution, engine) if present
     run_cfg = gen_inputs.get("run") or {}
     try:
@@ -700,6 +731,26 @@ def main(director_path, outpath):
             scene.render.engine = re
     except Exception:
         pass
+
+    # Re-apply quality preset if generator_inputs overrides the engine to Eevee after the initial pass.
+    # (Without this, eevee settings can remain at whatever the .blend defaults were, e.g. 64 samples.)
+    try:
+        if scene.render.engine == "BLENDER_EEVEE":
+            apply_quality_preset(scene, quality)
+    except Exception:
+        pass
+
+    # Final render settings debug
+    try:
+        ee = scene.eevee
+        print(
+            f"[vpg] final render.engine={scene.render.engine} "
+            f"cycles.samples={getattr(getattr(scene,'cycles',None),'samples',None)} "
+            f"eevee.taa_render_samples={getattr(ee,'taa_render_samples',None)}",
+            flush=True,
+        )
+    except Exception:
+        print(f"[vpg] final render.engine={scene.render.engine}", flush=True)
     role_prefix_map = (gen_inputs.get("blender_mapping") or {}).get("role_prefix") or {}
     roles_conf = gen_inputs.get("characters") or {}
     if not roles_conf:
@@ -843,7 +894,48 @@ def main(director_path, outpath):
             else:
                 print("[run_director_visemes] Warning: Viewport render failed; falling back to normal render.")
 
-    bpy.ops.render.render(animation=True)
+    # Render (with a denoiser fallback for OptiX denoiser failures).
+    try:
+        bpy.ops.render.render(animation=True)
+    except Exception as ex:
+        msg = str(ex)
+        # OptiX denoiser can fail in some headless/container setups even when OptiX rendering works.
+        if "OptiX denoiser" in msg or "Failed to create OptiX denoiser" in msg:
+            print("[cycles] OptiX denoiser failed; retrying with OPENIMAGEDENOISE (CPU) ...", flush=True)
+            try:
+                vl = bpy.context.view_layer
+                if hasattr(vl, "cycles"):
+                    try:
+                        vl.cycles.use_denoising = True
+                    except Exception:
+                        pass
+                    try:
+                        if hasattr(vl.cycles, "denoiser"):
+                            vl.cycles.denoiser = "OPENIMAGEDENOISE"
+                    except Exception:
+                        pass
+                # Some versions store denoiser on scene.cycles
+                try:
+                    if hasattr(scene.cycles, "denoiser"):
+                        scene.cycles.denoiser = "OPENIMAGEDENOISE"
+                except Exception:
+                    pass
+                bpy.ops.render.render(animation=True)
+                return
+            except Exception:
+                print("[cycles] OIDN retry failed; retrying with denoising OFF ...", flush=True)
+                try:
+                    vl = bpy.context.view_layer
+                    if hasattr(vl, "cycles"):
+                        try:
+                            vl.cycles.use_denoising = False
+                        except Exception:
+                            pass
+                    bpy.ops.render.render(animation=True)
+                    return
+                except Exception:
+                    pass
+        raise
 
 if __name__ == "__main__":
     import sys as _sys, argparse as _argparse

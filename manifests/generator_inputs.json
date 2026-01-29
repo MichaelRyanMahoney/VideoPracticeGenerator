@@ -1,10 +1,13 @@
 {
   "run": {
-    "project_name": "Testing_FourHeads",
+    "project_name": "Video-01",
     "fps": 2,
     "resolution": { "width": 1920, "height": 1080 },
     "render_engine": "CYCLES", 
-    "samples": 24,
+    "denoise": true,
+    "denoiser": "OPTIX",
+    "quality": "fast",
+    "samples": 4,
     "output_dir": "../renders",
     "audio_sample_rate": 48000,
     "seed": 42

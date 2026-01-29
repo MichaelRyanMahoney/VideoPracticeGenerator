@@ -33,6 +33,7 @@ RUN mkdir -p ${BLENDER_DIR} /app/nltk_data && \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+COPY app app
 COPY scripts scripts
 COPY assets assets
 COPY scenes scenes
@@ -44,7 +45,12 @@ RUN pip install --no-cache-dir g2p_en nltk
 
 # Optional WhisperX (GPU build). This is intentionally opt-in.
 ARG INSTALL_WHISPERX=0
+# Torch is required for WhisperX; choose CUDA wheels by default.
+# If you want CPU-only torch (debugging), build with:
+#   --build-arg TORCH_INDEX_URL=https://download.pytorch.org/whl/cpu
+ARG TORCH_INDEX_URL=https://download.pytorch.org/whl/cu121
 RUN if [ "$INSTALL_WHISPERX" = "1" ]; then \
+      pip install --no-cache-dir --index-url ${TORCH_INDEX_URL} torch torchaudio && \
       pip install --no-cache-dir whisperx ; \
     fi
 
@@ -53,3 +59,5 @@ RUN python -c "import nltk; nltk.download('averaged_perceptron_tagger_eng'); nlt
 
 ENV VPG_BLENDER_BIN=/usr/local/bin/blender
 
+# Optional: run API from this image (same image can also run the worker via `python -m app.worker`)
+EXPOSE 8000

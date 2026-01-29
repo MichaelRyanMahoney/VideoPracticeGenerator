@@ -148,6 +148,14 @@ def select_visemes_for_word(word, t0, t1, g2p, strategy="onset_plus_vowel", max_
     return visemes
 
 def _load_allowed_roles(generator_inputs_path: str) -> set[str]:
+    p = Path(generator_inputs_path)
+    data = json.loads(p.read_text())
+    roles = set((data.get("characters") or {}).keys())
+    if not roles:
+        raise RuntimeError(f"No roles found in {generator_inputs_path}/characters")
+    return roles
+
+
 def _is_s3_uri(s: str) -> bool:
     return isinstance(s, str) and s.startswith("s3://")
 
@@ -168,7 +176,7 @@ def _s3_download(s3, uri: str, dest: Path) -> None:
 def _ensure_local_audio(audio_ref: str, cache_dir: Path, s3) -> str:
     """
     Return a local filesystem path to a WAV for whisperx alignment.
-    If audio_ref is s3://..., download into cache_dir (using audio_hash if present in filename).
+    If audio_ref is s3://..., download into cache_dir.
     """
     if not _is_s3_uri(audio_ref):
         return str(Path(audio_ref).resolve())
@@ -182,13 +190,6 @@ def _ensure_local_audio(audio_ref: str, cache_dir: Path, s3) -> str:
         print(f"[s3] download {audio_ref} -> {local}")
         _s3_download(s3, audio_ref, local)
     return str(local.resolve())
-
-    p = Path(generator_inputs_path)
-    data = json.loads(p.read_text())
-    roles = set((data.get("characters") or {}).keys())
-    if not roles:
-        raise RuntimeError(f"No roles found in {generator_inputs_path}/characters")
-    return roles
 
 def batch_mode(manifest_csv, generator_inputs_json, fps, out_path, gap_sec=0.35, strategy="onset_plus_vowel", max_events_per_word=2, min_event_gap_sec=0.08, collapse_adjacent=True, audio_cache_dir: str = ""):
     align_model, metadata, device_align = load_aligner()
@@ -383,7 +384,7 @@ def batch_mode_with_stage(manifest_csv, generator_inputs_json, fps, out_path, sc
             is_manifest_pause = (
                 speaker.upper() in {"PAUSE", "BREAK"} or
                 PAUSE_TOKEN.search(transcript) is not None or
-                audio_raw == ""
+                audio_ref == ""
             )
             if is_manifest_pause:
                 try:
