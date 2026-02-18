@@ -84,6 +84,89 @@ def _scene_cache_key(project_root: Path, generator_inputs_json: Path) -> str:
     blob = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
     return hashlib.sha256(blob).hexdigest()[:16]
 
+def _json_hash(obj: Any) -> str:
+    blob = json.dumps(obj, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(blob).hexdigest()
+
+def _render_cache_key(
+    *,
+    project_id: str,
+    scene_cache_key: str,
+    director_obj: dict[str, Any],
+    generator_inputs_json: Path,
+) -> str:
+    """
+    Cache key for rendered frames. Should change whenever output frames would change.
+
+    Inputs included:
+      - scene_cache_key (captures prepared scene inputs + version)
+      - director content hash (captures timing/visemes/pauses/etc)
+      - render-relevant settings from generator_inputs.json run.*
+      - blender version (if provided via env)
+      - an explicit cache version bump knob (VPG_RENDER_CACHE_VERSION)
+    """
+    try:
+        gi = json.loads(generator_inputs_json.read_text(encoding="utf-8"))
+    except Exception:
+        gi = {}
+    run_cfg = (gi.get("run") or {}) if isinstance(gi, dict) else {}
+    payload = {
+        "v": int(os.environ.get("VPG_RENDER_CACHE_VERSION") or "1"),
+        "project_id": str(project_id),
+        "scene_cache_key": str(scene_cache_key),
+        "director_sha256": _json_hash(director_obj),
+        "render_engine": str(run_cfg.get("render_engine") or ""),
+        "quality": str(run_cfg.get("quality") or run_cfg.get("render_quality") or ""),
+        "fps": int(run_cfg.get("fps") or 0) or int(director_obj.get("fps", 24) or 24),
+        # The pipeline always renders PNG RGBA frames at the moment.
+        "transparent": True,
+        "blender_version": str(os.environ.get("BLENDER_VERSION") or ""),
+    }
+    return hashlib.sha256(json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()[:16]
+
+
+def _tc_to_seconds(tc: str) -> float:
+    try:
+        h, m, s = (tc or "00:00:00.000").split(":")
+        return float(h) * 3600 + float(m) * 60 + float(s)
+    except Exception:
+        return 0.0
+
+
+def _estimate_end_seconds_from_director(director: dict[str, Any]) -> float:
+    """
+    Match scripts/batch_render_array_entrypoint.py logic: estimate end time from beats/visemes
+    without needing audio.
+    """
+    beats = director.get("beats") or []
+    end_s = 0.0
+    for b in beats:
+        t0 = _tc_to_seconds(b.get("tc_in") or "00:00:00.000")
+        if (b.get("type") or "").lower() == "pause":
+            try:
+                dur = float(b.get("duration", 1.0))
+            except Exception:
+                dur = 1.0
+            end_s = max(end_s, t0 + max(0.0, dur))
+            continue
+        vmax = 0.0
+        for ev in (b.get("visemes") or []):
+            try:
+                vmax = max(vmax, float(ev.get("t", 0.0)))
+            except Exception:
+                pass
+        end_s = max(end_s, max(vmax, t0) + 0.5)
+    return float(end_s)
+
+
+def _s3_head(s3, s3_uri: str) -> bool:
+    b, k = _s3_parse(s3_uri)
+    try:
+        s3.head_object(Bucket=b, Key=k)
+        return True
+    except Exception:
+        return False
+
 
 def _run(cmd: list[str], cwd: Path | None = None, env: dict[str, str] | None = None) -> None:
     res = subprocess.run(cmd, cwd=str(cwd) if cwd else None, env=env)
@@ -123,8 +206,8 @@ def load_aws_config() -> AwsJobConfig:
     if not gpu_exec_url and not run_gpu_locally:
         if not queue:
             raise RuntimeError("Missing VPG_BATCH_JOB_QUEUE_GPU")
-    if not jd_director or not jd_render:
-        raise RuntimeError("Missing VPG_BATCH_JOB_DEF_GPU_DIRECTOR or VPG_BATCH_JOB_DEF_GPU_RENDER")
+        if not jd_director or not jd_render:
+            raise RuntimeError("Missing VPG_BATCH_JOB_DEF_GPU_DIRECTOR or VPG_BATCH_JOB_DEF_GPU_RENDER")
     shards = int(os.environ.get("VPG_RENDER_SHARDS") or "8")
     return AwsJobConfig(
         region=region,
@@ -300,9 +383,95 @@ def submit_full_job(project_root: Path, project_id: str, job_id: str, script_txt
         _run(cmd, cwd=project_root, env=env_gpu)
 
         write_status(s3, paths["status"], job_id, "gpu_render_local")
+        # Skip render if frames already exist for this job (prevents expensive accidental rerenders).
+        # We consider a render complete if the last expected frame PNG exists in S3.
+        enable_render_cache = (os.environ.get("VPG_ENABLE_RENDER_CACHE") or "1").strip() == "1"
+        if (os.environ.get("VPG_SKIP_RENDER_IF_FRAMES_EXIST") or "1").strip() == "1":
+            try:
+                # Compute expected total_frames using the same logic as batch_render_array_entrypoint.
+                director_obj = _s3_get_json(s3, paths["director"])
+                try:
+                    gi = json.loads(generator_inputs_json.read_text(encoding="utf-8"))
+                    fps = int(((gi.get("run") or {}).get("fps")) or 0) or int(director_obj.get("fps", 24))
+                except Exception:
+                    fps = int(director_obj.get("fps", 24) or 24)
+                end_s = _estimate_end_seconds_from_director(director_obj)
+                total_frames = max(1, int(round(end_s * int(fps))) + 2)
+
+                # Render cache: reuse frames across jobs when inputs/settings match.
+                frames_prefix_used = paths["frames_prefix"]
+                render_cache_key = ""
+                render_cache_prefix = ""
+                if enable_render_cache:
+                    render_cache_key = _render_cache_key(
+                        project_id=project_id,
+                        scene_cache_key=scene_cache_key,
+                        director_obj=director_obj,
+                        generator_inputs_json=generator_inputs_json.resolve(),
+                    )
+                    render_cache_prefix = s3_uri(cfg, f"projects/{project_id}/render_cache/{render_cache_key}/frames")
+                    cache_stem = f"batch_render_{render_cache_key[:8]}"
+                    cache_last = f"{render_cache_prefix.rstrip('/')}/{cache_stem}_{int(total_frames):04d}.png"
+                    if _s3_head(s3, cache_last):
+                        frames_prefix_used = render_cache_prefix
+                        write_status(
+                            s3,
+                            paths["status"],
+                            job_id,
+                            "render_cache_hit",
+                            {"renderCacheKey": render_cache_key, "framesPrefix": frames_prefix_used, "total_frames": int(total_frames)},
+                        )
+                        if os.environ.get("VPG_RUN_FINALIZE", "0") == "1":
+                            write_status(s3, paths["status"], job_id, "finalizing")
+                            _run_finalize(project_root, cfg, paths, frames_prefix_s3=frames_prefix_used)
+                            write_status(s3, paths["status"], job_id, "completed", {"output": paths["out_mp4"], "paths": paths, "framesPrefix": frames_prefix_used})
+                            return {"jobId": job_id, "projectId": project_id, "paths": paths, "mode": "single_node_gpu", "output": paths["out_mp4"], "renderSkipped": True, "renderCacheHit": True, "framesPrefix": frames_prefix_used}
+                        write_status(
+                            s3,
+                            paths["status"],
+                            job_id,
+                            "completed_gpu",
+                            {"paths": paths, "sceneCacheKey": scene_cache_key, "sceneCacheUri": scene_cache_uri, "sceneCacheHit": bool(scene_cache_hit), "renderSkipped": True, "renderCacheHit": True, "framesPrefix": frames_prefix_used},
+                        )
+                        return {"jobId": job_id, "projectId": project_id, "paths": paths, "mode": "single_node_gpu", "renderSkipped": True, "renderCacheHit": True, "framesPrefix": frames_prefix_used}
+
+                stem = f"batch_render_{job_id[:8]}"
+                last_frame_key = f"{paths['frames_prefix'].rstrip('/')}/{stem}_{int(total_frames):04d}.png"
+                if _s3_head(s3, last_frame_key):
+                    write_status(s3, paths["status"], job_id, "render_skipped", {"reason": "frames_exist", "total_frames": int(total_frames)})
+                    # Proceed to finalize if enabled
+                    if os.environ.get("VPG_RUN_FINALIZE", "0") == "1":
+                        write_status(s3, paths["status"], job_id, "finalizing")
+                        _run_finalize(project_root, cfg, paths, frames_prefix_s3=paths["frames_prefix"])
+                        write_status(s3, paths["status"], job_id, "completed", {"output": paths["out_mp4"], "paths": paths, "framesPrefix": paths["frames_prefix"]})
+                        return {"jobId": job_id, "projectId": project_id, "paths": paths, "mode": "single_node_gpu", "output": paths["out_mp4"], "renderSkipped": True}
+                    write_status(
+                        s3,
+                        paths["status"],
+                        job_id,
+                        "completed_gpu",
+                        {"paths": paths, "sceneCacheKey": scene_cache_key, "sceneCacheUri": scene_cache_uri, "sceneCacheHit": bool(scene_cache_hit), "renderSkipped": True},
+                    )
+                    return {"jobId": job_id, "projectId": project_id, "paths": paths, "mode": "single_node_gpu", "renderSkipped": True}
+            except Exception:
+                # If detection fails, fall through to rendering.
+                pass
         # Use the existing "compute frame range from director timeline" logic, but as a single shard.
         env_gpu["AWS_BATCH_JOB_ARRAY_INDEX"] = "0"
         env_gpu["VPG_RENDER_SHARDS"] = "1"
+        frames_prefix_for_render = paths["frames_prefix"]
+        if enable_render_cache:
+            try:
+                director_obj = _s3_get_json(s3, paths["director"])
+                render_cache_key = _render_cache_key(
+                    project_id=project_id,
+                    scene_cache_key=scene_cache_key,
+                    director_obj=director_obj,
+                    generator_inputs_json=generator_inputs_json.resolve(),
+                )
+                frames_prefix_for_render = s3_uri(cfg, f"projects/{project_id}/render_cache/{render_cache_key}/frames")
+            except Exception:
+                frames_prefix_for_render = paths["frames_prefix"]
         cmd = [
             sys.executable,
             str(project_root / "scripts" / "batch_render_array_entrypoint.py"),
@@ -313,70 +482,31 @@ def submit_full_job(project_root: Path, project_id: str, job_id: str, script_txt
             "--scene_s3",
             paths["prepared_scene"],
             "--frames_out_s3_prefix",
-            paths["frames_prefix"],
+            frames_prefix_for_render,
             "--shards",
             "1",
         ]
         _run(cmd, cwd=project_root, env=env_gpu)
+
+        # Optional: run finalize (mux/overlays/upload/email) locally after frames are uploaded.
+        if os.environ.get("VPG_RUN_FINALIZE", "0") == "1":
+            write_status(s3, paths["status"], job_id, "finalizing")
+            _run_finalize(project_root, cfg, paths, frames_prefix_s3=frames_prefix_for_render)
+            write_status(s3, paths["status"], job_id, "completed", {"output": paths["out_mp4"], "paths": paths, "framesPrefix": frames_prefix_for_render})
+            return {"jobId": job_id, "projectId": project_id, "paths": paths, "mode": "single_node_gpu", "output": paths["out_mp4"], "framesPrefix": frames_prefix_for_render}
 
         write_status(
             s3,
             paths["status"],
             job_id,
             "completed_gpu",
-            {"paths": paths, "sceneCacheKey": scene_cache_key, "sceneCacheUri": scene_cache_uri, "sceneCacheHit": bool(scene_cache_hit)},
+            {"paths": paths, "sceneCacheKey": scene_cache_key, "sceneCacheUri": scene_cache_uri, "sceneCacheHit": bool(scene_cache_hit), "framesPrefix": frames_prefix_for_render},
         )
-        return {"jobId": job_id, "projectId": project_id, "paths": paths, "mode": "single_node_gpu"}
+        return {"jobId": job_id, "projectId": project_id, "paths": paths, "mode": "single_node_gpu", "framesPrefix": frames_prefix_for_render}
 
-    # Submit GPU director job (whisperx)
-    write_status(s3, paths["status"], job_id, "submitting_gpu")
-    director_job_id = ""
-    if not gpu_exec_url:
-    director_job = batch.submit_job(
-        jobName=f"vpg-director-{project_id}-{job_id[:8]}",
-        jobQueue=cfg.batch_job_queue,
-        jobDefinition=cfg.batch_job_def_gpu_director,
-        containerOverrides={
-            "command": [
-                "python",
-                "scripts/gpu_build_director.py",
-                "--manifest_s3",
-                paths["manifest"],
-                "--generator_inputs_s3",
-                paths["generator_inputs"],
-                "--script_s3",
-                paths["script"],
-                "--director_out_s3",
-                paths["director"],
-            ]
-        },
-    )
-    director_job_id = director_job["jobId"]
-
-    # Submit GPU scene preparation job (append characters + configure roles) in parallel with director.
-    prepare_job_id: str | None = None
-    if not scene_cache_hit and not gpu_exec_url:
-    prepare_job = batch.submit_job(
-        jobName=f"vpg-scene-{project_id}-{job_id[:8]}",
-        jobQueue=cfg.batch_job_queue,
-        jobDefinition=cfg.batch_job_def_gpu_prepare_scene,
-        containerOverrides={
-            "command": [
-                "python",
-                "scripts/gpu_prepare_scene.py",
-                "--generator_inputs_s3",
-                paths["generator_inputs"],
-                "--prepared_scene_out_s3",
-                paths["prepared_scene"],
-                    "--prepared_scene_cache_s3",
-                    scene_cache_uri,
-            ]
-        },
-    )
-    prepare_job_id = prepare_job["jobId"]
-
+    # ---- EC2 GPU Executor mode (Option A) ----
     if gpu_exec_url:
-        # ---- EC2 GPU Executor mode (Option A) ----
+        write_status(s3, paths["status"], job_id, "submitting_gpu")
         hdrs = {"Content-Type": "application/json"}
         if gpu_exec_token:
             hdrs["X-VPG-Token"] = gpu_exec_token
@@ -405,12 +535,51 @@ def submit_full_job(project_root: Path, project_id: str, job_id: str, script_txt
         r.raise_for_status()
 
         write_status(s3, paths["status"], job_id, "gpu_render")
+        enable_render_cache = (os.environ.get("VPG_ENABLE_RENDER_CACHE") or "1").strip() == "1"
+        frames_prefix_for_render = paths["frames_prefix"]
+        if enable_render_cache:
+            try:
+                director_obj = _s3_get_json(s3, paths["director"])
+                try:
+                    gi = json.loads(generator_inputs_json.read_text(encoding="utf-8"))
+                    fps = int(((gi.get("run") or {}).get("fps")) or 0) or int(director_obj.get("fps", 24))
+                except Exception:
+                    fps = int(director_obj.get("fps", 24) or 24)
+                end_s = _estimate_end_seconds_from_director(director_obj)
+                total_frames = max(1, int(round(end_s * int(fps))) + 2)
+                render_cache_key = _render_cache_key(
+                    project_id=project_id,
+                    scene_cache_key=scene_cache_key,
+                    director_obj=director_obj,
+                    generator_inputs_json=generator_inputs_json.resolve(),
+                )
+                frames_prefix_for_render = s3_uri(cfg, f"projects/{project_id}/render_cache/{render_cache_key}/frames")
+                cache_stem = f"batch_render_{render_cache_key[:8]}"
+                cache_last = f"{frames_prefix_for_render.rstrip('/')}/{cache_stem}_{int(total_frames):04d}.png"
+                if _s3_head(s3, cache_last):
+                    write_status(
+                        s3,
+                        paths["status"],
+                        job_id,
+                        "render_cache_hit",
+                        {"renderCacheKey": render_cache_key, "framesPrefix": frames_prefix_for_render, "total_frames": int(total_frames)},
+                    )
+                    write_status(
+                        s3,
+                        paths["status"],
+                        job_id,
+                        "completed_gpu",
+                        {"paths": paths, "sceneCacheKey": scene_cache_key, "sceneCacheUri": scene_cache_uri, "sceneCacheHit": bool(scene_cache_hit), "renderCacheHit": True, "framesPrefix": frames_prefix_for_render},
+                    )
+                    return {"jobId": job_id, "projectId": project_id, "paths": paths, "mode": "gpu_executor", "renderCacheHit": True, "framesPrefix": frames_prefix_for_render}
+            except Exception:
+                frames_prefix_for_render = paths["frames_prefix"]
         payload = {
             "aws_region": cfg.region,
             "director_s3": paths["director"],
             "generator_inputs_s3": paths["generator_inputs"],
             "scene_s3": paths["prepared_scene"],
-            "frames_out_s3_prefix": paths["frames_prefix"],
+            "frames_out_s3_prefix": frames_prefix_for_render,
             # Let the GPU side compute frame ranges
             "xvfb": 1,
         }
@@ -422,11 +591,55 @@ def submit_full_job(project_root: Path, project_id: str, job_id: str, script_txt
             paths["status"],
             job_id,
             "completed_gpu",
-            {"paths": paths, "sceneCacheKey": scene_cache_key, "sceneCacheUri": scene_cache_uri, "sceneCacheHit": bool(scene_cache_hit)},
+            {"paths": paths, "sceneCacheKey": scene_cache_key, "sceneCacheUri": scene_cache_uri, "sceneCacheHit": bool(scene_cache_hit), "framesPrefix": frames_prefix_for_render},
         )
-        return {"jobId": job_id, "projectId": project_id, "paths": paths, "mode": "gpu_executor"}
+        return {"jobId": job_id, "projectId": project_id, "paths": paths, "mode": "gpu_executor", "framesPrefix": frames_prefix_for_render}
 
     # ---- AWS Batch mode ----
+    # Submit GPU director job (whisperx)
+    write_status(s3, paths["status"], job_id, "submitting_gpu")
+    director_job = batch.submit_job(
+        jobName=f"vpg-director-{project_id}-{job_id[:8]}",
+        jobQueue=cfg.batch_job_queue,
+        jobDefinition=cfg.batch_job_def_gpu_director,
+        containerOverrides={
+            "command": [
+                "python",
+                "scripts/gpu_build_director.py",
+                "--manifest_s3",
+                paths["manifest"],
+                "--generator_inputs_s3",
+                paths["generator_inputs"],
+                "--script_s3",
+                paths["script"],
+                "--director_out_s3",
+                paths["director"],
+            ]
+        },
+    )
+    director_job_id = director_job["jobId"]
+
+    # Submit GPU scene preparation job (append characters + configure roles) in parallel with director.
+    prepare_job_id: str | None = None
+    if not scene_cache_hit:
+        prepare_job = batch.submit_job(
+            jobName=f"vpg-scene-{project_id}-{job_id[:8]}",
+            jobQueue=cfg.batch_job_queue,
+            jobDefinition=cfg.batch_job_def_gpu_prepare_scene,
+            containerOverrides={
+                "command": [
+                    "python",
+                    "scripts/gpu_prepare_scene.py",
+                    "--generator_inputs_s3",
+                    paths["generator_inputs"],
+                    "--prepared_scene_out_s3",
+                    paths["prepared_scene"],
+                    "--prepared_scene_cache_s3",
+                    scene_cache_uri,
+                ]
+            },
+        )
+        prepare_job_id = prepare_job["jobId"]
     # Submit render array job that depends on BOTH director and prepared scene.
     depends = [{"jobId": director_job_id}]
     if prepare_job_id:
@@ -482,7 +695,7 @@ def submit_full_job(project_root: Path, project_id: str, job_id: str, script_txt
         write_status(s3, paths["status"], job_id, "waiting_for_render")
         _wait_for_batch_job(batch, render_job["jobId"], is_array=True)
         write_status(s3, paths["status"], job_id, "finalizing")
-        _run_finalize(project_root, cfg, paths)
+        _run_finalize(project_root, cfg, paths, frames_prefix_s3=paths["frames_prefix"])
         write_status(s3, paths["status"], job_id, "completed", {"output": paths["out_mp4"]})
 
     return result
@@ -520,7 +733,7 @@ def _wait_for_batch_job(batch, job_id: str, is_array: bool = False, poll_sec: in
         time.sleep(poll_sec)
 
 
-def _run_finalize(project_root: Path, cfg: AwsJobConfig, paths: dict[str, str]) -> None:
+def _run_finalize(project_root: Path, cfg: AwsJobConfig, paths: dict[str, str], frames_prefix_s3: str | None = None) -> None:
     """
     Run CPU finalizer locally (mux/overlays/upload/email).
     """
@@ -534,7 +747,7 @@ def _run_finalize(project_root: Path, cfg: AwsJobConfig, paths: dict[str, str]) 
         "--director_s3",
         paths["director"],
         "--frames_prefix_s3",
-        paths["frames_prefix"],
+        (frames_prefix_s3 or paths["frames_prefix"]),
         "--out_mp4_s3",
         paths["out_mp4"],
     ]

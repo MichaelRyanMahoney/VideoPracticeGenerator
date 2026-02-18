@@ -13,6 +13,14 @@ services:
       - VPG_SKIP_RENDER=0
       - VPG_SKIP_MUX=0
       - VPG_SKIP_BLENDER=0
+      # Keep large ML/model downloads on the /data volume (not container root).
+      - XDG_CACHE_HOME=/data/.cache
+      - TORCH_HOME=/data/.cache/torch
+      - HF_HOME=/data/.cache/huggingface
+      - VPG_ALIGN_MODEL_DIR=/data/.cache/torchaudio
+      # Keep temp work + per-line audio downloads off /tmp (container overlay).
+      - VPG_WORK_DIR=/data/tmp
+      - VPG_AUDIO_CACHE_DIR=/data/cache/audio
       # Optional: enable if you hit GL/context issues. Note: Xvfb may force software GL for Eevee.
       # - VPG_XVFB=1
     volumes:

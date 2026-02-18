@@ -51,16 +51,16 @@ POSIX:
 PowerShell:
   python "$env:PROJ/scripts/parse_screenplay_to_manifest.py" --in_txt "$env:PROJ/script.txt" --out_csv "$env:PROJ/manifests/scene1.csv"
 
-4) Generate audio files (Typecast)
-- Prepare manifests/typecast_voices.json with speaker -> voice_id mappings.
+4) Generate audio files (Typecast `ssfm-v30`)
+- Prefer `manifests/generator_inputs.json` for speaker -> `voice_id` mappings (`characters.<Role>.typecast.voice_id`).
 POSIX:
   export TYPECAST_API_KEY="<your_key>"
   python3 "scripts/tts_typecast_from_manifest.py" \
     --manifest_csv "manifests/scene1.csv" \
-    --voice_map "manifests/typecast_voices.json"
+    --generator_inputs_json "manifests/generator_inputs.json"
 PowerShell:
   $env:TYPECAST_API_KEY = "<your_key>"
-  python "$env:PROJ/scripts/tts_typecast_from_manifest.py" --manifest_csv "$env:PROJ/manifests/scene1.csv" --voice_map "$env:PROJ/manifests/typecast_voices.json"
+  python "$env:PROJ/scripts/tts_typecast_from_manifest.py" --manifest_csv "$env:PROJ/manifests/scene1.csv" --generator_inputs_json "$env:PROJ/manifests/generator_inputs.json"
 
 5) Build director_visemes.json (forced alignment with WhisperX)
 Install dependencies once:

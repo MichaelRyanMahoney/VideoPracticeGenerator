@@ -11,6 +11,16 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     BLENDER_VERSION=4.1.1 \
     BLENDER_DIR=/usr/local/blender
 
+# Default cache/work locations (override in your runtime env as needed).
+# Goal: keep large downloads and temp artifacts on the /data volume (typically backed by EBS),
+# not container root (/tmp, /root/.cache).
+ENV XDG_CACHE_HOME=/data/.cache \
+    TORCH_HOME=/data/.cache/torch \
+    HF_HOME=/data/.cache/huggingface \
+    VPG_ALIGN_MODEL_DIR=/data/.cache/torchaudio \
+    VPG_WORK_DIR=/data/tmp \
+    VPG_AUDIO_CACHE_DIR=/data/cache/audio
+
 WORKDIR /app
 
 # System deps (ffmpeg, GL/X libs needed by Blender)
@@ -45,10 +55,12 @@ RUN pip install --no-cache-dir g2p_en nltk
 
 # Optional WhisperX (GPU build). This is intentionally opt-in.
 ARG INSTALL_WHISPERX=0
-# Torch is required for WhisperX; choose CUDA wheels by default.
-# If you want CPU-only torch (debugging), build with:
-#   --build-arg TORCH_INDEX_URL=https://download.pytorch.org/whl/cpu
-ARG TORCH_INDEX_URL=https://download.pytorch.org/whl/cu121
+# Torch is required for WhisperX.
+# IMPORTANT: CUDA wheels pull in very large nvidia-* dependencies and can easily exhaust
+# small root volumes during docker builds. Default to CPU wheels for reliability.
+# If you want CUDA torch, build with:
+#   --build-arg TORCH_INDEX_URL=https://download.pytorch.org/whl/cu121
+ARG TORCH_INDEX_URL=https://download.pytorch.org/whl/cpu
 RUN if [ "$INSTALL_WHISPERX" = "1" ]; then \
       pip install --no-cache-dir --index-url ${TORCH_INDEX_URL} torch torchaudio && \
       pip install --no-cache-dir whisperx ; \

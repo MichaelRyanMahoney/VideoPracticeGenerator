@@ -23,6 +23,7 @@ from pathlib import Path
 
 import boto3
 
+from workdir_utils import cleanup_work_dir, make_work_dir, should_keep_workdir
 
 def s3_parse(uri: str) -> tuple[str, str]:
     assert uri.startswith("s3://")
@@ -92,57 +93,61 @@ def main():
         raise SystemExit(f"Invalid shard index {shard_idx} for shards={shards}")
 
     s3 = boto3.client("s3", region_name=os.environ.get("AWS_REGION") or os.environ.get("AWS_DEFAULT_REGION"))
-    work = Path(tempfile.mkdtemp(prefix="vpg_render_shard_"))
-    local_director = work / "director.json"
-    local_gen = work / "generator_inputs.json"
-    s3_download(s3, args.director_s3, local_director)
-    s3_download(s3, args.generator_inputs_s3, local_gen)
+    work = make_work_dir("vpg_render_shard_")
+    try:
+        local_director = work / "director.json"
+        local_gen = work / "generator_inputs.json"
+        s3_download(s3, args.director_s3, local_director)
+        s3_download(s3, args.generator_inputs_s3, local_gen)
 
-    director = json.loads(local_director.read_text())
-    fps = None
-    if int(args.fps or 0) > 0:
-        fps = int(args.fps)
-    else:
-        try:
-            gi = json.loads(local_gen.read_text())
-            fps = int(((gi.get("run") or {}).get("fps")) or 0) or None
-        except Exception:
-            fps = None
-        if fps is None:
-            fps = int(director.get("fps", 24))
-    fps = int(fps or 24)
+        director = json.loads(local_director.read_text())
+        fps = None
+        if int(args.fps or 0) > 0:
+            fps = int(args.fps)
+        else:
+            try:
+                gi = json.loads(local_gen.read_text())
+                fps = int(((gi.get("run") or {}).get("fps")) or 0) or None
+            except Exception:
+                fps = None
+            if fps is None:
+                fps = int(director.get("fps", 24))
+        fps = int(fps or 24)
 
-    end_s = estimate_end_seconds(director)
-    total_frames = max(1, int(round(end_s * fps)) + 2)
+        end_s = estimate_end_seconds(director)
+        total_frames = max(1, int(round(end_s * fps)) + 2)
 
-    # Split [1..total_frames] across shards
-    frames_per = (total_frames + shards - 1) // shards
-    frame_start = shard_idx * frames_per + 1
-    frame_end = min(total_frames, (shard_idx + 1) * frames_per)
-    if frame_start > frame_end:
-        print(f"[info] shard {shard_idx}: nothing to render (frame_start > frame_end). Exiting.")
-        return
+        # Split [1..total_frames] across shards
+        frames_per = (total_frames + shards - 1) // shards
+        frame_start = shard_idx * frames_per + 1
+        frame_end = min(total_frames, (shard_idx + 1) * frames_per)
+        if frame_start > frame_end:
+            print(f"[info] shard {shard_idx}: nothing to render (frame_start > frame_end). Exiting.")
+            return
 
-    print(f"[shard] idx={shard_idx}/{shards} fps={fps} end_s={end_s:.3f} total_frames={total_frames} range=[{frame_start},{frame_end}]")
+        print(f"[shard] idx={shard_idx}/{shards} fps={fps} end_s={end_s:.3f} total_frames={total_frames} range=[{frame_start},{frame_end}]")
 
-    # Delegate to worker_render (which runs Blender). It will upload PNGs to S3 prefix.
-    project_root = Path(__file__).resolve().parents[1]
-    worker = project_root / "scripts" / "worker_render.py"
-    cmd = [
-        sys.executable,
-        str(worker),
-        "--director_s3", args.director_s3,
-        "--generator_inputs_s3", args.generator_inputs_s3,
-        "--frames_out_s3_prefix", args.frames_out_s3_prefix,
-        "--frame_start", str(int(frame_start)),
-        "--frame_end", str(int(frame_end)),
-        "--transparent",
-    ]
-    if args.scene_s3:
-        cmd += ["--scene_s3", args.scene_s3]
-    run(cmd, cwd=project_root)
+        # Delegate to worker_render (which runs Blender). It will upload PNGs to S3 prefix.
+        project_root = Path(__file__).resolve().parents[1]
+        worker = project_root / "scripts" / "worker_render.py"
+        cmd = [
+            sys.executable,
+            str(worker),
+            "--director_s3", args.director_s3,
+            "--generator_inputs_s3", args.generator_inputs_s3,
+            "--frames_out_s3_prefix", args.frames_out_s3_prefix,
+            "--frame_start", str(int(frame_start)),
+            "--frame_end", str(int(frame_end)),
+            "--transparent",
+        ]
+        if args.scene_s3:
+            cmd += ["--scene_s3", args.scene_s3]
+        run(cmd, cwd=project_root)
 
-    print("[batch_render_array_entrypoint] done.")
+        print("[batch_render_array_entrypoint] done.")
+    finally:
+        if not should_keep_workdir():
+            cleanup_work_dir(work)
 
 
 if __name__ == "__main__":

@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-import os, csv, json, argparse, requests, subprocess, tempfile
+import math
+import os, csv, json, argparse, requests, subprocess
 from pathlib import Path
 import boto3
 
+from workdir_utils import cleanup_work_dir, make_work_dir, should_keep_workdir
 
 TYPECAST_API_URL = "https://api.typecast.ai/v1/text-to-speech"
 
@@ -13,7 +15,9 @@ DEFAULT_EMOTION_INTENSITY = 1.0
 DEFAULT_TEMPO = 1.0
 DEFAULT_PITCH = 0
 DEFAULT_VOLUME = 100
-DEFAULT_SEED = "05302020"
+DEFAULT_SEED = 5302020
+DEFAULT_MODEL = "ssfm-v30"
+VALID_EMOTION_PRESETS = {"normal", "happy", "sad", "angry", "whisper", "toneup", "tonedown"}
 
 
 def require_api_key() -> str:
@@ -54,9 +58,31 @@ def download_to(path: Path, url: str):
                     f.write(chunk)
 
 
+def normalize_emotion_preset(value: str) -> str:
+    emotion = (value or DEFAULT_EMOTION_PRESET).strip().lower()
+    return emotion if emotion in VALID_EMOTION_PRESETS else DEFAULT_EMOTION_PRESET
+
+
+def parse_pitch_to_semitones(value: object) -> float:
+    """Accept either semitone pitch or multiplier ratio.
+
+    - If pitch is in [0.5, 2.0], treat it as a ratio where 1.0 means neutral.
+    - Otherwise treat it as semitones directly.
+    """
+    try:
+        raw = float(value)
+    except Exception:
+        return float(DEFAULT_PITCH)
+    if 0.5 <= raw <= 2.0:
+        semitones = 12.0 * math.log(raw, 2)
+    else:
+        semitones = raw
+    return max(-12.0, min(12.0, semitones))
+
+
 def tts_typecast(api_key: str, voice_id: str, text: str, out_wav: Path,
                  emotion: str = DEFAULT_EMOTION_PRESET, emotion_intensity: float = DEFAULT_EMOTION_INTENSITY,
-                 tempo: float = DEFAULT_TEMPO, pitch: int = DEFAULT_PITCH, volume: int = DEFAULT_VOLUME):
+                 tempo: float = DEFAULT_TEMPO, pitch: float = DEFAULT_PITCH, volume: int = DEFAULT_VOLUME):
     """Call Typecast TTS and save as 48kHz stereo WAV at out_wav.
     Attempts to request WAV; if API returns a URL or other format, handles it.
     """
@@ -67,25 +93,28 @@ def tts_typecast(api_key: str, voice_id: str, text: str, out_wav: Path,
     except Exception:
         ei = 1.0
     try:
-        vol = int(max(0, min(100, int(volume))))
+        vol = int(max(0, min(200, int(volume))))
     except Exception:
         vol = 100
+    emotion_preset = normalize_emotion_preset(emotion)
+    pitch_semitones = parse_pitch_to_semitones(pitch)
+    tempo_out = max(0.5, min(2.0, float(tempo)))
 
     payload = {
         "voice_id": voice_id,
         "text": text,
-        # Model/language names may vary; these are common defaults
-        "model": "ssfm-v21",
+        "model": DEFAULT_MODEL,
         "language": "eng",
         "seed": DEFAULT_SEED,
         "prompt": {
-            "emotion_preset": emotion,
+            "emotion_type": "preset",
+            "emotion_preset": emotion_preset,
             "emotion_intensity": ei
         },
         "output": {
             "volume": vol,
-            "audio_pitch": pitch,
-            "audio_tempo": tempo,
+            "audio_pitch": pitch_semitones,
+            "audio_tempo": tempo_out,
             "audio_format": "wav"
         },
     }
@@ -218,7 +247,7 @@ def main():
         except Exception:
             r_tempo = DEFAULT_TEMPO
         try:
-            r_pitch = int(row.get("pitch") or DEFAULT_PITCH)
+            r_pitch = float(row.get("pitch") or DEFAULT_PITCH)
         except Exception:
             r_pitch = DEFAULT_PITCH
         try:
@@ -235,7 +264,7 @@ def main():
             if _s3_exists(s3, audio_raw):
                 print(f"[skip] {rid} {speaker} -> {audio_hash or audio_raw} (s3 exists)")
                 continue
-            tmp_dir = Path(tempfile.mkdtemp(prefix="vpg_tts_"))
+            tmp_dir = make_work_dir("vpg_tts_")
             audio_out = tmp_dir / f"{audio_hash or (speaker + '_' + rid)}.wav"
         else:
             audio_out = Path(audio_raw)
@@ -256,7 +285,8 @@ def main():
                 f"characters.{speaker}.typecast.voice_id populated."
             )
 
-        print(f"[Typecast] {rid} {speaker} -> {audio_out.name}  voice_id={vid}  emo={r_emotion} inten={r_intensity} tempo={r_tempo} pitch={r_pitch} vol={r_volume}")
+        pitch_st = parse_pitch_to_semitones(r_pitch)
+        print(f"[Typecast] {rid} {speaker} -> {audio_out.name}  voice_id={vid}  model={DEFAULT_MODEL}  emo={r_emotion} inten={r_intensity} tempo={r_tempo} pitch={r_pitch} ({pitch_st:.2f}st) vol={r_volume}")
         tts_typecast(api_key, vid, text, audio_out,
                      emotion=r_emotion, emotion_intensity=r_intensity,
                      tempo=r_tempo, pitch=r_pitch, volume=r_volume)
@@ -266,6 +296,8 @@ def main():
             assert s3 is not None
             print(f"[s3] upload -> {audio_raw}")
             _s3_upload_file(s3, audio_out, audio_raw)
+            if not should_keep_workdir():
+                cleanup_work_dir(tmp_dir)
 
     print(f"Done. Generated {len(rows)} wav files via Typecast.")
 

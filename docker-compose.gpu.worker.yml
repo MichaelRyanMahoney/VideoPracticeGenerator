@@ -5,12 +5,24 @@ services:
       dockerfile: docker/Dockerfile.gpu
       args:
         INSTALL_WHISPERX: "1"
+        # Default to CPU torch wheels to avoid multi-GB CUDA deps during build.
+        # Switch to CUDA wheels only if you truly need WhisperX on GPU:
+        #   TORCH_INDEX_URL: "https://download.pytorch.org/whl/cu121"
+        TORCH_INDEX_URL: "https://download.pytorch.org/whl/cpu"
     # Requires: NVIDIA drivers on host + nvidia-container-toolkit installed.
     gpus: all
     environment:
       - AWS_REGION=${AWS_REGION:-us-east-1}
       - VPG_DATA_DIR=/data
       - VPG_BLENDER_BIN=/usr/local/bin/blender
+      # Keep large ML/model downloads on the /data volume (not container root).
+      - XDG_CACHE_HOME=/data/.cache
+      - TORCH_HOME=/data/.cache/torch
+      - HF_HOME=/data/.cache/huggingface
+      - VPG_ALIGN_MODEL_DIR=/data/.cache/torchaudio
+      # Keep temp work + per-line audio downloads off /tmp (container overlay).
+      - VPG_WORK_DIR=/data/tmp
+      - VPG_AUDIO_CACHE_DIR=/data/cache/audio
       # Optional: enable if you hit GL/context issues.
       # - VPG_XVFB=1
     volumes:

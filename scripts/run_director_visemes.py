@@ -28,6 +28,7 @@ CLI_PREPARE_VIEWPORT_BLEND = None
 CLI_VIEWPORT_RENDER = False
 CLI_NO_RENDER = False
 CLI_TRANSPARENT = False
+CLI_OPAQUE = False
 CLI_FRAMES = False
 CLI_FRAME_START = None
 CLI_FRAME_END = None
@@ -468,11 +469,21 @@ def main(director_path, outpath):
         MAX_OVERLAP_FRAMES = max(0, int(round(MAX_OVERLAP_FRAMES * smooth_factor)))
 
     # Render settings
-    scene.render.use_sequencer = True
-    # Transparent background toggle (JSON: render.transparent, CLI: --transparent)
+    #
+    # IMPORTANT: If `use_sequencer` is True and the VSE contains no video strips (common in
+    # our pipeline, especially when running with --no_audio), Blender will render black frames.
+    # We therefore disable sequencer rendering by default and only enable it when explicitly requested.
+    use_sequencer = (os.environ.get("VPG_USE_SEQUENCER") or "0").strip() == "1"
+    try:
+        scene.render.use_sequencer = bool(use_sequencer)
+    except Exception:
+        pass
+    # Transparent background toggle (JSON: render.transparent, CLI: --transparent/--opaque)
     # Default behavior: render PNG frames with alpha (transparent=True) unless explicitly overridden.
     _render_cfg = (data.get("render") or {})
-    if CLI_TRANSPARENT:
+    if CLI_OPAQUE:
+        transparent = False
+    elif CLI_TRANSPARENT:
         transparent = True
     elif "transparent" in _render_cfg:
         try:
@@ -486,6 +497,7 @@ def main(director_path, outpath):
     except Exception:
         pass
     # Decide output mode: video vs image sequence
+    # - `--frames` forces PNG output regardless of transparency (useful for debugging).
     output_frames = bool(CLI_FRAMES or transparent)
     if output_frames:
         # Use PNG frames; RGBA if transparent, else RGB
@@ -955,7 +967,9 @@ if __name__ == "__main__":
     ap.add_argument("--prepare_viewport_blend", help="Path to save a playback-ready .blend (visemes keyed, audio laid out).")
     ap.add_argument("--viewport_render", action="store_true", help="Use Viewport Render Animation (UI mode only; much faster).")
     ap.add_argument("--no_render", action="store_true", help="Prepare scene (and optional .blend) but do not render.")
+    ap.add_argument("--frames", action="store_true", help="Force PNG image sequence output (even if opaque).")
     ap.add_argument("--transparent", action="store_true", help="Enable Film Transparent and render PNG RGBA frames (alpha-friendly).")
+    ap.add_argument("--opaque", action="store_true", help="Disable Film Transparent (opaque background) for easier debugging.")
     ap.add_argument("--frame_start", type=int, help="Override scene.frame_start (chunked render).")
     ap.add_argument("--frame_end", type=int, help="Override scene.frame_end (chunked render).")
     ap.add_argument("--no_clean_frames", action="store_true", help="Do not delete existing frames in the output frames directory.")
@@ -981,7 +995,9 @@ if __name__ == "__main__":
     CLI_PREPARE_VIEWPORT_BLEND = args.prepare_viewport_blend
     CLI_VIEWPORT_RENDER = bool(args.viewport_render)
     CLI_NO_RENDER = bool(args.no_render)
+    CLI_FRAMES = bool(args.frames)
     CLI_TRANSPARENT = bool(args.transparent)
+    CLI_OPAQUE = bool(args.opaque)
     CLI_FRAME_START = args.frame_start
     CLI_FRAME_END = args.frame_end
     CLI_NO_CLEAN_FRAMES = bool(args.no_clean_frames)

@@ -29,8 +29,11 @@ ALIASES = {
 # Allow digits in role labels (e.g., DISPUTANT 1); support optional inline {key=value ...}
 SPEAKER_LINE = re.compile(r'^\s*([A-Z0-9 ]+?)(?:\s*\(([A-Z \.]+)\))?\s*(?:\{([^}]*)\})?\s*$')
 
-# Standalone defaults directive: {DEFAULTS emotion=normal intensity=1.0 tempo=1.0 pitch=0 volume=100}
+# Standalone defaults directive:
+# {DEFAULTS emotion=normal intensity=1.0 tempo=1.0 pitch=1.0 volume=100}
+# pitch accepts either semitone shift (0 neutral) or ratio (1.0 neutral).
 DEFAULTS_LINE = re.compile(r'^\s*\{\s*DEFAULTS\s+([^}]*)\}\s*$')
+VALID_EMOTION_PRESETS = {"normal", "happy", "sad", "angry", "whisper", "toneup", "tonedown"}
 
 def normalize_speaker(raw_role, raw_name):
     """
@@ -73,7 +76,8 @@ def _coerce_types(d: dict) -> dict:
     for k, v in d.items():
         kk = k.lower()
         if kk in {"emotion", "emotion_preset"}:
-            out["emotion_preset"] = str(v).lower()
+            emo = str(v).strip().lower()
+            out["emotion_preset"] = emo if emo in VALID_EMOTION_PRESETS else "normal"
         elif kk in {"intensity", "emotion_intensity"}:
             try:
                 out["emotion_intensity"] = float(v)
@@ -86,7 +90,7 @@ def _coerce_types(d: dict) -> dict:
                 pass
         elif kk == "pitch":
             try:
-                out["pitch"] = int(v)
+                out["pitch"] = float(v)
             except Exception:
                 pass
         elif kk == "volume":
@@ -103,7 +107,7 @@ def parse_script(lines):
         "emotion_preset": "normal",
         "emotion_intensity": 1.0,
         "tempo": 1.0,
-        "pitch": 0,
+        "pitch": 0.0,
         "volume": 100,
     }
     while i < len(lines):
@@ -209,7 +213,7 @@ def main():
             "emotion_preset": attrs.get("emotion_preset", "normal"),
             "emotion_intensity": float(attrs.get("emotion_intensity", 1.0)),
             "tempo": float(attrs.get("tempo", 1.0)),
-            "pitch": int(attrs.get("pitch", 0)),
+            "pitch": float(attrs.get("pitch", 0.0)),
             "volume": int(attrs.get("volume", 100)),
         }
         raw = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
@@ -242,7 +246,7 @@ def main():
                 attrs.get("emotion_preset","normal"),
                 attrs.get("emotion_intensity",1.0),
                 attrs.get("tempo",1.0),
-                attrs.get("pitch",0),
+                attrs.get("pitch",0.0),
                 attrs.get("volume",100),
             ])
     print(f"Wrote {args.out_csv} with {len(entries)} rows")

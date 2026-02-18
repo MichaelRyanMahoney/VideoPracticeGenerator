@@ -9,17 +9,57 @@ import boto3
 
 import torch
 import whisperx
+import nltk
 from g2p_en import G2p
 from ovr_viseme_map import phoneme_to_viseme
 
 VOWELS = {"AA","AE","AH","AO","AW","AY","EH","ER","EY","IH","IY","OW","OY","UH","UW","AX"}
 STRONG_ONSET_GROUPS = {"viseme_PP","viseme_FF","viseme_TH","viseme_CH","viseme_SS"}  # visual consonants
 
+def _ensure_nltk_resource(resource_path: str, download_id: str) -> None:
+    try:
+        nltk.data.find(resource_path)
+        return
+    except LookupError:
+        pass
+    print(f"[nltk] downloading {download_id}...")
+    nltk.download(download_id, quiet=True)
+    # Re-check so we fail early with a clear message if download failed.
+    nltk.data.find(resource_path)
+
+
+def ensure_nltk_for_g2p() -> None:
+    """Ensure runtime NLTK assets required by g2p_en are available."""
+    # Keep NLTK assets in-repo by default when no explicit NLTK_DATA is provided.
+    if not (os.environ.get("NLTK_DATA") or "").strip():
+        local_nltk = Path(__file__).resolve().parents[1] / "nltk_data"
+        local_nltk.mkdir(parents=True, exist_ok=True)
+        os.environ["NLTK_DATA"] = str(local_nltk)
+    # Required for POS tagging in g2p_en.
+    try:
+        _ensure_nltk_resource("taggers/averaged_perceptron_tagger_eng", "averaged_perceptron_tagger_eng")
+    except LookupError:
+        # Older NLTK distributions still use the legacy name.
+        _ensure_nltk_resource("taggers/averaged_perceptron_tagger", "averaged_perceptron_tagger")
+    # Required for dictionary-backed phoneme lookup in g2p_en.
+    _ensure_nltk_resource("corpora/cmudict", "cmudict")
+
+
+def make_g2p() -> G2p:
+    ensure_nltk_for_g2p()
+    return G2p()
+
+
 def word_to_phones_with_stress(word, g2p):
     """
     Return list of (base_phone, stress_digit_or_None), e.g., [("AE","1"), ("T",None)]
     """
-    tokens = g2p(word)
+    try:
+        tokens = g2p(word)
+    except LookupError:
+        # Defensive fallback if NLTK data is missing at runtime.
+        ensure_nltk_for_g2p()
+        tokens = g2p(word)
     out = []
     for t in tokens:
         t = t.strip()
@@ -42,9 +82,29 @@ def distribute_times(start, end, n):
     return [start + (i + 0.5) * step for i in range(n)]
 
 def load_aligner():
-    device_align = "mps" if torch.backends.mps.is_available() else "cpu"
+    if torch.cuda.is_available():
+        device_align = "cuda"
+    elif torch.backends.mps.is_available():
+        device_align = "mps"
+    else:
+        device_align = "cpu"
     print(f"[whisperx] align device: {device_align}")
-    align_model, metadata = whisperx.load_align_model(language_code="en", device=device_align)
+
+    # Keep alignment model downloads out of container root by using a configurable cache directory.
+    # WhisperX passes model_dir through to torchaudio's download utilities.
+    model_dir = (os.environ.get("VPG_ALIGN_MODEL_DIR") or "").strip()
+    if not model_dir:
+        torch_home = (os.environ.get("TORCH_HOME") or "").strip()
+        if torch_home:
+            model_dir = str(Path(torch_home) / "torchaudio")
+    kwargs = {}
+    if model_dir:
+        p = Path(model_dir).expanduser()
+        p.mkdir(parents=True, exist_ok=True)
+        kwargs["model_dir"] = str(p)
+        print(f"[whisperx] align model_dir: {p}")
+
+    align_model, metadata = whisperx.load_align_model(language_code="en", device=device_align, **kwargs)
     return align_model, metadata, device_align
 
 def get_wav_duration_seconds(audio_path: str) -> float:
@@ -193,7 +253,7 @@ def _ensure_local_audio(audio_ref: str, cache_dir: Path, s3) -> str:
 
 def batch_mode(manifest_csv, generator_inputs_json, fps, out_path, gap_sec=0.35, strategy="onset_plus_vowel", max_events_per_word=2, min_event_gap_sec=0.08, collapse_adjacent=True, audio_cache_dir: str = ""):
     align_model, metadata, device_align = load_aligner()
-    g2p = G2p()
+    g2p = make_g2p()
 
     allowed_roles = _load_allowed_roles(generator_inputs_json)
     beats = []
@@ -332,7 +392,7 @@ def _parse_stage_from_script(script_path: str) -> tuple[dict, str, int]:
 
 def batch_mode_with_stage(manifest_csv, generator_inputs_json, fps, out_path, script_txt=None, gap_sec=0.5, strategy="onset_plus_vowel", max_events_per_word=2, min_event_gap_sec=0.08, collapse_adjacent=True, pause_seconds=0.5, audio_cache_dir: str = ""):
     align_model, metadata, device_align = load_aligner()
-    g2p = G2p()
+    g2p = make_g2p()
 
     allowed_roles = _load_allowed_roles(generator_inputs_json)
     beats = []

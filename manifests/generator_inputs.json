@@ -1,13 +1,13 @@
 {
   "run": {
     "project_name": "Video-01",
-    "fps": 2,
+    "fps": 1,
     "resolution": { "width": 1920, "height": 1080 },
     "render_engine": "CYCLES", 
     "denoise": true,
     "denoiser": "OPTIX",
     "quality": "fast",
-    "samples": 4,
+    "samples": 2,
     "output_dir": "../renders",
     "audio_sample_rate": 48000,
     "seed": 42
@@ -53,7 +53,7 @@
       "name": "Caleb",
       "typecast": {
         "voice_name": "Placeholder",
-        "voice_id": "tc_6791c4c4bbcdc04afd3fde2f",
+        "voice_id": "tc_685ca2dcfa58f44bdbe60d65",
         "languages": ["English"]
       },
       "blender": {
@@ -71,7 +71,7 @@
       "name": "Aria",
       "typecast": {
         "voice_name": "Placeholder",
-        "voice_id": "tc_6763aa69e0158fa7fe2ecdd2",
+        "voice_id": "tc_677f3763b5a012d3b3b3e85e",
         "languages": ["English"]
       },
       "blender": {

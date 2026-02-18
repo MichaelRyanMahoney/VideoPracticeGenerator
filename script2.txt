@@ -1,0 +1,566 @@
+TITLE: Caleb & Aria
+PROJECT: Mock Scenario
+VERSION: 02/18/2026
+
+DISPUTANT 1 NAME: Caleb
+DISPUTANT 1 PROFILE: 6th Grade Boy
+
+DISPUTANT 2 NAME: Aria
+DISPUTANT 2 PROFILE: 6th Grade Girl
+
+MEDIATOR A NAME: Emily
+MEDIATOR B NAME: Michael
+
+CONFLICT DESCRIPTION: When music class was starting, Caleb and Aria started arguing about who should sit in a seat by the instruments cart while other students were watching. The music teacher had stepped into the storage room to grab drumsticks, and neither of them would move.
+CONFLICT BEHAVIORS: Insulting, Arguing in class
+
+WHAT HAPPENED (ACCORDING TO D1):
+Caleb says that Aria called him “annoying” and said he always sits in the wrong spot. He also says he didn’t know Aria usually sits there and thought you could sit anywhere if you got there first.
+
+WHAT HAPPENED (ACCORDING TO D2):
+Aria says that Caleb took the seat she usually sits in during music class, and he wasn’t listening to her when she tried to tell him it was her normal spot.
+
+WHAT D1 WAS MOST BOTHERED BY:
+Caleb was bothered by being called out in front of the class.
+
+WHAT D2 WAS MOST BOTHERED BY:
+Aria was bothered by the fact that Caleb wouldn’t move and didn’t listen when she told him it was her regular seat.
+
+WHAT D1 FELT:
+Caleb felt put on the spot when Aria called him annoying while other students were watching.
+
+WHAT D2 FELT:
+Aria felt frustrated when Caleb stayed in the seat and ignored what she was saying.
+
+WHAT D1 WANTS:
+Caleb wants Aria to not insult him in front of other people.
+
+WHAT D2 WANTS:
+Aria wants Caleb to let her have her usual seat since it’s near her friends.
+
+WHAT D1 CAN DO DIFFERENTLY:
+Caleb can ask if someone usually sits in a seat before taking it and listen when someone explains something.
+
+WHAT D2 CAN DO DIFFERENTLY:
+Aria can explain calmly that it is her seat and not call names.
+
+WHAT BOTH CAN DO DIFFERENTLY:
+Both can use calm voices and ask the teacher for help instead of arguing.
+
+AGREEMENT – D1:
+Caleb agrees to move to a different open seat in music class if Aria asks to have a seat that is close to her friends.
+
+AGREEMENT – D2:
+Aria agrees to tell Caleb it’s her usual seat without calling him annoying or insulting him in front of others.
+
+
+### P: PRESENT YOURSELF AND PEER MEDIATION
+
+MEDIATOR A (EMILY)
+{emotion=normal intensity=1.0 tempo=1.02 pitch=1.0}
+Hi! You’ve been asked to do a peer mediation.
+
+MEDIATOR A (EMILY)
+{emotion=normal intensity=1.0 tempo=1.02 pitch=1.0}
+You’re not in trouble and I’ll explain more once we sit down.
+
+MEDIATOR A (EMILY)
+{emotion=normal intensity=1.0 tempo=1.01 pitch=1.0}
+Please come with me.
+
+[PAUSE]
+
+MEDIATOR A (EMILY)
+{emotion=normal intensity=1.0 tempo=1.02 pitch=1.0}
+Hi! You’ve been asked to do a peer mediation.
+
+MEDIATOR A (EMILY)
+{emotion=normal intensity=1.0 tempo=1.02 pitch=1.0}
+You’re not in trouble and I’ll explain more once we sit down.
+
+MEDIATOR A (EMILY)
+{emotion=normal intensity=1.0 tempo=1.01 pitch=1.0}
+Please come with me.
+
+[PAUSE]
+[PAUSE]
+
+MEDIATOR A (EMILY)
+{emotion=normal intensity=1.0 tempo=1.02 pitch=1.0}
+Hello! My name is Emily.
+
+MEDIATOR A (EMILY)
+{emotion=normal intensity=1.0 tempo=1.01 pitch=1.0}
+This is Michael and we are your peer mediators.
+
+MEDIATOR A (EMILY)
+{emotion=toneup intensity=1.0 tempo=1.06 pitch=1.0}
+What are your names?
+
+DISPUTANT 1 (CALEB)
+{emotion=normal intensity=1.0 tempo=1.03 pitch=1.0}
+Caleb.
+
+DISPUTANT 2 (ARIA)
+{emotion=normal intensity=0.95 tempo=1.02 pitch=1.0}
+Aria.
+
+MEDIATOR A (EMILY)
+{emotion=tonedown intensity=0.95 tempo=0.98 pitch=1.0}
+Thanks.
+
+MEDIATOR A (EMILY)
+{emotion=normal intensity=1.0 tempo=1.02 pitch=1.0}
+You’re not in trouble.
+
+MEDIATOR A (EMILY)
+{emotion=normal intensity=1.0 tempo=1.01 pitch=1.0}
+We heard you had a disagreement.
+
+MEDIATOR A (EMILY)
+{emotion=normal intensity=1.0 tempo=1.02 pitch=1.0}
+This is peer mediation, where students can work things out together.
+
+MEDIATOR A (EMILY)
+{emotion=normal intensity=1.0 tempo=1.01 pitch=1.0}
+We won’t share what you say with other students.
+
+MEDIATOR A (EMILY)
+{emotion=normal intensity=1.0 tempo=1.02 pitch=1.0}
+We won’t take sides.
+
+MEDIATOR A (EMILY)
+{emotion=normal intensity=1.0 tempo=1.01 pitch=1.0}
+We’ll help you find a solution that gives you both something you want.
+
+MEDIATOR A (EMILY)
+{emotion=normal intensity=1.0 tempo=1.02 pitch=1.0}
+We can help you resolve things here, instead of in the office.
+
+MEDIATOR A (EMILY)
+{emotion=toneup intensity=1.0 tempo=1.06 pitch=1.0}
+Does that sound okay?
+
+DISPUTANT 1 (CALEB)
+{emotion=normal intensity=0.95 tempo=1.02 pitch=1.0}
+Yeah.
+
+DISPUTANT 2 (ARIA)
+{emotion=normal intensity=0.95 tempo=1.01 pitch=1.0}
+Okay.
+
+[PAUSE]
+
+
+### E: EXPLAIN THE RULES
+
+MEDIATOR B (MICHAEL)
+{emotion=normal intensity=1.0 tempo=1.02 pitch=1.0}
+To have a good mediation, there are a few rules we all need to follow.
+
+MEDIATOR B (MICHAEL)
+{emotion=normal intensity=1.0 tempo=1.01 pitch=1.0}
+The Confidentiality Rule is for us mediators.
+
+MEDIATOR B (MICHAEL)
+{emotion=normal intensity=1.0 tempo=1.02 pitch=1.0}
+We won’t share what you say with other students.
+
+MEDIATOR B (MICHAEL)
+{emotion=toneup intensity=1.0 tempo=1.07 pitch=1.0}
+The One Mic Rule is for both of you.
+
+MEDIATOR B (MICHAEL)
+{emotion=normal intensity=1.0 tempo=1.02 pitch=1.0}
+It means that one person speaks at a time.
+
+MEDIATOR B (MICHAEL)
+{emotion=toneup intensity=1.0 tempo=1.06 pitch=1.0}
+The Respect Rule is for all of us.
+
+MEDIATOR B (MICHAEL)
+{emotion=normal intensity=1.0 tempo=1.02 pitch=1.0}
+We have to speak respectfully.
+
+MEDIATOR B (MICHAEL)
+{emotion=toneup intensity=1.0 tempo=1.06 pitch=1.0}
+Do you both agree to the rules?
+
+DISPUTANT 1 (CALEB)
+{emotion=normal intensity=0.95 tempo=1.02 pitch=1.0}
+Yeah, I agree.
+
+DISPUTANT 2 (ARIA)
+{emotion=normal intensity=0.95 tempo=1.01 pitch=1.0}
+I agree.
+
+[PAUSE]
+
+
+### A: ASK BOTH SIDES TO SHARE
+
+MEDIATOR A (EMILY)
+{emotion=normal intensity=1.0 tempo=1.02 pitch=1.0}
+We want to hear both of your perspectives on what we were told.
+
+MEDIATOR A (EMILY)
+{emotion=normal intensity=1.0 tempo=1.02 pitch=1.0}
+When music class was starting, Caleb and Aria started arguing about who should sit in a seat by the instruments cart while other students were watching.
+
+MEDIATOR A (EMILY)
+{emotion=normal intensity=1.0 tempo=1.01 pitch=1.0}
+The music teacher had stepped into the storage room to grab drumsticks, and neither of them would move.
+
+[PAUSE]
+
+MEDIATOR A (EMILY)
+{emotion=toneup intensity=1.0 tempo=1.06 pitch=1.0}
+Caleb, from your perspective, what happened between you two?
+
+DISPUTANT 1 (CALEB)
+{emotion=normal intensity=1.0 tempo=1.05 pitch=1.0}
+So I sat down by the instruments cart.
+
+DISPUTANT 1 (CALEB)
+{emotion=normal intensity=1.0 tempo=1.04 pitch=1.0}
+Aria came over and called me annoying.
+
+DISPUTANT 1 (CALEB)
+{emotion=normal intensity=0.95 tempo=1.03 pitch=1.0}
+And she said I always sit in the wrong spot.
+
+DISPUTANT 1 (CALEB)
+{emotion=normal intensity=0.95 tempo=1.03 pitch=1.0}
+I didn’t know she usually sits there.
+
+DISPUTANT 1 (CALEB)
+{emotion=normal intensity=0.95 tempo=1.02 pitch=1.0}
+I thought you could sit anywhere if you got there first.
+
+MEDIATOR A (EMILY)
+{emotion=tonedown intensity=0.95 tempo=0.98 pitch=1.0}
+What I heard you say is that Aria called you “annoying” and said you always sit in the wrong spot.
+
+MEDIATOR A (EMILY)
+{emotion=tonedown intensity=0.95 tempo=0.98 pitch=1.0}
+And you didn’t know that was her usual seat, so you thought it was just first come, first serve.
+
+MEDIATOR A (EMILY)
+{emotion=toneup intensity=1.0 tempo=1.06 pitch=1.0}
+Is that right?
+
+DISPUTANT 1 (CALEB)
+{emotion=normal intensity=0.95 tempo=1.01 pitch=1.0}
+Yeah.
+
+MEDIATOR A (EMILY)
+{emotion=normal intensity=1.0 tempo=1.02 pitch=1.0}
+Is there anything else you want to share?
+
+DISPUTANT 1 (CALEB)
+{emotion=normal intensity=0.9 tempo=1.01 pitch=1.0}
+Not really.
+
+[PAUSE]
+[OVERLAY1]
+[PAUSE]
+
+MEDIATOR A (EMILY)
+{emotion=toneup intensity=1.0 tempo=1.06 pitch=1.0}
+Aria, from your perspective, what happened between you two?
+
+DISPUTANT 2 (ARIA)
+{emotion=normal intensity=1.0 tempo=1.04 pitch=1.0}
+I always sit in that seat in music.
+
+DISPUTANT 2 (ARIA)
+{emotion=normal intensity=0.95 tempo=1.03 pitch=1.0}
+It’s close to my friends.
+
+DISPUTANT 2 (ARIA)
+{emotion=angry intensity=0.45 tempo=1.02 pitch=1.0}
+Caleb took it and he wasn’t listening to me when I said it’s my normal spot.
+
+DISPUTANT 2 (ARIA)
+{emotion=normal intensity=0.95 tempo=1.02 pitch=1.0}
+He just stayed there.
+
+MEDIATOR A (EMILY)
+{emotion=tonedown intensity=0.95 tempo=0.98 pitch=1.0}
+What I heard you say is that Caleb sat in the seat you usually sit in during music class.
+
+MEDIATOR A (EMILY)
+{emotion=tonedown intensity=0.95 tempo=0.98 pitch=1.0}
+And when you tried to tell him it was your normal spot, you felt like he wasn’t listening and wouldn’t move.
+
+MEDIATOR A (EMILY)
+{emotion=toneup intensity=1.0 tempo=1.06 pitch=1.0}
+Is that right?
+
+DISPUTANT 2 (ARIA)
+{emotion=normal intensity=0.95 tempo=1.01 pitch=1.0}
+Yeah.
+
+MEDIATOR A (EMILY)
+{emotion=normal intensity=1.0 tempo=1.02 pitch=1.0}
+Is there anything else you want to share?
+
+DISPUTANT 2 (ARIA)
+{emotion=normal intensity=0.9 tempo=1.01 pitch=1.0}
+No.
+
+[PAUSE]
+[OVERLAY2]
+[PAUSE]
+
+MEDIATOR B (MICHAEL)
+{emotion=toneup intensity=1.0 tempo=1.06 pitch=1.0}
+Caleb, what bothered you most in this situation?
+
+DISPUTANT 1 (CALEB)
+{emotion=sad intensity=0.8 tempo=0.98 pitch=1.0}
+Being called out in front of everyone.
+
+MEDIATOR B (MICHAEL)
+{emotion=tonedown intensity=0.95 tempo=0.98 pitch=1.0}
+How did you feel when Aria called you annoying while other students were watching?
+
+DISPUTANT 1 (CALEB)
+{emotion=sad intensity=0.85 tempo=0.98 pitch=1.0}
+Like… put on the spot.
+
+DISPUTANT 1 (CALEB)
+{emotion=sad intensity=0.75 tempo=0.99 pitch=1.0}
+It was embarrassing.
+
+MEDIATOR B (MICHAEL)
+{emotion=normal intensity=1.0 tempo=1.01 pitch=1.0}
+Thank you for sharing.
+
+[PAUSE]
+
+MEDIATOR B (MICHAEL)
+{emotion=toneup intensity=1.0 tempo=1.06 pitch=1.0}
+Aria, what bothered you most in this situation?
+
+DISPUTANT 2 (ARIA)
+{emotion=angry intensity=0.45 tempo=1.01 pitch=1.0}
+That he wouldn’t move.
+
+DISPUTANT 2 (ARIA)
+{emotion=angry intensity=0.45 tempo=1.01 pitch=1.0}
+And he didn’t listen when I told him it’s my regular seat.
+
+MEDIATOR B (MICHAEL)
+{emotion=tonedown intensity=0.95 tempo=0.98 pitch=1.0}
+How did you feel when Caleb stayed in the seat and ignored what you were saying?
+
+DISPUTANT 2 (ARIA)
+{emotion=angry intensity=0.5 tempo=1.02 pitch=1.0}
+Frustrated.
+
+DISPUTANT 2 (ARIA)
+{emotion=normal intensity=0.9 tempo=1.01 pitch=1.0}
+Like he didn’t care.
+
+MEDIATOR B (MICHAEL)
+{emotion=normal intensity=1.0 tempo=1.01 pitch=1.0}
+Thank you for sharing.
+
+[PAUSE]
+
+
+### C: CREATE A WIN-WIN SOLUTION
+
+MEDIATOR A (EMILY)
+{emotion=normal intensity=1.0 tempo=1.02 pitch=1.0}
+Now we’re going to talk about what you both want, so we can make a win-win plan.
+
+MEDIATOR A (EMILY)
+{emotion=toneup intensity=1.0 tempo=1.06 pitch=1.0}
+Caleb, what’s something you want Aria to do, or to stop doing?
+
+DISPUTANT 1 (CALEB)
+{emotion=normal intensity=0.95 tempo=1.02 pitch=1.0}
+Just don’t insult me in front of people.
+
+DISPUTANT 1 (CALEB)
+{emotion=normal intensity=0.95 tempo=1.02 pitch=1.0}
+Like don’t call me annoying.
+
+MEDIATOR A (EMILY)
+{emotion=tonedown intensity=0.95 tempo=0.98 pitch=1.0}
+So you want Aria to not call you names or insult you, especially in front of other students.
+
+MEDIATOR A (EMILY)
+{emotion=toneup intensity=1.0 tempo=1.06 pitch=1.0}
+Aria, what’s something you want Caleb to do, or to stop doing?
+
+DISPUTANT 2 (ARIA)
+{emotion=normal intensity=0.95 tempo=1.02 pitch=1.0}
+I want him to let me have my usual seat.
+
+DISPUTANT 2 (ARIA)
+{emotion=normal intensity=0.95 tempo=1.02 pitch=1.0}
+It’s close to my friends.
+
+MEDIATOR A (EMILY)
+{emotion=tonedown intensity=0.95 tempo=0.98 pitch=1.0}
+So you want Caleb to let you have your normal seat in music class, since it’s near your friends.
+
+[PAUSE]
+
+MEDIATOR B (MICHAEL)
+{emotion=normal intensity=1.0 tempo=1.02 pitch=1.0}
+Now let’s think about what you can both do differently, so you each get something you want.
+
+MEDIATOR B (MICHAEL)
+{emotion=toneup intensity=1.0 tempo=1.06 pitch=1.0}
+Caleb, what’s one thing you could do differently to help this work?
+
+DISPUTANT 1 (CALEB)
+{emotion=normal intensity=0.95 tempo=1.02 pitch=1.0}
+I could ask if someone usually sits there before I take the seat.
+
+DISPUTANT 1 (CALEB)
+{emotion=normal intensity=0.9 tempo=1.01 pitch=1.0}
+And like, actually listen if they say something.
+
+MEDIATOR B (MICHAEL)
+{emotion=normal intensity=1.0 tempo=1.01 pitch=1.0}
+Okay.
+
+MEDIATOR B (MICHAEL)
+{emotion=toneup intensity=1.0 tempo=1.06 pitch=1.0}
+Aria, what’s one thing you could do differently to help this work?
+
+DISPUTANT 2 (ARIA)
+{emotion=normal intensity=0.95 tempo=1.02 pitch=1.0}
+I can explain it calmly.
+
+DISPUTANT 2 (ARIA)
+{emotion=normal intensity=0.9 tempo=1.01 pitch=1.0}
+And not call him annoying.
+
+MEDIATOR B (MICHAEL)
+{emotion=normal intensity=1.0 tempo=1.01 pitch=1.0}
+Got it.
+
+[PAUSE]
+
+MEDIATOR A (EMILY)
+{emotion=toneup intensity=1.0 tempo=1.06 pitch=1.0}
+Is there anything else you’d like each other to do differently?
+
+DISPUTANT 1 (CALEB)
+{emotion=normal intensity=0.9 tempo=1.01 pitch=1.0}
+Just… say it normal.
+
+DISPUTANT 2 (ARIA)
+{emotion=normal intensity=0.9 tempo=1.01 pitch=1.0}
+And he can just move to another seat if it’s mine.
+
+[PAUSE]
+
+MEDIATOR A (EMILY)
+{emotion=toneup intensity=1.0 tempo=1.06 pitch=1.0}
+Is there something you could both do differently?
+
+DISPUTANT 1 (CALEB)
+{emotion=normal intensity=0.9 tempo=1.01 pitch=1.0}
+Use calm voices.
+
+DISPUTANT 2 (ARIA)
+{emotion=normal intensity=0.9 tempo=1.01 pitch=1.0}
+And if it’s getting annoying—
+
+DISPUTANT 2 (ARIA)
+{emotion=normal intensity=0.85 tempo=1.01 pitch=1.0}
+I mean if it’s getting like, too much, we can ask the teacher.
+
+MEDIATOR A (EMILY)
+{emotion=tonedown intensity=0.95 tempo=0.98 pitch=1.0}
+So both of you will use calm voices.
+
+MEDIATOR A (EMILY)
+{emotion=tonedown intensity=0.95 tempo=0.98 pitch=1.0}
+And if it starts turning into an argument, you’ll ask the teacher for help instead of arguing.
+
+[PAUSE]
+
+
+### E: ESTABLISH AN AGREEMENT
+
+MEDIATOR B (MICHAEL)
+{emotion=normal intensity=1.0 tempo=1.02 pitch=1.0}
+Now we’re going to write an agreement using what you both shared, so that this doesn’t happen again.
+
+[PAUSE]
+[PAUSE]
+[PAUSE]
+
+[ProcessFormSwap]
+
+[PAUSE]
+[PAUSE]
+
+MEDIATOR A (EMILY)
+{emotion=normal intensity=1.0 tempo=1.02 pitch=1.0}
+Here’s what we have.
+
+[PAUSE]
+
+MEDIATOR A (EMILY)
+{emotion=normal intensity=1.0 tempo=1.02 pitch=1.0}
+Caleb agrees to move to a different open seat in music class if Aria asks to have a seat that is close to her friends.
+
+MEDIATOR A (EMILY)
+{emotion=normal intensity=1.0 tempo=1.02 pitch=1.0}
+Aria agrees to tell Caleb it’s her usual seat without calling him annoying or insulting him in front of others.
+
+[PAUSE]
+[PAUSE]
+
+MEDIATOR A (EMILY)
+{emotion=toneup intensity=1.0 tempo=1.06 pitch=1.0}
+Do you both agree to do these things?
+
+DISPUTANT 1 (CALEB)
+{emotion=happy intensity=0.35 tempo=1.02 pitch=1.0}
+Yeah.
+
+DISPUTANT 2 (ARIA)
+{emotion=happy intensity=0.3 tempo=1.02 pitch=1.0}
+Yes.
+
+MEDIATOR B (MICHAEL)
+{emotion=normal intensity=1.0 tempo=1.01 pitch=1.0}
+Please read it and sign below.
+
+[PAUSE]
+[PAUSE]
+
+MEDIATOR B (MICHAEL)
+{emotion=normal intensity=1.0 tempo=1.02 pitch=1.0}
+Is there anything you want to say to each other before we finish?
+
+DISPUTANT 2 (ARIA)
+{emotion=normal intensity=0.85 tempo=1.01 pitch=1.0}
+Sorry I said it like that.
+
+DISPUTANT 1 (CALEB)
+{emotion=normal intensity=0.85 tempo=1.01 pitch=1.0}
+It’s fine.
+
+DISPUTANT 1 (CALEB)
+{emotion=normal intensity=0.85 tempo=1.01 pitch=1.0}
+I’ll just move next time.
+
+MEDIATOR A (EMILY)
+{emotion=happy intensity=0.35 tempo=1.03 pitch=1.0}
+Thanks for doing this mediation with us.
+
+MEDIATOR A (EMILY)
+{emotion=normal intensity=1.0 tempo=1.02 pitch=1.0}
+We’ll walk you back to class now.
+

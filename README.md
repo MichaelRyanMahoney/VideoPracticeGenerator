@@ -30,6 +30,15 @@ When `audio` is an S3 URI, `scripts/tts_typecast_from_manifest.py`:
 - **skips** synthesis if the object already exists in S3
 - otherwise generates WAV and uploads to that URI
 
+### Typecast model + delivery controls
+The TTS pipeline uses Typecast `ssfm-v30` (`POST /v1/text-to-speech`) with preset emotion prompts.
+
+- Supported `emotion_preset`: `normal`, `happy`, `sad`, `angry`, `whisper`, `toneup`, `tonedown`
+- `emotion_intensity`: `0.0` to `2.0`
+- `tempo`: `0.5` to `2.0`
+- `pitch`: accepts either semitone shift (`0` neutral) or ratio (`1.0` neutral, converted to semitones)
+- `volume`: `0` to `200`
+
 ### Parallel rendering (Batch array jobs)
 Distributed render shards render with `--no_audio` (timeline end estimated from visemes), so render workers do not need to download audio.
 
@@ -45,6 +54,46 @@ docker compose -f docker-compose.cpu.yml up --build
 
 ```bash
 docker compose -f docker-compose.gpu.worker.yml up --build
+```
+
+### Prevent re-downloading WhisperX/PyTorch models + avoid filling container `/tmp`
+Two common sources of wasted time and disk on a single EC2 GPU box are:
+- **Torch/torchaudio model checkpoints** downloading into container root (default: `/root/.cache/...`)
+- **Per-line audio WAV downloads** caching under `/tmp` (container overlay)
+
+This repo now defaults the GPU docker-compose files to keep caches on `/data`:
+- `TORCH_HOME=/data/.cache/torch`
+- `VPG_ALIGN_MODEL_DIR=/data/.cache/torchaudio`
+- `VPG_WORK_DIR=/data/tmp`
+- `VPG_AUDIO_CACHE_DIR=/data/cache/audio`
+
+Make sure `/data` is backed by a sufficiently large EBS volume.
+
+### Idempotency: skip director generation when already done
+`scripts/gpu_build_director.py` will **skip WhisperX** if the target `director_out_s3` already exists in S3.
+
+- **Default**: skip if exists (`VPG_SKIP_DIRECTOR_IF_EXISTS=1`)
+- **Force rebuild**: run `gpu_build_director.py --force` (or set `VPG_SKIP_DIRECTOR_IF_EXISTS=0`)
+
+### Render cache (reuse frames across jobs)
+If **director + scene + render settings** are identical, you can reuse already-rendered frames instead of re-rendering.
+
+When enabled (`VPG_ENABLE_RENDER_CACHE=1`, default), single-node GPU mode and the GPU executor mode will:
+- compute a deterministic `render_cache_key`
+- check for the “last expected frame” under:
+  - `projects/<project>/render_cache/<render_cache_key>/frames`
+- on a cache hit, **skip rendering** and finalize using that frames prefix
+
+To force a new cached render even if inputs are the same:
+- bump `VPG_RENDER_CACHE_VERSION` (default: `1`)
+
+### Quick disk cleanup (host)
+If you do run out of disk on the EC2 host, Docker artifacts are often the culprit:
+
+```bash
+docker system df
+docker system prune -af
+docker volume prune -f
 ```
 
 ## AWS wiring (what you create in AWS)

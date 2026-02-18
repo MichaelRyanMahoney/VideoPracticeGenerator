@@ -5,12 +5,13 @@ import os
 import subprocess
 import sys
 from pathlib import Path
-import os
 import shutil
 import time
 import uuid
 
 import boto3
+
+from workdir_utils import cleanup_work_dir, make_work_dir, should_keep_workdir
 
 
 def run_cmd(cmd: list[str], cwd: Path | None = None) -> None:
@@ -57,121 +58,129 @@ def main():
     s3 = boto3.client("s3", region_name=os.environ.get("AWS_REGION") or os.environ.get("AWS_DEFAULT_REGION"))
 
     project_root = Path(__file__).resolve().parents[1]
-    work = project_root / "out" / "_batch_work"
-    work.mkdir(parents=True, exist_ok=True)
-    local_director = work / "director_visemes.json"
-    local_gen_inputs = work / "generator_inputs.json"
-    s3_download(s3, args.director_s3, local_director)
-    s3_download(s3, args.generator_inputs_s3, local_gen_inputs)
-    # Ensure downstream Blender scripts read the *job* generator_inputs, not a baked-in file.
-    os.environ["VPG_GENERATOR_INPUTS_JSON"] = str(local_gen_inputs)
-
-    # Decide render engine override from generator inputs (so we don't depend on any baked defaults).
-    engine_cli = None
-    quality_cli = None
+    work = make_work_dir("vpg_worker_render_")
     try:
-        gi = json.loads(local_gen_inputs.read_text())
-        run_cfg = gi.get("run") or {}
-        re = str(run_cfg.get("render_engine") or "").strip().lower()
-        if re in ("blender_eevee", "eevee"):
-            engine_cli = "eevee"
-        elif re in ("blender_workbench", "workbench"):
-            engine_cli = "workbench"
-        elif re in ("blender_cycles", "cycles"):
-            engine_cli = "cycles"
-        # Optional: allow a simple quality knob for Eevee via generator_inputs.json
-        # (fast/full). If omitted, the Blender script default applies.
-        q = str(run_cfg.get("quality") or "").strip().lower()
-        if q in ("fast", "full"):
-            quality_cli = q
-    except Exception:
+        local_director = work / "director_visemes.json"
+        local_gen_inputs = work / "generator_inputs.json"
+        s3_download(s3, args.director_s3, local_director)
+        s3_download(s3, args.generator_inputs_s3, local_gen_inputs)
+        # Ensure downstream Blender scripts read the *job* generator_inputs, not a baked-in file.
+        os.environ["VPG_GENERATOR_INPUTS_JSON"] = str(local_gen_inputs)
+
+        # Decide render engine override from generator inputs (so we don't depend on any baked defaults).
         engine_cli = None
+        quality_cli = None
+        try:
+            gi = json.loads(local_gen_inputs.read_text())
+            run_cfg = gi.get("run") or {}
+            re = str(run_cfg.get("render_engine") or "").strip().lower()
+            if re in ("blender_eevee", "eevee"):
+                engine_cli = "eevee"
+            elif re in ("blender_workbench", "workbench"):
+                engine_cli = "workbench"
+            elif re in ("blender_cycles", "cycles"):
+                engine_cli = "cycles"
+            # Optional: allow a simple quality knob for Eevee via generator_inputs.json
+            # (fast/full). If omitted, the Blender script default applies.
+            q = str(run_cfg.get("quality") or "").strip().lower()
+            if q in ("fast", "full"):
+                quality_cli = q
+        except Exception:
+            engine_cli = None
+            quality_cli = None
 
-    # Prepare temp scene: either download a prepared scene, or copy base scene and configure roles
-    cfg_path = project_root / "run_full_video_creation_sequence.config.json"
-    cfg = json.loads(cfg_path.read_text())
-    # IMPORTANT: the repo config may contain a Mac path. In containers/Batch we must honor env overrides.
-    blender_bin = (
-        os.environ.get("VPG_BLENDER_BIN")
-        or os.environ.get("VPG_BLENDER_BIN_PATH")
-        or cfg.get("blender_binary")
-        or "/usr/local/bin/blender"
-    )
-    ts_scene = work / "work_scene.blend"
-    # NOTE: Eevee/Workbench use OpenGL. Running under Xvfb often forces software GL,
-    # which can be dramatically slower than running headless with GPU/EGL.
-    # We therefore only use xvfb-run when explicitly requested AND not rendering Eevee/Workbench
-    # (unless forced).
-    force_xvfb = (os.environ.get("VPG_FORCE_XVFB") or "").strip() == "1"
-    want_xvfb = os.environ.get("VPG_XVFB") == "1"
-    use_xvfb = bool(want_xvfb and (force_xvfb or (engine_cli not in ("eevee", "workbench"))))
-    pre = ["xvfb-run", "-a", "-s", "-screen 0 1920x1080x24"] if use_xvfb else []
+        # Prepare temp scene: either download a prepared scene, or copy base scene and configure roles
+        cfg_path = project_root / "run_full_video_creation_sequence.config.json"
+        cfg = json.loads(cfg_path.read_text())
+        # IMPORTANT: the repo config may contain a Mac path. In containers/Batch we must honor env overrides.
+        blender_bin = (
+            os.environ.get("VPG_BLENDER_BIN")
+            or os.environ.get("VPG_BLENDER_BIN_PATH")
+            or cfg.get("blender_binary")
+            or "/usr/local/bin/blender"
+        )
+        ts_scene = work / "work_scene.blend"
 
-    if args.scene_s3:
-        # Use prepared scene (already has role collections + configured materials/selectors)
-        s3_download(s3, args.scene_s3, ts_scene)
-    else:
-        base_scene = cfg.get("base_scene_blend") or "scenes/base_scene.blend"
-        base_scene_path = (project_root / base_scene).resolve()
-        if not base_scene_path.exists():
-            raise SystemExit(f"Base scene not found: {base_scene_path}")
-        ts_scene.write_bytes(base_scene_path.read_bytes())
-        cfg_script = project_root / "scripts" / "blender_configure_roles_for_render.py"
-        run_cmd(pre + [
+        # NOTE: Eevee/Workbench use OpenGL. Running under Xvfb often forces software GL,
+        # which can be dramatically slower than running headless with GPU/EGL.
+        # We therefore only use xvfb-run when explicitly requested AND not rendering Eevee/Workbench
+        # (unless forced).
+        force_xvfb = (os.environ.get("VPG_FORCE_XVFB") or "").strip() == "1"
+        want_xvfb = os.environ.get("VPG_XVFB") == "1"
+        use_xvfb = bool(want_xvfb and (force_xvfb or (engine_cli not in ("eevee", "workbench"))))
+        pre = ["xvfb-run", "-a", "-s", "-screen 0 1920x1080x24"] if use_xvfb else []
+
+        if args.scene_s3:
+            # Use prepared scene (already has role collections + configured materials/selectors)
+            s3_download(s3, args.scene_s3, ts_scene)
+        else:
+            base_scene = cfg.get("base_scene_blend") or "scenes/base_scene.blend"
+            base_scene_path = (project_root / base_scene).resolve()
+            if not base_scene_path.exists():
+                raise SystemExit(f"Base scene not found: {base_scene_path}")
+            ts_scene.write_bytes(base_scene_path.read_bytes())
+            cfg_script = project_root / "scripts" / "blender_configure_roles_for_render.py"
+            run_cmd(pre + [
+                str(blender_bin), "-b", str(ts_scene),
+                "--python", str(cfg_script),
+                "--", "--config", str(local_gen_inputs), "--save"
+            ])
+
+        # Render the requested range with transparent frames
+        # Use a unique output per run to avoid cross-job contamination.
+        run_id = uuid.uuid4().hex[:8]
+        try:
+            # Try to derive job id from frames prefix: .../jobs/<jobId>/frames
+            p = args.frames_out_s3_prefix
+            if "/jobs/" in p:
+                run_id = p.split("/jobs/", 1)[1].split("/", 1)[0][:8] or run_id
+            elif "/render_cache/" in p:
+                # Deterministic render cache stem: .../render_cache/<renderCacheKey>/frames
+                run_id = p.split("/render_cache/", 1)[1].split("/", 1)[0][:8] or run_id
+        except Exception:
+            pass
+        out_video = work / f"batch_render_{run_id}.mp4"
+        frames_dir = out_video.parent / f"{out_video.stem}_frames"
+        # Clear any prior frames for this run_id to ensure we don't upload stale PNGs if Blender fails.
+        if frames_dir.exists():
+            shutil.rmtree(frames_dir, ignore_errors=True)
+        start_ts = time.time()
+        run_director_py = project_root / "scripts" / "run_director_visemes.py"
+        render_cmd = pre + [
             str(blender_bin), "-b", str(ts_scene),
-            "--python", str(cfg_script),
-            "--", "--config", str(local_gen_inputs), "--save"
-        ])
+            "--python", str(run_director_py),
+            "--",
+            "--director", str(local_director),
+            "--out", str(out_video),
+            "--frame_start", str(int(args.frame_start)),
+            "--frame_end", str(int(args.frame_end)),
+            "--no_audio",
+            "--no_clean_frames",
+        ]
+        if engine_cli:
+            render_cmd += ["--engine", engine_cli]
+        if quality_cli:
+            render_cmd += ["--quality", quality_cli]
+        if args.transparent:
+            render_cmd.append("--transparent")
+        run_cmd(render_cmd)
 
-    # Render the requested range with transparent frames
-    # Use a unique output per run to avoid cross-job contamination.
-    run_id = uuid.uuid4().hex[:8]
-    try:
-        # Try to derive job id from frames prefix: .../jobs/<jobId>/frames
-        p = args.frames_out_s3_prefix
-        if "/jobs/" in p:
-            run_id = p.split("/jobs/", 1)[1].split("/", 1)[0][:8] or run_id
-    except Exception:
-        pass
-    out_video = work / f"batch_render_{run_id}.mp4"
-    frames_dir = out_video.parent / f"{out_video.stem}_frames"
-    # Clear any prior frames for this run_id to ensure we don't upload stale PNGs if Blender fails.
-    if frames_dir.exists():
-        shutil.rmtree(frames_dir, ignore_errors=True)
-    start_ts = time.time()
-    run_director_py = project_root / "scripts" / "run_director_visemes.py"
-    render_cmd = pre + [
-        str(blender_bin), "-b", str(ts_scene),
-        "--python", str(run_director_py),
-        "--",
-        "--director", str(local_director),
-        "--out", str(out_video),
-        "--frame_start", str(int(args.frame_start)),
-        "--frame_end", str(int(args.frame_end)),
-        "--no_audio",
-        "--no_clean_frames",
-    ]
-    if engine_cli:
-        render_cmd += ["--engine", engine_cli]
-    if quality_cli:
-        render_cmd += ["--quality", quality_cli]
-    if args.transparent:
-        render_cmd.append("--transparent")
-    run_cmd(render_cmd)
+        # Upload frames back to S3
+        if not frames_dir.exists():
+            raise SystemExit("[error] frames directory missing; render failed.")
+        pngs = sorted(frames_dir.glob("*.png"))
+        if not pngs:
+            raise SystemExit("[error] no PNG frames produced; render failed.")
+        # Sanity: ensure frames are from this run (avoid uploading leftovers).
+        newest = max(p.stat().st_mtime for p in pngs)
+        if newest < (start_ts - 1.0):
+            raise SystemExit("[error] PNG frames appear to be stale (older than this render invocation).")
+        s3_upload_dir(s3, frames_dir, args.frames_out_s3_prefix)
 
-    # Upload frames back to S3
-    if not frames_dir.exists():
-        raise SystemExit("[error] frames directory missing; render failed.")
-    pngs = sorted(frames_dir.glob("*.png"))
-    if not pngs:
-        raise SystemExit("[error] no PNG frames produced; render failed.")
-    # Sanity: ensure frames are from this run (avoid uploading leftovers).
-    newest = max(p.stat().st_mtime for p in pngs)
-    if newest < (start_ts - 1.0):
-        raise SystemExit("[error] PNG frames appear to be stale (older than this render invocation).")
-    s3_upload_dir(s3, frames_dir, args.frames_out_s3_prefix)
-
-    print("[worker_render] done.")
+        print("[worker_render] done.")
+    finally:
+        if not should_keep_workdir():
+            cleanup_work_dir(work)
 
 
 if __name__ == "__main__":

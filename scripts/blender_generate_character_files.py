@@ -503,7 +503,7 @@ def main():
                 try:
                     # In headless Batch, it's safer to avoid any interactive overwrite checks.
                     # Also, copy=True avoids some edge cases around moving/renaming the currently-open file.
-                try:
+                    try:
                         bpy.ops.wm.save_as_mainfile(filepath=str(scene_save_as), copy=True, check_existing=False)
                     except TypeError:
                         bpy.ops.wm.save_as_mainfile(filepath=str(scene_save_as), copy=True)
@@ -529,7 +529,7 @@ def main():
                     except Exception as ex2:
                         print(f"[WARN] fallback save/copy failed: {ex2}")
                     if not recovered:
-                    raise
+                        raise
             elif opts["scene_save"]:
                 if bpy.data.filepath:
                     print(f"[SAVE] Scene in place: {bpy.data.filepath}")

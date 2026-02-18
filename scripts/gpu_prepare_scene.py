@@ -20,6 +20,7 @@ from pathlib import Path
 import boto3
 import uuid
 
+from workdir_utils import cleanup_work_dir, make_work_dir, should_keep_workdir
 
 def s3_parse(uri: str) -> tuple[str, str]:
     assert uri.startswith("s3://")
@@ -90,12 +91,13 @@ def main():
     # To avoid that class of issues, do the heavy Blender IO on a local scratch filesystem.
     # You can override with VPG_PREPARE_SCENE_WORKDIR=/app/out/... if you explicitly want it.
     forced = (os.environ.get("VPG_PREPARE_SCENE_WORKDIR") or "").strip()
+    work = None
     if forced:
         work = Path(forced).expanduser().resolve() / str(uuid.uuid4())
-    work.mkdir(parents=True, exist_ok=True)
+        work.mkdir(parents=True, exist_ok=True)
         print(f"[gpu_prepare_scene] workdir (forced) = {work}")
     else:
-        work = Path(tempfile.mkdtemp(prefix="vpg_prepare_scene_"))
+        work = make_work_dir("vpg_prepare_scene_")
         print(f"[gpu_prepare_scene] workdir (tmp) = {work}")
 
     # Force Blender to use a clean config + a tempdir that exists in this container.
@@ -119,75 +121,85 @@ def main():
         blender_flags += ["--tempdir", str(work)]
     else:
         print("[gpu_prepare_scene] note: blender does not advertise --tempdir; relying on TMPDIR instead.")
-    gen_inputs = work / "generator_inputs.json"
-    s3_download(s3, args.generator_inputs_s3, gen_inputs)
+    try:
+        gen_inputs = work / "generator_inputs.json"
+        s3_download(s3, args.generator_inputs_s3, gen_inputs)
 
-    # Create a working scene
-    work_scene = work / "work_scene.blend"
-    work_scene.write_bytes(base_scene_path.read_bytes())
+        # Create a working scene
+        work_scene = work / "work_scene.blend"
+        work_scene.write_bytes(base_scene_path.read_bytes())
 
-    # 1) Generate role blends + append into the work scene (positions included)
-    default_char_blend = (project_root / (cfg.get("default_character_blend") or "assets/DefaultCharacter.blend")).resolve()
-    if not default_char_blend.exists():
-        raise SystemExit(f"Default character blend not found in image: {default_char_blend}")
-    gen_script = project_root / "scripts" / "blender_generate_character_files.py"
-    prepared_scene = work / "prepared_scene.blend"
-    run([
-        str(blender_bin),
-        *blender_flags,
-        "-b",
-        str(default_char_blend),
-        "--python",
-        str(gen_script),
-        "--",
-        "--config",
-        str(gen_inputs),
-        "--source",
-        str(default_char_blend),
-        "--append-scene",
-        str(work_scene),
-        "--scene-save-as",
-        str(prepared_scene),
-        "--outdir",
-        str(work / "role_blends"),
-    ], cwd=project_root, env=blender_env)
+        # 1) Generate role blends + append into the work scene (positions included)
+        default_char_blend = (project_root / (cfg.get("default_character_blend") or "assets/DefaultCharacter.blend")).resolve()
+        if not default_char_blend.exists():
+            raise SystemExit(f"Default character blend not found in image: {default_char_blend}")
+        gen_script = project_root / "scripts" / "blender_generate_character_files.py"
+        prepared_scene = work / "prepared_scene.blend"
+        run([
+            str(blender_bin),
+            *blender_flags,
+            "-b",
+            str(default_char_blend),
+            "--python",
+            str(gen_script),
+            "--",
+            "--config",
+            str(gen_inputs),
+            "--source",
+            str(default_char_blend),
+            "--append-scene",
+            str(work_scene),
+            "--scene-save-as",
+            str(prepared_scene),
+            "--outdir",
+            str(work / "role_blends"),
+        ], cwd=project_root, env=blender_env)
 
-    # 2) Configure roles/colors/selectors in the prepared scene
-    cfg_script = project_root / "scripts" / "blender_configure_roles_for_render.py"
-    run([
-        str(blender_bin),
-        *blender_flags,
-        "-b",
-        str(prepared_scene),
-        "--python",
-        str(cfg_script),
-        "--",
-        "--config",
-        str(gen_inputs),
-        "--save",
-    ], cwd=project_root, env=blender_env)
+        # 2) Configure roles/colors/selectors in the prepared scene
+        cfg_script = project_root / "scripts" / "blender_configure_roles_for_render.py"
+        run([
+            str(blender_bin),
+            *blender_flags,
+            "-b",
+            str(prepared_scene),
+            "--python",
+            str(cfg_script),
+            "--",
+            "--config",
+            str(gen_inputs),
+            # Ensure World/HDRI is applied even when generator_inputs.json does not specify it.
+            # blender_configure_roles_for_render.py supports reading HDRI settings from an external
+            # config file (our repo-level run_full_video_creation_sequence.config.json).
+            "--hdri_from_config",
+            str(cfg_path),
+            "--save",
+        ], cwd=project_root, env=blender_env)
 
-    # 3) Verify role collections exist (fail fast if not)
-    verify_py = project_root / "scripts" / "blender_verify_roles_in_scene.py"
-    run([
-        str(blender_bin),
-        *blender_flags,
-        "-b",
-        str(prepared_scene),
-        "--python",
-        str(verify_py),
-        "--",
-        "--roles",
-        "Disputant1",
-        "MediatorA",
-        "MediatorB",
-        "Disputant2",
-    ], cwd=project_root, env=blender_env)
+        # 3) Verify role collections exist (fail fast if not)
+        verify_py = project_root / "scripts" / "blender_verify_roles_in_scene.py"
+        run([
+            str(blender_bin),
+            *blender_flags,
+            "-b",
+            str(prepared_scene),
+            "--python",
+            str(verify_py),
+            "--",
+            "--roles",
+            "Disputant1",
+            "MediatorA",
+            "MediatorB",
+            "Disputant2",
+        ], cwd=project_root, env=blender_env)
 
-    s3_upload(s3, prepared_scene, args.prepared_scene_out_s3)
-    if args.prepared_scene_cache_s3:
-        s3_upload(s3, prepared_scene, args.prepared_scene_cache_s3)
-    print("[gpu_prepare_scene] done.")
+        s3_upload(s3, prepared_scene, args.prepared_scene_out_s3)
+        if args.prepared_scene_cache_s3:
+            s3_upload(s3, prepared_scene, args.prepared_scene_cache_s3)
+        print("[gpu_prepare_scene] done.")
+    finally:
+        # If you forced the workdir, assume you might want to inspect it unless you explicitly unset KEEP.
+        if work and (not should_keep_workdir()) and (not forced):
+            cleanup_work_dir(work)
 
 
 if __name__ == "__main__":

@@ -1,72 +1,113 @@
-id,speaker,audio,transcript,emotion_preset,emotion_intensity,tempo,pitch,volume
-001,MediatorA,audio/MEDIATORA_001.wav,"Hi! You’ve both been asked to participate in a peer mediation. It’s meant to help you, and you’re not in trouble. I’ll explain more in a bit. Please follow me.",normal,1.0,1.04,0,100
-002,Disputant1,audio/DISPUTANT1_002.wav,Okay.,normal,1.0,1.0,0,100
-003,Disputant2,audio/DISPUTANT2_003.wav,Okay.,normal,1.0,1.0,0,100
-004,MediatorA,audio/MEDIATORA_004.wav,Hello! My name is Emily and this is Michael. What are your names?,happy,0.4,1.04,0,100
-005,Disputant1,audio/DISPUTANT1_005.wav,I’m Caleb.,normal,1.0,1.0,0,100
-006,Disputant2,audio/DISPUTANT2_006.wav,I’m Aria.,normal,1.0,1.0,0,100
-007,MediatorA,audio/MEDIATORA_007.wav,"This is peer mediation, where students talk things through and solve conflicts without adults.",normal,1.0,0.98,0,100
-008,MediatorA,audio/MEDIATORA_008.wav,"As peer mediators, we won’t share anything you say here with other students.",normal,1.0,0.98,0,100
-009,MediatorB,audio/MEDIATORB_009.wav,"It sounds like you had a disagreement, and we’re here to help you work through it.",normal,1.0,1.0,0,100
-010,MediatorB,audio/MEDIATORB_010.wav,"We’ll listen to both of your sides. We won’t take sides, but we’ll help you agree on a solution.",normal,1.0,1.0,0,100
-011,MediatorB,audio/MEDIATORB_011.wav,"Most students prefer talking it out here, rather than going to the office. Want to try it out?",normal,1.0,1.0,0,100
-012,Disputant1,audio/DISPUTANT1_012.wav,Yeah.,normal,1.0,1.0,0,100
-013,Disputant2,audio/DISPUTANT2_013.wav,Sure.,normal,1.0,1.0,0,100
-014,MediatorA,audio/MEDIATORA_014.wav,"So for us to have a good mediation, there are some rules we all need to follow.",normal,1.0,1.0,0,100
-015,MediatorA,audio/MEDIATORA_015.wav,"The first rule is the confidentiality rule, and that's for us mediators. We won’t share what you say with other students.",normal,1.0,0.98,0,100
-016,MediatorB,audio/MEDIATORB_016.wav,"A rule for you both is the One Mic rule. If the other person is speaking, wait for them to finish.",normal,1.0,1.1,0,100
-017,MediatorB,audio/MEDIATORB_017.wav,The Respect rule says that all of us need to respect each other. Do you both agree to the rules?,normal,1.0,1.1,0,100
-018,Disputant1,audio/DISPUTANT1_018.wav,Yeah that's okay.,normal,1.0,1.0,0,100
-019,Disputant2,audio/DISPUTANT2_019.wav,Yeah.,normal,1.0,1.0,0,100
-020,MediatorA,audio/MEDIATORA_020.wav,"Okay. We heard that you argued over your seats in the classroom, and both refused to move. Caleb, can you share first about what happened?",normal,1.0,1.0,0,100
-021,Disputant1,audio/DISPUTANT1_021.wav,"In music, I sat down, and Aria started saying stuff about me. Like, a mean name. I didn’t want to move after that.",normal,1.0,1.0,0,100
-022,MediatorA,audio/MEDIATORA_022.wav,"So what I’m hearing is you sat down in music class, Aria said a mean name toward you, and you didn't want to move. Did I get that right?",normal,1.0,0.98,0,100
-023,Disputant1,audio/DISPUTANT1_023.wav,"Yeah, that’s right.",sad,0.8,0.98,0,100
-024,MediatorB,audio/MEDIATORB_024.wav,"Aria, could you please share what happened, from your point of view?",normal,1.0,1.1,0,100
-025,Disputant2,audio/DISPUTANT2_025.wav,"Yeah, that seat is where I usually sit with my friends. Caleb took it, and I asked him to move, and he wouldn’t, so I got mad.",normal,1.0,1.0,0,100
-026,MediatorB,audio/MEDIATORB_026.wav,"So you’re saying that’s your usual spot near your friends, Caleb sat there, you asked him to switch, and when he didn’t, you felt mad. Is that accurate?",normal,1.0,1.1,0,100
-027,Disputant2,audio/DISPUTANT2_027.wav,Yeah.,normal,1.0,1.0,0,100
-028,MediatorA,audio/MEDIATORA_028.wav,"Caleb, how did you feel when Aria called you the mean name?",normal,1.0,0.98,0,100
-029,Disputant1,audio/DISPUTANT1_029.wav,Umm... embarrassed. People were looking. It felt bad.,sad,1.0,0.96,0,100
-030,MediatorB,audio/MEDIATORB_030.wav,"And Aria, how did you feel when you saw Caleb sitting in the seat you usually use?",normal,1.0,1.1,0,100
-031,Disputant2,audio/DISPUTANT2_031.wav,I felt frustrated. My friends were already there.,normal,1.0,1.0,0,100
-032,MediatorA,audio/MEDIATORA_032.wav,"Caleb, what bothered you the most in this situation?",normal,1.0,1.0,0,100
-033,Disputant1,audio/DISPUTANT1_033.wav,Being called a mean name in front of everyone. That was the worst part.,normal,1.0,1.0,0,100
-034,MediatorA,audio/MEDIATORA_034.wav,What do you want to be different between you two after today?,normal,1.0,0.98,0,100
-035,Disputant1,audio/DISPUTANT1_035.wav,I want her to not call me names or say mean stuff.,normal,1.0,1.0,0,100
-036,MediatorA,audio/MEDIATORA_036.wav,It sounds like what you want is to not be insulted in front of your classmates. Is that right?,normal,1.0,0.98,0,100
-037,Disputant1,audio/DISPUTANT1_037.wav,Yeah.,happy,0.2,1.0,0,100
-038,MediatorB,audio/MEDIATORB_038.wav,"Aria, what bothered you the most in this situation?",normal,1.0,1.1,0,100
-039,Disputant2,audio/DISPUTANT2_039.wav,Not being able to sit with my friends like I usually do.,normal,1.0,1.0,0,100
-040,MediatorB,audio/MEDIATORB_040.wav,What do you want to be different between you two after today?,normal,1.0,1.1,0,100
-041,Disputant2,audio/DISPUTANT2_041.wav,I want to sit next to my friends during music without it turning into a fight.,normal,1.0,1.0,0,100
-042,MediatorB,audio/MEDIATORB_042.wav,"So it sounds like you want to keep your usual seat near your friends, without arguing. Is that right?",normal,1.0,1.1,0,100
-043,Disputant2,audio/DISPUTANT2_043.wav,Yeah that's right.,happy,0.1,1.02,0,100
-044,MediatorA,audio/MEDIATORA_044.wav,"Okay, we started this mediation because we heard that you argued over your seats and both refused to move.",normal,1.0,1.0,0,100
-045,MediatorA,audio/MEDIATORA_045.wav,Our goal now is to work together to find a solution so that this conflict doesn’t happen again.,normal,1.0,1.0,0,100
-046,MediatorA,audio/MEDIATORA_046.wav,"We’re going to create a win-win solution, which means you both will get something you want.",normal,1.0,1.0,0,100
-047,MediatorB,audio/MEDIATORB_047.wav,"Caleb, it seems like you want not to be insulted in front of your classmates.",normal,1.0,1.1,0,100
-048,MediatorB,audio/MEDIATORB_048.wav,"Aria, it seems like you want to sit next to your friends during music.",normal,1.0,1.1,0,100
-049,MediatorB,audio/MEDIATORB_049.wav,What are some ways you can both get something you want?,normal,1.0,1.1,0,100
-050,Disputant2,audio/DISPUTANT2_050.wav,Umm... He could let me have that seat near my friends.,normal,1.0,1.0,0,100
-051,Disputant1,audio/DISPUTANT1_051.wav,"Yeah, I want her to not say mean things about me.",normal,1.0,1.0,0,100
-052,MediatorA,audio/MEDIATORA_052.wav,"Okay, and what could help prevent future arguments?",normal,1.0,0.98,0,100
-053,Disputant1,audio/DISPUTANT1_053.wav,"Maybe we could just sit on different sides, so we don't bother each other again.",normal,1.0,1.0,0,100
-054,Disputant2,audio/DISPUTANT2_054.wav,I’m fine with that if I can still sit on the side with my friends.,happy,0.1,1.04,0,100
-055,MediatorB,audio/MEDIATORB_055.wav,So a realistic thing Caleb could get is that Aria wouldn't insult him. And a realistic thing Aria could get is getting to sit next to her friends during music... Does that match what you both want?,normal,1.0,1.1,0,100
-056,Disputant1,audio/DISPUTANT1_056.wav,Yeah.,happy,0.1,1.02,0,100
-057,Disputant2,audio/DISPUTANT2_057.wav,Yes.,happy,0.1,1.02,0,100
-058,MediatorA,audio/MEDIATORA_058.wav,"Okay, while Michael writes down the agreement, how do you feel after going through this mediation?",normal,1.0,1.0,0,100
-059,Disputant1,audio/DISPUTANT1_059.wav,Better. I don't want to fight so that's good.,happy,0.1,1.0,0,100
-060,Disputant2,audio/DISPUTANT2_060.wav,"Yeah, it's good, I feel better.",happy,0.1,1.02,0,100
-061,MediatorA,audio/MEDIATORA_061.wav,Is there anything else you want to say to the other person?,normal,1.0,0.98,0,100
-062,Disputant2,audio/DISPUTANT2_062.wav,I won’t say mean stuff anymore. I just want to sit with my group.,normal,1.0,1.0,0,100
-063,Disputant1,audio/DISPUTANT1_063.wav,That's okay. I’ll let you have that seat.,normal,1.0,1.0,0,100
-064,MediatorB,audio/MEDIATORB_064.wav,"Okay, I’m going to read the agreement out loud.",normal,1.0,1.1,0,100
-065,MediatorB,audio/MEDIATORB_065.wav,Caleb agrees to always let Aria sit in the seat next to her friends in music class.,normal,1.0,1.1,0,100
-066,MediatorB,audio/MEDIATORB_066.wav,Aria agrees to not say mean things about Caleb or to insult him.,normal,1.0,1.1,0,100
-067,MediatorB,audio/MEDIATORB_067.wav,And Both Caleb and Aria agree to sit on opposite sides of the classroom in music class so they don't fight in the future.,normal,1.0,1.1,0,100
-068,MediatorB,audio/MEDIATORB_068.wav,Do you both agree to this?,normal,1.0,1.1,0,100
-069,Disputant1,audio/DISPUTANT1_069.wav,Yeah I agree.,happy,0.2,1.04,0,100
-070,Disputant2,audio/DISPUTANT2_070.wav,I agree.,happy,0.1,1.04,0,100
-071,MediatorA,audio/MEDIATORA_071.wav,"Okay, great. Now we’ll have you both sign, and we’re done. Thanks for working on this together.",happy,0.3,1.04,0,100
+id,speaker,audio,audio_hash,transcript,emotion_preset,emotion_intensity,tempo,pitch,volume
+001,MediatorA,audio/MEDIATORA_001.wav,e1374ed4f73d44c072b87aa60735001e433a858b2a50daa1334f1c6b42cef49c,Hi! You’ve been asked to do a peer mediation.,normal,1.0,1.02,1.0,100
+002,MediatorA,audio/MEDIATORA_002.wav,8be877a0e59a988cf25271730619282a813d3bec4badfae1edf9adb75d12b74f,You’re not in trouble and I’ll explain more once we sit down.,normal,1.0,1.02,1.0,100
+003,MediatorA,audio/MEDIATORA_003.wav,c6da29c175c5f1aa0f8fb645b1691cb1f633b9e6d669242a47302f31365ca043,Please come with me.,normal,1.0,1.01,1.0,100
+004,MediatorA,audio/MEDIATORA_004.wav,e1374ed4f73d44c072b87aa60735001e433a858b2a50daa1334f1c6b42cef49c,Hi! You’ve been asked to do a peer mediation.,normal,1.0,1.02,1.0,100
+005,MediatorA,audio/MEDIATORA_005.wav,8be877a0e59a988cf25271730619282a813d3bec4badfae1edf9adb75d12b74f,You’re not in trouble and I’ll explain more once we sit down.,normal,1.0,1.02,1.0,100
+006,MediatorA,audio/MEDIATORA_006.wav,c6da29c175c5f1aa0f8fb645b1691cb1f633b9e6d669242a47302f31365ca043,Please come with me.,normal,1.0,1.01,1.0,100
+007,MediatorA,audio/MEDIATORA_007.wav,407bc36b96a27d248de1b42460a264f9bcd7529433edb312d23c2e3eca8dbeed,Hello! My name is Emily.,normal,1.0,1.02,1.0,100
+008,MediatorA,audio/MEDIATORA_008.wav,14048f5f279b27445bda6d4d2fc146c401107edf492f8fad8765ac80b0b2302c,This is Michael and we are your peer mediators.,normal,1.0,1.01,1.0,100
+009,MediatorA,audio/MEDIATORA_009.wav,119afddc854de26479a269708416dc487cca52d1bedd9b85d292604b79aac701,What are your names?,toneup,1.0,1.06,1.0,100
+010,Disputant1,audio/DISPUTANT1_010.wav,4ec34194e8e3e50ca60b9a315aea19a059107740bd45dda114d1651cfff40082,Caleb.,normal,1.0,1.03,1.0,100
+011,Disputant2,audio/DISPUTANT2_011.wav,8006706f8d63fe6bb4b1e08055ca02b5e5f6b624da266e6575f244e7ed84d303,Aria.,normal,0.95,1.02,1.0,100
+012,MediatorA,audio/MEDIATORA_012.wav,6b96fbefb97a1f5fb348d9892b5bb648f94e311cf55d3fed2eb05b637a66f948,Thanks.,tonedown,0.95,0.98,1.0,100
+013,MediatorA,audio/MEDIATORA_013.wav,9b9d20460a1d60363f7e0e9905c9020d0d08e91a9bda169ab7d8ad0875d29276,You’re not in trouble.,normal,1.0,1.02,1.0,100
+014,MediatorA,audio/MEDIATORA_014.wav,cafd04e7c07b56da782251692a95290ad78380ac6df3738b4f3a3fb959177d39,We heard you had a disagreement.,normal,1.0,1.01,1.0,100
+015,MediatorA,audio/MEDIATORA_015.wav,4cadd912f98aa6a2ed9ac02cf103561778cb3ad3f2ffb8066822a9cf06e24ed2,"This is peer mediation, where students can work things out together.",normal,1.0,1.02,1.0,100
+016,MediatorA,audio/MEDIATORA_016.wav,41706bd9451b3fbad3008d1c1548dec4eef010f13221be82628c96f761040f9d,We won’t share what you say with other students.,normal,1.0,1.01,1.0,100
+017,MediatorA,audio/MEDIATORA_017.wav,6ccfee59ffa549e24bee50be88079c18cfc8216e158e75e08be2e0d2dd54b442,We won’t take sides.,normal,1.0,1.02,1.0,100
+018,MediatorA,audio/MEDIATORA_018.wav,ddca8f5499f416c85ceb37b01e77d0c838aadfad18aae6c1b83722f8a53a34db,We’ll help you find a solution that gives you both something you want.,normal,1.0,1.01,1.0,100
+019,MediatorA,audio/MEDIATORA_019.wav,9d9e3649002941fd16725baa03155cd2c795753fbeff63a0a8c4e838b416e316,"We can help you resolve things here, instead of in the office.",normal,1.0,1.02,1.0,100
+020,MediatorA,audio/MEDIATORA_020.wav,a70dccbf919c946ba92ab474968266167acd78bd9e9a10f957bb7710c89ad3d0,Does that sound okay?,toneup,1.0,1.06,1.0,100
+021,Disputant1,audio/DISPUTANT1_021.wav,dd158eaea06ee348085c8f772001536311c1cb435c809e57da1e05f9f0a50d46,Yeah.,normal,0.95,1.02,1.0,100
+022,Disputant2,audio/DISPUTANT2_022.wav,fbc12e0030483e57733f33d4ff63e0649f7901a5716c95395e621f4e0249518f,Okay.,normal,0.95,1.01,1.0,100
+023,MediatorB,audio/MEDIATORB_023.wav,4929d764ad79e69a9f7d00a385cdb14d379182661831643fc847e69bdbf0b190,"To have a good mediation, there are a few rules we all need to follow.",normal,1.0,1.02,1.0,100
+024,MediatorB,audio/MEDIATORB_024.wav,b89d73989dbb74535a277c4e7f718a5e2cfa9e652ac58e66b55239609d968f72,The Confidentiality Rule is for us mediators.,normal,1.0,1.01,1.0,100
+025,MediatorB,audio/MEDIATORB_025.wav,240688c56ce245c862b583cc19510ca9e30e26ff4cc501bba5104e9cc26e47c7,We won’t share what you say with other students.,normal,1.0,1.02,1.0,100
+026,MediatorB,audio/MEDIATORB_026.wav,7e9c7000514dde7b117cb84f56a6929f93a89ae4801bc5c3228701340f603b83,The One Mic Rule is for both of you.,toneup,1.0,1.07,1.0,100
+027,MediatorB,audio/MEDIATORB_027.wav,4528a319837e8b68d4b0415bfa00ca4435c17828fb85027b0904d8910bf8dbb6,It means that one person speaks at a time.,normal,1.0,1.02,1.0,100
+028,MediatorB,audio/MEDIATORB_028.wav,218efce4de53553cc88eab60766a47a2571c5c73a873401d278123f9cac5abb4,The Respect Rule is for all of us.,toneup,1.0,1.06,1.0,100
+029,MediatorB,audio/MEDIATORB_029.wav,2a919d415b38cb335a3fdaa69d4153fbf9fa1cf45f16b418c2346abf93dacb1d,We have to speak respectfully.,normal,1.0,1.02,1.0,100
+030,MediatorB,audio/MEDIATORB_030.wav,d99e4c6d8e839e728245c29c81164de8516d80b127582318d5957276858a1800,Do you both agree to the rules?,toneup,1.0,1.06,1.0,100
+031,Disputant1,audio/DISPUTANT1_031.wav,2c311622c0f0e15a5a36aa39450b5d7f5047f3182dcf8cf3857519176509c432,"Yeah, I agree.",normal,0.95,1.02,1.0,100
+032,Disputant2,audio/DISPUTANT2_032.wav,520bbfbb1072d0cf2d98cfb59ab9f82cc46079bdc18ed24d8381c211b5bf746c,I agree.,normal,0.95,1.01,1.0,100
+033,MediatorA,audio/MEDIATORA_033.wav,33ae0b2984e227c48ed6f67106dbfbf773e892ff21d44a61c58054d16a1b3e6c,We want to hear both of your perspectives on what we were told.,normal,1.0,1.02,1.0,100
+034,MediatorA,audio/MEDIATORA_034.wav,98fed239c33c550f8c093d36ef46b9f29a389a970d5591bbf1791db538451203,"When music class was starting, Caleb and Aria started arguing about who should sit in a seat by the instruments cart while other students were watching.",normal,1.0,1.02,1.0,100
+035,MediatorA,audio/MEDIATORA_035.wav,7546de92e365334c3e11e2ebfcdc27d6af6dca65603abf5d12dd018efb7f3c34,"The music teacher had stepped into the storage room to grab drumsticks, and neither of them would move.",normal,1.0,1.01,1.0,100
+036,MediatorA,audio/MEDIATORA_036.wav,a6266fb860396c73b3c1c4ac3985c58e2dbe2eea19cba729e8e65c5429a68fd2,"Caleb, from your perspective, what happened between you two?",toneup,1.0,1.06,1.0,100
+037,Disputant1,audio/DISPUTANT1_037.wav,c874c7ceac4035f7079ff75e4b956c7fb51a33b82799c52c4829b90ad6d5a407,So I sat down by the instruments cart.,normal,1.0,1.05,1.0,100
+038,Disputant1,audio/DISPUTANT1_038.wav,683ad9f842931a25d7f37fec085cfa012efe6373bd9584d1243b51fb7b560518,Aria came over and called me annoying.,normal,1.0,1.04,1.0,100
+039,Disputant1,audio/DISPUTANT1_039.wav,efc89009f4ae0aa402ee7feae3831ef75956ee91186bd990f8412d138f4c5e64,And she said I always sit in the wrong spot.,normal,0.95,1.03,1.0,100
+040,Disputant1,audio/DISPUTANT1_040.wav,b6f70e7592a756b7b181bd957f1acc40e3a88105492f41a9edba9dd86d54a4a1,I didn’t know she usually sits there.,normal,0.95,1.03,1.0,100
+041,Disputant1,audio/DISPUTANT1_041.wav,4410cef7535b50efb754bb3145cf1ccb1f85b99cc8e1d51f6ba0866af01aee9b,I thought you could sit anywhere if you got there first.,normal,0.95,1.02,1.0,100
+042,MediatorA,audio/MEDIATORA_042.wav,0ff1e7589e52527b7a8cdf8c6edde726810b021c34ead0b4334e1beb130c9b53,What I heard you say is that Aria called you “annoying” and said you always sit in the wrong spot.,tonedown,0.95,0.98,1.0,100
+043,MediatorA,audio/MEDIATORA_043.wav,73b1274aa70d5501b953662f56cf22457dc97642c3ab4f84c2f85976b597f1d0,"And you didn’t know that was her usual seat, so you thought it was just first come, first serve.",tonedown,0.95,0.98,1.0,100
+044,MediatorA,audio/MEDIATORA_044.wav,b38e14f22b1641fa998464862da139259e9ebabe03bcbc36f812dbd504420f0f,Is that right?,toneup,1.0,1.06,1.0,100
+045,Disputant1,audio/DISPUTANT1_045.wav,0347d6f926edbc14f0fef3308e6df3e2b0bb5c06767cd1ecf31e0445d213d23e,Yeah.,normal,0.95,1.01,1.0,100
+046,MediatorA,audio/MEDIATORA_046.wav,146d71725660a233565ca27996248f1fd0aed5d543f08fdd0ea76e048db7ac15,Is there anything else you want to share?,normal,1.0,1.02,1.0,100
+047,Disputant1,audio/DISPUTANT1_047.wav,817e7f89ed4298808c60ce212616a0a57260324f90e83bcdafc4b1306f9c8557,Not really.,normal,0.9,1.01,1.0,100
+048,MediatorA,audio/MEDIATORA_048.wav,192fa2530334b95a66c4f2bd74f0345e4b01c5a5cd10dcbe1ef8c62578d28151,"Aria, from your perspective, what happened between you two?",toneup,1.0,1.06,1.0,100
+049,Disputant2,audio/DISPUTANT2_049.wav,78fb85308e4010f0d8e7bb69b62731f94d8d416673ed2f8010580d47a1a2c4aa,I always sit in that seat in music.,normal,1.0,1.04,1.0,100
+050,Disputant2,audio/DISPUTANT2_050.wav,1cb2f422d29d9e9795c2e77f02b8730981336628428ae87e823979d22838c2ff,It’s close to my friends.,normal,0.95,1.03,1.0,100
+051,Disputant2,audio/DISPUTANT2_051.wav,2120c05fd5fbe63d1a503f429e9075bd90f8a161b2ed7f22248ae2775189fb15,Caleb took it and he wasn’t listening to me when I said it’s my normal spot.,angry,0.45,1.02,1.0,100
+052,Disputant2,audio/DISPUTANT2_052.wav,fb5579d5178c1473e36bc001bd432260ec0432dd3e5fa6d24d64e69bf39f89be,He just stayed there.,normal,0.95,1.02,1.0,100
+053,MediatorA,audio/MEDIATORA_053.wav,ae832904fc1d56316408333012f8f015370a122f989b6838d5122c8525a481c0,What I heard you say is that Caleb sat in the seat you usually sit in during music class.,tonedown,0.95,0.98,1.0,100
+054,MediatorA,audio/MEDIATORA_054.wav,7b29b9dfde6f69b4af094e20d7ed9a7e4df43fffd48027d9df7db010de08d667,"And when you tried to tell him it was your normal spot, you felt like he wasn’t listening and wouldn’t move.",tonedown,0.95,0.98,1.0,100
+055,MediatorA,audio/MEDIATORA_055.wav,b38e14f22b1641fa998464862da139259e9ebabe03bcbc36f812dbd504420f0f,Is that right?,toneup,1.0,1.06,1.0,100
+056,Disputant2,audio/DISPUTANT2_056.wav,ce53b980ae8e9b7e2dd3c2c3470f668103604eb697b7db2b768d912395e4802e,Yeah.,normal,0.95,1.01,1.0,100
+057,MediatorA,audio/MEDIATORA_057.wav,146d71725660a233565ca27996248f1fd0aed5d543f08fdd0ea76e048db7ac15,Is there anything else you want to share?,normal,1.0,1.02,1.0,100
+058,Disputant2,audio/DISPUTANT2_058.wav,f4b5d758ff741b148fe9fff3b79beb76fa01b6176b391e7aeb23346429566092,No.,normal,0.9,1.01,1.0,100
+059,MediatorB,audio/MEDIATORB_059.wav,5b182546eafd676e8ea8d83ab4433e8bfe94ade2c2fbcc1511eaf23f08e3ac24,"Caleb, what bothered you most in this situation?",toneup,1.0,1.06,1.0,100
+060,Disputant1,audio/DISPUTANT1_060.wav,a9dd1f61960a11c58d21c620f74d949626a3fb0ac79d431b998c22654ffbc3f2,Being called out in front of everyone.,sad,0.8,0.98,1.0,100
+061,MediatorB,audio/MEDIATORB_061.wav,6c395dfeed7b9bbdb3580ff64e7bee045cf4ecb10ad2e3aaf3ed4da5630d0cf5,How did you feel when Aria called you annoying while other students were watching?,tonedown,0.95,0.98,1.0,100
+062,Disputant1,audio/DISPUTANT1_062.wav,aafbaa2d2858241f08dc7125bb480d95d5d4fe8e58848acfa36a49959511c99b,Like… put on the spot.,sad,0.85,0.98,1.0,100
+063,Disputant1,audio/DISPUTANT1_063.wav,9725816e130c0affb3888035cec1edef3c584ea79b286294a7efaff8c98def48,It was embarrassing.,sad,0.75,0.99,1.0,100
+064,MediatorB,audio/MEDIATORB_064.wav,aa7f50b59c0d138baf345804179a3e2bd34f47931ea7a64920376692ab7bad4b,Thank you for sharing.,normal,1.0,1.01,1.0,100
+065,MediatorB,audio/MEDIATORB_065.wav,3bb6fc28f4847e8557169a1532d2e94923a7e18d70238bbbe83b8f694e8471cd,"Aria, what bothered you most in this situation?",toneup,1.0,1.06,1.0,100
+066,Disputant2,audio/DISPUTANT2_066.wav,ed357b7d4367271fc640bdf008b0f40f30d0553f13fbefb199aab7c44901a9fc,That he wouldn’t move.,angry,0.45,1.01,1.0,100
+067,Disputant2,audio/DISPUTANT2_067.wav,1c295b1d9ef851be5c15960400ace7fe1de39d67ba92aacc74edd044594490f0,And he didn’t listen when I told him it’s my regular seat.,angry,0.45,1.01,1.0,100
+068,MediatorB,audio/MEDIATORB_068.wav,34b1aeb3c27907871ce9d76ebc1f4ef62155e6c8096422e2b19f0fd90d8831db,How did you feel when Caleb stayed in the seat and ignored what you were saying?,tonedown,0.95,0.98,1.0,100
+069,Disputant2,audio/DISPUTANT2_069.wav,003151b87a86886973001497a87ccad96b604483d8826b03effd29ef40970e2a,Frustrated.,angry,0.5,1.02,1.0,100
+070,Disputant2,audio/DISPUTANT2_070.wav,88797dec97945f42b0df143feb7cb024c31ecf6e146ef7fe6004fed0b8a0902d,Like he didn’t care.,normal,0.9,1.01,1.0,100
+071,MediatorB,audio/MEDIATORB_071.wav,aa7f50b59c0d138baf345804179a3e2bd34f47931ea7a64920376692ab7bad4b,Thank you for sharing.,normal,1.0,1.01,1.0,100
+072,MediatorA,audio/MEDIATORA_072.wav,59d8e03f0861098b5aaeb34f175115154394592605cb29f6a291766c532b724c,"Now we’re going to talk about what you both want, so we can make a win-win plan.",normal,1.0,1.02,1.0,100
+073,MediatorA,audio/MEDIATORA_073.wav,d8bebe676631f69c05acdb0c871e53b5f681c60736d36d4fdcdf09ff97417760,"Caleb, what’s something you want Aria to do, or to stop doing?",toneup,1.0,1.06,1.0,100
+074,Disputant1,audio/DISPUTANT1_074.wav,564317d4da36455c475fea0d95ec14746799edece65e28d8d1f90aebe27ddc60,Just don’t insult me in front of people.,normal,0.95,1.02,1.0,100
+075,Disputant1,audio/DISPUTANT1_075.wav,524768e3693603145c437433555ea47f62488d5169553cbd7646a16f4a808512,Like don’t call me annoying.,normal,0.95,1.02,1.0,100
+076,MediatorA,audio/MEDIATORA_076.wav,7845ec14863e22ae3ab29a40df68ea9d8e399f9b5d4b07c1c40082a1291d042c,"So you want Aria to not call you names or insult you, especially in front of other students.",tonedown,0.95,0.98,1.0,100
+077,MediatorA,audio/MEDIATORA_077.wav,6d30f804a4d9f085818982f73a6676ea0404897696d489c272cce6a952d0e7fa,"Aria, what’s something you want Caleb to do, or to stop doing?",toneup,1.0,1.06,1.0,100
+078,Disputant2,audio/DISPUTANT2_078.wav,c4b452d04152b50f68a3e2f2d4a175244415bbd4453c24be219c06c05e891cad,I want him to let me have my usual seat.,normal,0.95,1.02,1.0,100
+079,Disputant2,audio/DISPUTANT2_079.wav,6a8142078eca0f39150fec1e6150bba09e91c318dd82f1e270e669b54f93176f,It’s close to my friends.,normal,0.95,1.02,1.0,100
+080,MediatorA,audio/MEDIATORA_080.wav,f5e367f74873ed72f5f91dbd88acd903ff21204471f22eb97d67c5b776ad2972,"So you want Caleb to let you have your normal seat in music class, since it’s near your friends.",tonedown,0.95,0.98,1.0,100
+081,MediatorB,audio/MEDIATORB_081.wav,db9126919bb07d5ad14d08a1fb9ce12b01c0ce83f8508384144e84d0618bfaa1,"Now let’s think about what you can both do differently, so you each get something you want.",normal,1.0,1.02,1.0,100
+082,MediatorB,audio/MEDIATORB_082.wav,2dda1e88c967aef2244b209796c62c6f4e7ed7b79c1314e7f5fd1dfccbe8bffa,"Caleb, what’s one thing you could do differently to help this work?",toneup,1.0,1.06,1.0,100
+083,Disputant1,audio/DISPUTANT1_083.wav,9e4c4d75af91681fd4c3522aa6fd994e3cca3182bd3b663af2c6084a06a917c1,I could ask if someone usually sits there before I take the seat.,normal,0.95,1.02,1.0,100
+084,Disputant1,audio/DISPUTANT1_084.wav,3787476a8f370876d271d10f31491a75c88ab6a7e513f39618af411c47278e91,"And like, actually listen if they say something.",normal,0.9,1.01,1.0,100
+085,MediatorB,audio/MEDIATORB_085.wav,302c5e3896b450c86ba5c23b93f9b050a0916f4834d42b82f04008a0db1dfc05,Okay.,normal,1.0,1.01,1.0,100
+086,MediatorB,audio/MEDIATORB_086.wav,8c39e3682e5e8b3bc5ecd7f4bc82e546b335e1672f1fc8178e53d56fc7b6c362,"Aria, what’s one thing you could do differently to help this work?",toneup,1.0,1.06,1.0,100
+087,Disputant2,audio/DISPUTANT2_087.wav,5610f96fa1cbe0c81b513a92c2abceb3bf5062ecd103c740f9bb76dd706f42c3,I can explain it calmly.,normal,0.95,1.02,1.0,100
+088,Disputant2,audio/DISPUTANT2_088.wav,89942843b28fb8083995b98a9f872921bfe722486a1df8dc25c20244d6552ff1,And not call him annoying.,normal,0.9,1.01,1.0,100
+089,MediatorB,audio/MEDIATORB_089.wav,c69616b6d81e1c3c04249fbb3be81b081826b2f8cae1ee734ad55a90237307d3,Got it.,normal,1.0,1.01,1.0,100
+090,MediatorA,audio/MEDIATORA_090.wav,ad3b06604b865898b2502d9f2cf04197bf7bc90ed7b95df06df37c8cb7596326,Is there anything else you’d like each other to do differently?,toneup,1.0,1.06,1.0,100
+091,Disputant1,audio/DISPUTANT1_091.wav,97e324dac9ae65c5857be0fb2f17382dac769bdebefe74d43245ceb2263ae490,Just… say it normal.,normal,0.9,1.01,1.0,100
+092,Disputant2,audio/DISPUTANT2_092.wav,044b9e281614f5e9dead0875b4b4ee1eeba559c73326420702aa98fd7bac4ecb,And he can just move to another seat if it’s mine.,normal,0.9,1.01,1.0,100
+093,MediatorA,audio/MEDIATORA_093.wav,4d6c852d6f59bdf23e98ab04c5be468e787266acd40f6c15b63a6a6876f4298c,Is there something you could both do differently?,toneup,1.0,1.06,1.0,100
+094,Disputant1,audio/DISPUTANT1_094.wav,22c001ced970e2c6188da3ee7d836fb13337fb6272c1753c09e23389cd56e320,Use calm voices.,normal,0.9,1.01,1.0,100
+095,Disputant2,audio/DISPUTANT2_095.wav,0e775e21a93a836b425c9f4954bec76233a7a97f55864b2f5ae55bb3d745bf67,And if it’s getting annoying—,normal,0.9,1.01,1.0,100
+096,Disputant2,audio/DISPUTANT2_096.wav,fba5b44d687a351e4c2bd4895869625ce509e5f1165c4782fc3c8672ae141949,"I mean if it’s getting like, too much, we can ask the teacher.",normal,0.85,1.01,1.0,100
+097,MediatorA,audio/MEDIATORA_097.wav,fe3594fc9def67d558cd73d53b5d2b96337fcbfb8e95a6b315b520021eedc12a,So both of you will use calm voices.,tonedown,0.95,0.98,1.0,100
+098,MediatorA,audio/MEDIATORA_098.wav,c5b8794b203440437ab51a79c0fe5f4a0f93b7cea6c236736b20e5f6309f4e31,"And if it starts turning into an argument, you’ll ask the teacher for help instead of arguing.",tonedown,0.95,0.98,1.0,100
+099,MediatorB,audio/MEDIATORB_099.wav,18ded09b261185415cbf211cdae8938ca1cc08e9c740f04887ee618fa9f0a81e,"Now we’re going to write an agreement using what you both shared, so that this doesn’t happen again.",normal,1.0,1.02,1.0,100
+100,MediatorA,audio/MEDIATORA_100.wav,35e67dfb0687369720f5d75a3e45d36023c7b2cb9757c7119c7afc73f5434502,Here’s what we have.,normal,1.0,1.02,1.0,100
+101,MediatorA,audio/MEDIATORA_101.wav,358e259cc624d1529a71b7e51d72a95186f99b99e69ff74d5666bc2b91b6be8f,Caleb agrees to move to a different open seat in music class if Aria asks to have a seat that is close to her friends.,normal,1.0,1.02,1.0,100
+102,MediatorA,audio/MEDIATORA_102.wav,b0eb0e489ac9217fe3c5f22c94bbd79b76fd9ee04a9efacb9181309e14799c54,Aria agrees to tell Caleb it’s her usual seat without calling him annoying or insulting him in front of others.,normal,1.0,1.02,1.0,100
+103,MediatorA,audio/MEDIATORA_103.wav,a1a171591b7e50e247f5575cd0b651a1695c0bfc8df3a4f2168f496a833353e8,Do you both agree to do these things?,toneup,1.0,1.06,1.0,100
+104,Disputant1,audio/DISPUTANT1_104.wav,bfe8b341fd7d70d03ba41d93802acdd382ccce0dafe7b8a21b19050f79937d21,Yeah.,happy,0.35,1.02,1.0,100
+105,Disputant2,audio/DISPUTANT2_105.wav,33d28e3f8e06e13ab8da16248273111e3ebda97ee34acaadbf9edaf34fb34be8,Yes.,happy,0.3,1.02,1.0,100
+106,MediatorB,audio/MEDIATORB_106.wav,ccc886435aed2e7cd1855a46e2757d9a1bf939fff4de3246d16125463bacf562,Please read it and sign below.,normal,1.0,1.01,1.0,100
+107,MediatorB,audio/MEDIATORB_107.wav,57ed5d2efe25678efb0bb1114ce7c500ad4064be3138640147fb1348e79df505,Is there anything you want to say to each other before we finish?,normal,1.0,1.02,1.0,100
+108,Disputant2,audio/DISPUTANT2_108.wav,4ba1ede83e1118bef5837ada98580a0cc60a5995a1cf06664fc304975cb133f8,Sorry I said it like that.,normal,0.85,1.01,1.0,100
+109,Disputant1,audio/DISPUTANT1_109.wav,ede4a1ab177627a86d12dedbf8ca30e113ead96d95ae02a038d80d27a7e0eaec,It’s fine.,normal,0.85,1.01,1.0,100
+110,Disputant1,audio/DISPUTANT1_110.wav,ea84a05d728dea3ea687a49050009798903e4d8e32d8b6d876d501324edaa80c,I’ll just move next time.,normal,0.85,1.01,1.0,100
+111,MediatorA,audio/MEDIATORA_111.wav,3b27e65ba1d65c82d0e921974b031034b1f245abf0357dfaf6edd62e5b56df30,Thanks for doing this mediation with us.,happy,0.35,1.03,1.0,100
+112,MediatorA,audio/MEDIATORA_112.wav,d2d95c3b3c277d2ce2e6aecacf7f88b9b6ec259468c54b4f5b41c33a1a58126d,We’ll walk you back to class now.,normal,1.0,1.02,1.0,100

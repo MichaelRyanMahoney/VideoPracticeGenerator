@@ -17,6 +17,7 @@ from pathlib import Path
 
 import boto3
 
+from workdir_utils import cleanup_work_dir, make_work_dir, should_keep_workdir
 
 def s3_parse(uri: str) -> tuple[str, str]:
     assert uri.startswith("s3://")
@@ -75,86 +76,90 @@ def main():
     s3 = boto3.client("s3", region_name=region)
     ses = boto3.client("ses", region_name=region) if (args.email_to and args.email_from) else None
 
-    work = Path(tempfile.mkdtemp(prefix="vpg_finalize_"))
-    director_local = work / "director_visemes.json"
-    frames_dir = work / "frames"
-    frames_dir.mkdir(parents=True, exist_ok=True)
-    script_local = work / "script.txt"
-    overlay_cfg_local = work / "overlays.config"
+    work = make_work_dir("vpg_finalize_")
+    try:
+        director_local = work / "director_visemes.json"
+        frames_dir = work / "frames"
+        frames_dir.mkdir(parents=True, exist_ok=True)
+        script_local = work / "script.txt"
+        overlay_cfg_local = work / "overlays.config"
 
-    s3_download_file(s3, args.director_s3, director_local)
-    s3_sync_down_prefix(s3, args.frames_prefix_s3, frames_dir)
-    if args.script_s3:
-        s3_download_file(s3, args.script_s3, script_local)
-    if args.overlay_config_s3:
-        s3_download_file(s3, args.overlay_config_s3, overlay_cfg_local)
+        s3_download_file(s3, args.director_s3, director_local)
+        s3_sync_down_prefix(s3, args.frames_prefix_s3, frames_dir)
+        if args.script_s3:
+            s3_download_file(s3, args.script_s3, script_local)
+        if args.overlay_config_s3:
+            s3_download_file(s3, args.overlay_config_s3, overlay_cfg_local)
 
-    # Determine frame pattern stem (expects something_%04d.png)
-    first = next(frames_dir.rglob("*.png"), None)
-    if not first:
-        raise SystemExit("No frames found to mux.")
-    stem = first.stem.rsplit("_", 1)[0]
-    pattern = frames_dir / f"{stem}_%04d.png"
+        # Determine frame pattern stem (expects something_%04d.png)
+        first = next(frames_dir.rglob("*.png"), None)
+        if not first:
+            raise SystemExit("No frames found to mux.")
+        stem = first.stem.rsplit("_", 1)[0]
+        pattern = frames_dir / f"{stem}_%04d.png"
 
-    project_root = Path(__file__).resolve().parents[1]
-    base_out = work / "base.mp4"
+        project_root = Path(__file__).resolve().parents[1]
+        base_out = work / "base.mp4"
 
-    # Mux (downloads S3 audio on demand inside mux_from_director.py)
-    mux_py = project_root / "scripts" / "mux_from_director.py"
-    run([
-        sys.executable,
-        str(mux_py),
-        "--director",
-        str(director_local),
-        "--frames",
-        str(pattern),
-        "--out",
-        str(base_out),
-    ], cwd=project_root)
-
-    final_out = base_out
-    if args.overlay_config_s3 and args.script_s3:
-        # Apply overlays using config (expects script+director+base+overlay_image+out inside config)
-        apply_py = project_root / "scripts" / "apply_overlays.py"
-        out2 = work / "final.mp4"
+        # Mux (downloads S3 audio on demand inside mux_from_director.py)
+        mux_py = project_root / "scripts" / "mux_from_director.py"
         run([
             sys.executable,
-            str(apply_py),
-            "--config",
-            str(overlay_cfg_local),
+            str(mux_py),
+            "--director",
+            str(director_local),
+            "--frames",
+            str(pattern),
+            "--out",
+            str(base_out),
         ], cwd=project_root)
-        # apply_overlays writes to cfg.out; if you want strict behavior, define cfg.out to be out2.
-        # For now, if cfg.out exists, use it; else fallback.
-        if out2.exists():
-            final_out = out2
 
-    # Upload final MP4
-    s3_upload_file(s3, final_out, args.out_mp4_s3)
+        final_out = base_out
+        if args.overlay_config_s3 and args.script_s3:
+            # Apply overlays using config (expects script+director+base+overlay_image+out inside config)
+            apply_py = project_root / "scripts" / "apply_overlays.py"
+            out2 = work / "final.mp4"
+            run([
+                sys.executable,
+                str(apply_py),
+                "--config",
+                str(overlay_cfg_local),
+            ], cwd=project_root)
+            # apply_overlays writes to cfg.out; if you want strict behavior, define cfg.out to be out2.
+            # For now, if cfg.out exists, use it; else fallback.
+            if out2.exists():
+                final_out = out2
 
-    # Presign
-    b, k = s3_parse(args.out_mp4_s3)
-    url = s3.generate_presigned_url(
-        "get_object",
-        Params={"Bucket": b, "Key": k},
-        ExpiresIn=int(args.presign_seconds),
-    )
-    print("[out] presigned_url:", url)
+        # Upload final MP4
+        s3_upload_file(s3, final_out, args.out_mp4_s3)
 
-    # Email (optional)
-    if ses:
-        subj = "MediatorSPARK Video Ready"
-        body = f"Your video is ready.\n\nDownload link (expires in {int(args.presign_seconds)}s):\n{url}\n"
-        print(f"[ses] send {args.email_from} -> {args.email_to}")
-        ses.send_email(
-            Source=args.email_from,
-            Destination={"ToAddresses": [args.email_to]},
-            Message={
-                "Subject": {"Data": subj},
-                "Body": {"Text": {"Data": body}},
-            },
+        # Presign
+        b, k = s3_parse(args.out_mp4_s3)
+        url = s3.generate_presigned_url(
+            "get_object",
+            Params={"Bucket": b, "Key": k},
+            ExpiresIn=int(args.presign_seconds),
         )
+        print("[out] presigned_url:", url)
 
-    print("[worker_finalize] done.")
+        # Email (optional)
+        if ses:
+            subj = "MediatorSPARK Video Ready"
+            body = f"Your video is ready.\n\nDownload link (expires in {int(args.presign_seconds)}s):\n{url}\n"
+            print(f"[ses] send {args.email_from} -> {args.email_to}")
+            ses.send_email(
+                Source=args.email_from,
+                Destination={"ToAddresses": [args.email_to]},
+                Message={
+                    "Subject": {"Data": subj},
+                    "Body": {"Text": {"Data": body}},
+                },
+            )
+
+        print("[worker_finalize] done.")
+    finally:
+        if not should_keep_workdir():
+            cleanup_work_dir(work)
 
 
 if __name__ == "__main__":

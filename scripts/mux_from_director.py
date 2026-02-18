@@ -18,6 +18,7 @@ import tempfile
 from pathlib import Path
 import boto3
 
+from workdir_utils import cleanup_work_dir, make_work_dir, should_keep_workdir
 
 def parse_timecode_to_seconds(tc: str) -> float:
     """
@@ -143,7 +144,7 @@ def main():
         return no.split("/", 1)[0], no.split("/", 1)[1]
 
     s3 = boto3.client("s3", region_name=os.environ.get("AWS_REGION") or os.environ.get("AWS_DEFAULT_REGION"))
-    dl_dir = Path(tempfile.mkdtemp(prefix="vpg_mux_audio_"))
+    dl_dir = make_work_dir("vpg_mux_audio_")
 
     def ensure_local_audio(audio_ref: str) -> Path:
         if not is_s3(audio_ref):
@@ -157,99 +158,103 @@ def main():
             s3.download_file(b, k, str(dst))
         return dst
 
-    for b in beats:
-        audio = (b.get("audio") or "").strip()
-        if not audio:
-            continue
-        tc_in = b.get("tc_in") or "00:00:00.000"
-        t_sec = parse_timecode_to_seconds(tc_in)
-        delay_ms = int(round(t_sec * 1000.0))
-        p = ensure_local_audio(audio)
-        if not p.exists():
-            # Skip missing audio with a notice; keep going
-            print(f"[mux] Warning: missing audio file, skipping: {p}")
-            continue
-        audio_offsets_ms.append((str(p.resolve()), delay_ms))
+    try:
+        for b in beats:
+            audio = (b.get("audio") or "").strip()
+            if not audio:
+                continue
+            tc_in = b.get("tc_in") or "00:00:00.000"
+            t_sec = parse_timecode_to_seconds(tc_in)
+            delay_ms = int(round(t_sec * 1000.0))
+            p = ensure_local_audio(audio)
+            if not p.exists():
+                # Skip missing audio with a notice; keep going
+                print(f"[mux] Warning: missing audio file, skipping: {p}")
+                continue
+            audio_offsets_ms.append((str(p.resolve()), delay_ms))
 
-    frames_pattern = str(Path(args.frames))
-    out_mp4 = str(Path(args.out))
+        frames_pattern = str(Path(args.frames))
+        out_mp4 = str(Path(args.out))
 
-    # Build ffmpeg command; handle optional background overlay
-    if args.background:
-        bg_path = str(Path(args.background))
-        cmd: list[str] = []
-        cmd += ["ffmpeg", "-y"]
-        # Background image (looped)
-        cmd += ["-loop", "1", "-framerate", str(int(fps)), "-i", bg_path]
-        # Foreground frames (RGBA PNG sequence)
-        cmd += ["-framerate", str(int(fps)), "-i", frames_pattern]
-        # Audio inputs
-        for audio_path, _ms in audio_offsets_ms:
-            cmd += ["-i", audio_path]
+        # Build ffmpeg command; handle optional background overlay
+        if args.background:
+            bg_path = str(Path(args.background))
+            cmd: list[str] = []
+            cmd += ["ffmpeg", "-y"]
+            # Background image (looped)
+            cmd += ["-loop", "1", "-framerate", str(int(fps)), "-i", bg_path]
+            # Foreground frames (RGBA PNG sequence)
+            cmd += ["-framerate", str(int(fps)), "-i", frames_pattern]
+            # Audio inputs
+            for audio_path, _ms in audio_offsets_ms:
+                cmd += ["-i", audio_path]
 
-        # Build filter_complex: keep background native size, scale frames to bg width,
-        # bottom-align overlay, then audio mix
-        filter_parts: list[str] = []
-        # [0:v] = bg, [1:v] = frames
-        # 1) Ensure background is even-sized for H.264
-        filter_parts.append(f"[0:v]scale=ceil(iw/2)*2:ceil(ih/2)*2[bg]")
-        # 2) Keep foreground at its original render size; optional minimal processing
-        #    Keep alpha intact by processing in yuva444p domain only if needed
-        c = float(args.fg_contrast)
-        s = float(args.fg_sharpen)
-        if c != 1.0 or s > 0.0:
-            filter_parts.append(
-                f"[1:v]format=rgba,format=yuva444p,scale=1400:-1:flags=bicubic,eq=contrast={c}" + (f",unsharp=7:7:{s}:7:7:0.0" if s > 0.0 else "") + ",format=rgba[fg]"
-            )
+            # Build filter_complex: keep background native size, scale frames to bg width,
+            # bottom-align overlay, then audio mix
+            filter_parts: list[str] = []
+            # [0:v] = bg, [1:v] = frames
+            # 1) Ensure background is even-sized for H.264
+            filter_parts.append(f"[0:v]scale=ceil(iw/2)*2:ceil(ih/2)*2[bg]")
+            # 2) Keep foreground at its original render size; optional minimal processing
+            #    Keep alpha intact by processing in yuva444p domain only if needed
+            c = float(args.fg_contrast)
+            s = float(args.fg_sharpen)
+            if c != 1.0 or s > 0.0:
+                filter_parts.append(
+                    f"[1:v]format=rgba,format=yuva444p,scale=1400:-1:flags=bicubic,eq=contrast={c}" + (f",unsharp=7:7:{s}:7:7:0.0" if s > 0.0 else "") + ",format=rgba[fg]"
+                )
+            else:
+                filter_parts.append(
+                    "[1:v]format=rgba,scale=1400:-1:flags=bicubic[fg]"
+                )
+            # 3) Ensure alpha on foreground for proper compositing
+            filter_parts.append(f"[fg]format=rgba[fg]")
+            # 4) Center horizontally and bottom-align the foreground over the background
+            filter_parts.append(f"[bg][fg]overlay=x=(main_w-overlay_w)/2:y=main_h-overlay_h:shortest=1[outv]")
+
+            # Audio delays/mix: inputs start at index 2 when bg is provided
+            labels: list[str] = []
+            for i, (_path, delay_ms) in enumerate(audio_offsets_ms, start=2):
+                a_in = f"{i}:a"
+                a_out = f"a{i}"
+                delay_expr = f"{int(delay_ms)}|{int(delay_ms)}"
+                filter_parts.append(f"[{a_in}]adelay={delay_expr},apad[{a_out}]")
+                labels.append(f"[{a_out}]")
+            if labels:
+                amix = "".join(labels) + f"amix=inputs={len(labels)}:normalize=0, aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo[amix]"
+                filter_parts.append(amix)
+            cmd += ["-filter_complex", "; ".join(filter_parts)]
+            # Map the composed video and audio
+            cmd += ["-map", "[outv]"]
+            if labels:
+                cmd += ["-map", "[amix]"]
+            # Encoding
+            cmd += ["-c:v", "libx264", "-crf", str(int(args.crf)), "-pix_fmt", "yuv420p"]
+            if labels:
+                cmd += ["-c:a", "aac", "-b:a", args.audio_bitrate]
+            cmd += ["-shortest", out_mp4]
         else:
-            filter_parts.append(
-                "[1:v]format=rgba,scale=1400:-1:flags=bicubic[fg]"
+            cmd = build_ffmpeg_cmd(
+                frames_pattern=frames_pattern,
+                fps=fps,
+                audio_offsets_ms=audio_offsets_ms,
+                out_mp4=out_mp4,
+                crf=int(args.crf),
+                audio_bitrate=args.audio_bitrate
             )
-        # 3) Ensure alpha on foreground for proper compositing
-        filter_parts.append(f"[fg]format=rgba[fg]")
-        # 4) Center horizontally and bottom-align the foreground over the background
-        filter_parts.append(f"[bg][fg]overlay=x=(main_w-overlay_w)/2:y=main_h-overlay_h:shortest=1[outv]")
 
-        # Audio delays/mix: inputs start at index 2 when bg is provided
-        labels: list[str] = []
-        for i, (_path, delay_ms) in enumerate(audio_offsets_ms, start=2):
-            a_in = f"{i}:a"
-            a_out = f"a{i}"
-            delay_expr = f"{int(delay_ms)}|{int(delay_ms)}"
-            filter_parts.append(f"[{a_in}]adelay={delay_expr},apad[{a_out}]")
-            labels.append(f"[{a_out}]")
-        if labels:
-            amix = "".join(labels) + f"amix=inputs={len(labels)}:normalize=0, aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo[amix]"
-            filter_parts.append(amix)
-        cmd += ["-filter_complex", "; ".join(filter_parts)]
-        # Map the composed video and audio
-        cmd += ["-map", "[outv]"]
-        if labels:
-            cmd += ["-map", "[amix]"]
-        # Encoding
-        cmd += ["-c:v", "libx264", "-crf", str(int(args.crf)), "-pix_fmt", "yuv420p"]
-        if labels:
-            cmd += ["-c:a", "aac", "-b:a", args.audio_bitrate]
-        cmd += ["-shortest", out_mp4]
-    else:
-        cmd = build_ffmpeg_cmd(
-            frames_pattern=frames_pattern,
-            fps=fps,
-            audio_offsets_ms=audio_offsets_ms,
-            out_mp4=out_mp4,
-            crf=int(args.crf),
-            audio_bitrate=args.audio_bitrate
-        )
+        print("[mux] ffmpeg command:")
+        print(" ", shlex.join(cmd))
+        if args.dry_run:
+            return
 
-    print("[mux] ffmpeg command:")
-    print(" ", shlex.join(cmd))
-    if args.dry_run:
-        return
-
-    proc = subprocess.run(cmd)
-    if proc.returncode != 0:
-        raise SystemExit(proc.returncode)
-    print(f"[mux] Wrote: {out_mp4}")
+        proc = subprocess.run(cmd)
+        if proc.returncode != 0:
+            raise SystemExit(proc.returncode)
+        print(f"[mux] Wrote: {out_mp4}")
+    finally:
+        if not should_keep_workdir():
+            cleanup_work_dir(dl_dir)
 
 
 if __name__ == "__main__":
