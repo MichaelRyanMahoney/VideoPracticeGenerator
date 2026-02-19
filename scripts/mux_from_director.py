@@ -10,7 +10,9 @@ Usage example:
     --out "/abs/path/to/out/four_heads_demo.mp4"
 """
 import argparse
+import glob
 import json
+import re
 import shlex
 import subprocess
 import os
@@ -34,7 +36,7 @@ def parse_timecode_to_seconds(tc: str) -> float:
         return 0.0
 
 
-def build_ffmpeg_cmd(frames_pattern: str, fps: int, audio_offsets_ms: list[tuple[str, int]], out_mp4: str, crf: int = 18, audio_bitrate: str = "192k") -> list[str]:
+def build_ffmpeg_cmd(frames_pattern: str, fps: int, audio_offsets_ms: list[tuple[str, int]], out_mp4: str, crf: int = 18, audio_bitrate: str = "192k", max_duration: float | None = None) -> list[str]:
     """
     frames_pattern: e.g., "/.../out/four_heads_demo_frames/four_heads_demo_%04d.png"
     audio_offsets_ms: list of tuples (audio_path, delay_ms)
@@ -83,8 +85,11 @@ def build_ffmpeg_cmd(frames_pattern: str, fps: int, audio_offsets_ms: list[tuple
     ]
     if labels:
         cmd += ["-c:a", "aac", "-b:a", audio_bitrate]
-    # Shortest to stop when video or audio ends (whichever is shorter)
-    cmd += ["-shortest", out_mp4]
+    if max_duration:
+        cmd += ["-t", f"{max_duration:.3f}"]
+    else:
+        cmd += ["-shortest"]
+    cmd += [out_mp4]
     return cmd
 
 
@@ -176,6 +181,14 @@ def main():
         frames_pattern = str(Path(args.frames))
         out_mp4 = str(Path(args.out))
 
+        # Compute video duration from frame count for a hard output cap
+        # (apad produces infinite audio; -shortest is unreliable with filter_complex)
+        _frame_glob = re.sub(r'%\d*d', '*', frames_pattern)
+        _num_frames = len(glob.glob(_frame_glob))
+        _video_dur = (_num_frames / float(fps) + 2.0) if (_num_frames and fps) else None
+        if _video_dur:
+            print(f"[mux] Frame count: {_num_frames}, fps: {fps}, hard duration cap: {_video_dur:.3f}s")
+
         # Build ffmpeg command; handle optional background overlay
         if args.background:
             bg_path = str(Path(args.background))
@@ -232,7 +245,11 @@ def main():
             cmd += ["-c:v", "libx264", "-crf", str(int(args.crf)), "-pix_fmt", "yuv420p"]
             if labels:
                 cmd += ["-c:a", "aac", "-b:a", args.audio_bitrate]
-            cmd += ["-shortest", out_mp4]
+            if _video_dur:
+                cmd += ["-t", f"{_video_dur:.3f}"]
+            else:
+                cmd += ["-shortest"]
+            cmd += [out_mp4]
         else:
             cmd = build_ffmpeg_cmd(
                 frames_pattern=frames_pattern,
@@ -240,7 +257,8 @@ def main():
                 audio_offsets_ms=audio_offsets_ms,
                 out_mp4=out_mp4,
                 crf=int(args.crf),
-                audio_bitrate=args.audio_bitrate
+                audio_bitrate=args.audio_bitrate,
+                max_duration=_video_dur,
             )
 
         print("[mux] ffmpeg command:")

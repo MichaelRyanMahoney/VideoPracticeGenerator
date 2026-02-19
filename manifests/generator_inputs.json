@@ -7,7 +7,7 @@
     "denoise": true,
     "denoiser": "OPTIX",
     "quality": "fast",
-    "samples": 2,
+    "samples": 1,
     "output_dir": "../renders",
     "audio_sample_rate": 48000,
     "seed": 42
@@ -53,7 +53,7 @@
       "name": "Caleb",
       "typecast": {
         "voice_name": "Placeholder",
-        "voice_id": "tc_685ca2dcfa58f44bdbe60d65",
+        "voice_id": "tc_633d530f093ca33db95de02b",
         "languages": ["English"]
       },
       "blender": {

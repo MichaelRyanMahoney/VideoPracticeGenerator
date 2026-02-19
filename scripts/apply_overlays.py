@@ -154,11 +154,15 @@ def map_overlays_to_times(script_tokens: list[str], beat_tokens: list[BeatToken]
       - if no next beat exists, drop overlay (can't place after end)
     """
     overlay_times: list[float] = []
+    beat_has_pause = any(bt.kind == "pause" for bt in beat_tokens)
     si = 0
     bi = 0
     while si < len(script_tokens):
         st = script_tokens[si]
         if st in ("line", "pause"):
+            if st == "pause" and not beat_has_pause:
+                si += 1
+                continue
             # advance beats until we match the same kind
             while bi < len(beat_tokens) and beat_tokens[bi].kind != st:
                 bi += 1
@@ -171,12 +175,11 @@ def map_overlays_to_times(script_tokens: list[str], beat_tokens: list[BeatToken]
             # overlay timing based on requested anchor
             if bi < len(beat_tokens):
                 if anchor == "prev_end":
-                    # previous beat end == next beat start
                     overlay_times.append(beat_tokens[bi].tc_in_sec)
                 else:
-                    # next_start (legacy behavior)
                     overlay_times.append(beat_tokens[bi].tc_in_sec)
-            # If we're at end, we can't place overlay; silently skip
+            else:
+                print(f"[apply_overlays] Warning: overlay at script token {si} dropped (no remaining beats to anchor)")
             si += 1
             continue
         # unknown token, skip
@@ -190,11 +193,15 @@ def map_pf_swaps_to_times(script_tokens: list[str], beat_tokens: list[BeatToken]
     Uses same anchoring strategy as overlays.
     """
     times: list[float] = []
+    beat_has_pause = any(bt.kind == "pause" for bt in beat_tokens)
     si = 0
     bi = 0
     while si < len(script_tokens):
         st = script_tokens[si]
         if st in ("line", "pause"):
+            if st == "pause" and not beat_has_pause:
+                si += 1
+                continue
             while bi < len(beat_tokens) and beat_tokens[bi].kind != st:
                 bi += 1
             if bi < len(beat_tokens):
@@ -203,7 +210,6 @@ def map_pf_swaps_to_times(script_tokens: list[str], beat_tokens: list[BeatToken]
             continue
         if st == "pf_swap":
             if bi < len(beat_tokens):
-                # For prev_end and next_start, this resolves to next beat start
                 times.append(beat_tokens[bi].tc_in_sec)
             si += 1
             continue
@@ -280,6 +286,8 @@ def resolve_paths_in_config(cfg: Dict[str, Any], cfg_dir: Path) -> Dict[str, Any
             intro2 = dict(resolved[k])
             if "bg" in intro2:
                 intro2["bg"] = _resolve_path(cfg_dir, intro2.get("bg"))
+            if "title_slide" in intro2:
+                intro2["title_slide"] = _resolve_path(cfg_dir, intro2.get("title_slide"))
             if "process_form_overlay" in intro2:
                 intro2["process_form_overlay"] = _resolve_path(cfg_dir, intro2.get("process_form_overlay"))
             if "chars" in intro2 and isinstance(intro2["chars"], list):
@@ -427,6 +435,21 @@ def ffprobe_stream_durations(path: str) -> dict:
         return {"video": None, "audio": None, "format": None}
 
 
+def ffmpeg_has_filter(filter_name: str) -> bool:
+    if not shutil.which("ffmpeg"):
+        return False
+    try:
+        p = subprocess.run(
+            ["ffmpeg", "-hide_banner", "-filters"],
+            capture_output=True,
+            text=True,
+        )
+        hay = (p.stdout or "") + "\n" + (p.stderr or "")
+        return re.search(rf"\b{re.escape(filter_name)}\b", hay) is not None
+    except Exception:
+        return False
+
+
 def main():
     # First parse only --config to seed defaults
     ap0 = argparse.ArgumentParser(add_help=False)
@@ -485,10 +508,25 @@ def main():
     ap.add_argument("--intro_fontcolor", default="white", help="Intro text color (default white)")
     ap.add_argument("--intro_boxcolor", default="black@0.6", help="Background box color behind intro text (default black@0.6)")
     ap.add_argument("--intro_fade", type=float, default=0.5, help="Intro fade in/out seconds (default 0.5)")
+    ap.add_argument("--allow_no_drawtext", action="store_true", help="Allow running without ffmpeg drawtext (degrades labels/intro text)")
     # Seed config defaults so CLI still overrides
     if cfg:
         ap.set_defaults(**cfg)
     args = ap.parse_args()
+    can_drawtext = ffmpeg_has_filter("drawtext")
+    if not can_drawtext:
+        if not args.allow_no_drawtext:
+            raise SystemExit(
+                "ffmpeg 'drawtext' filter is required for overlays/labels/intro text, but it is not available.\n"
+                "Install an ffmpeg build with libfreetype/fontconfig enabled, then verify with:\n"
+                "  ffmpeg -hide_banner -filters | rg drawtext"
+            )
+        if args.labels:
+            print("[apply_overlays] Warning: drawtext unavailable and allow_no_drawtext=true; disabling labels.")
+            args.labels = False
+        if args.intro_bg:
+            print("[apply_overlays] Warning: drawtext unavailable and allow_no_drawtext=true; disabling intro text slates.")
+            args.intro_bg = []
 
     # Post-parse validation so config can satisfy required values
     missing = [k for k in ["script", "director", "base", "overlay_image", "out"] if not getattr(args, k, None)]
@@ -596,28 +634,6 @@ def main():
         # Y position expression: 75px from bottom
         pf_y_expr = f"(main_h - overlay_h - 75)"
 
-        # Prepare label texts from script header
-        d1_name = extract_header_value(script_text, "DISPUTANT 1 NAME:")
-        d2_name = extract_header_value(script_text, "DISPUTANT 2 NAME:")
-        ma_name = extract_header_value(script_text, "MEDIATOR A NAME:")
-        mb_name = extract_header_value(script_text, "MEDIATOR B NAME:")
-        def first_name(full: str) -> str:
-            full = (full or "").strip()
-            if not full:
-                return ""
-            return full.split()[0].title()
-        d1 = f"Disputant 1\n{first_name(d1_name) or 'Unknown'}"
-        d2 = f"Disputant 2\n{first_name(d2_name) or 'Unknown'}"
-        ma = f"Mediator A\n{first_name(ma_name) or 'Unknown'}"
-        mb = f"Mediator B\n{first_name(mb_name) or 'Unknown'}"
-
-        # Write label textfiles to avoid escaping issues
-        tmp_labels_dir = Path(tempfile.mkdtemp(prefix="labels_"))
-        tf_d1 = tmp_labels_dir / "d1.txt"; tf_d1.write_text(d1)
-        tf_ma = tmp_labels_dir / "ma.txt"; tf_ma.write_text(ma)
-        tf_mb = tmp_labels_dir / "mb.txt"; tf_mb.write_text(mb)
-        tf_d2 = tmp_labels_dir / "d2.txt"; tf_d2.write_text(d2)
-
         # Positions (fractions of width for center points)
         # Left to right: D1, Mediator A, Mediator B, D2
         # Hard-coded geometry from user spec
@@ -656,72 +672,80 @@ def main():
             # normalize pixel format to avoid odd overlay behavior
             filter_parts.append(f"[0:v]format=rgba[v0]")
         # Optional bubble input
-        have_bubble = bool(args.labels_bubble)
+        have_bubble = bool(args.labels and args.labels_bubble)
         if have_bubble:
             input_args += ["-loop", "1", "-i", str(Path(args.labels_bubble))]
             # Scale to requested width (hard-coded 289) then split for reuse
             filter_parts.append(f"[{next_input_idx}:v]scale={bubble_width}:-1,format=rgba,split=4[nb1][nb2][nb3][nb4]")
             next_input_idx += 1
 
-        # Add four overlays (bubble if provided) + drawtext sequentially
-        # Helper to add one label (bubble + two lines), index i maps to above arrays
-        def add_label(prev_stream: str, i: int, title_text: str, name_text: str, nb_tag: str) -> str:
-            # Bubble placement: center on cx_px[i], y from top using bottom distance
-            if have_bubble:
-                filter_parts.append(
-                    f"[{prev_stream}][{nb_tag}]overlay=x=({cx_px[i]}-overlay_w/2):y=(main_h-{bottom_px[i]}-overlay_h):format=auto[vb{i}]"
-                )
-                s = f"vb{i}"
-            else:
-                s = prev_stream
-            # Title (bold), aligned center on cx, vertical approx centered in bubble using bottom distance
-            title_y = f"(main_h - {bottom_px[i]} - ({title_size}+{line_spacing}+{name_size})/2 - {name_size} - 35)"
-            draw_title = ":".join([
-                f"fontfile='{bold_font}'",
-                "fontcolor=white",
-                f"fontsize={title_size}",
-                f"text='{title_text}'",
-                f"x=({cx_px[i]}-text_w/2)",
-                f"y={title_y}",
-            ])
-            filter_parts.append(f"[{s}]drawtext={draw_title}[vt{i}]")
-            # Name (regular), centered under title
-            name_y = f"({title_y}+{title_size}+{line_spacing})"
-            draw_name = ":".join([
-                f"fontfile='{regular_font}'",
-                "fontcolor=white",
-                f"fontsize={name_size}",
-                f"text='({name_text})'",
-                f"x=({cx_px[i]}-text_w/2)",
-                f"y={name_y}",
-            ])
-            out_tag = f"vo{i}"
-            filter_parts.append(f"[vt{i}]drawtext={draw_name}[{out_tag}]")
-            return out_tag
+        final_stream = "v0"
+        if args.labels:
+            # Prepare label texts from script header
+            d1_name = extract_header_value(script_text, "DISPUTANT 1 NAME:")
+            d2_name = extract_header_value(script_text, "DISPUTANT 2 NAME:")
+            ma_name = extract_header_value(script_text, "MEDIATOR A NAME:")
+            mb_name = extract_header_value(script_text, "MEDIATOR B NAME:")
 
-        # D1
-        if have_bubble:
+            def first_name(full: str) -> str:
+                full = (full or "").strip()
+                if not full:
+                    return ""
+                return full.split()[0].title()
+
+            # Add four overlays (bubble if provided) + drawtext sequentially
+            # Helper to add one label (bubble + two lines), index i maps to above arrays
+            def add_label(prev_stream: str, i: int, title_text: str, name_text: str, nb_tag: str) -> str:
+                # Bubble placement: center on cx_px[i], y from top using bottom distance
+                if have_bubble:
+                    filter_parts.append(
+                        f"[{prev_stream}][{nb_tag}]overlay=x=({cx_px[i]}-overlay_w/2):y=(main_h-{bottom_px[i]}-overlay_h):format=auto[vb{i}]"
+                    )
+                    s = f"vb{i}"
+                else:
+                    s = prev_stream
+                # Title (bold), aligned center on cx, vertical approx centered in bubble using bottom distance
+                title_y = f"(main_h - {bottom_px[i]} - ({title_size}+{line_spacing}+{name_size})/2 - {name_size} - 35)"
+                draw_title = ":".join([
+                    f"fontfile='{bold_font}'",
+                    "fontcolor=white",
+                    f"fontsize={title_size}",
+                    f"text='{title_text}'",
+                    f"x=({cx_px[i]}-text_w/2)",
+                    f"y={title_y}",
+                ])
+                filter_parts.append(f"[{s}]drawtext={draw_title}[vt{i}]")
+                # Name (regular), centered under title
+                name_y = f"({title_y}+{title_size}+{line_spacing})"
+                draw_name = ":".join([
+                    f"fontfile='{regular_font}'",
+                    "fontcolor=white",
+                    f"fontsize={name_size}",
+                    f"text='({name_text})'",
+                    f"x=({cx_px[i]}-text_w/2)",
+                    f"y={name_y}",
+                ])
+                out_tag = f"vo{i}"
+                filter_parts.append(f"[vt{i}]drawtext={draw_name}[{out_tag}]")
+                return out_tag
+
+            # D1 -> MA -> MB -> D2
             next_stream = add_label("v0", 0, "Disputant 1", first_name(d1_name) or "Unknown", "nb1")
-        else:
-            next_stream = add_label("v0", 0, "Disputant 1", first_name(d1_name) or "Unknown", "nb1")
-        # Mediator A
-        # Mediator A
-        next_stream = add_label(next_stream, 1, "Mediator A", first_name(ma_name) or "Unknown", "nb2")
-        # Mediator B
-        # Mediator B
-        next_stream = add_label(next_stream, 2, "Mediator B", first_name(mb_name) or "Unknown", "nb3")
-        # D2
-        # D2
-        final_stream = add_label(next_stream, 3, "Disputant 2", first_name(d2_name) or "Unknown", "nb4")
+            next_stream = add_label(next_stream, 1, "Mediator A", first_name(ma_name) or "Unknown", "nb2")
+            next_stream = add_label(next_stream, 2, "Mediator B", first_name(mb_name) or "Unknown", "nb3")
+            final_stream = add_label(next_stream, 3, "Disputant 2", first_name(d2_name) or "Unknown", "nb4")
 
         base_labels = str(Path(out_path).with_suffix(".pre_slates.mp4"))
         print("[apply_overlays] Compositing labels/icon (pre-slate) →", base_labels)
+        _dur_cap = base_video_s or base_format_s
+        _phase1_limit = ["-t", f"{_dur_cap + 2.0:.3f}"] if _dur_cap else ["-shortest"]
         cmd = input_args + [
             "-filter_complex", ";".join(filter_parts),
             "-map", f"[{final_stream}]", "-map", "0:a?",
             "-c:v", "libx264", "-crf", str(int(args.crf)), "-pix_fmt", "yuv420p",
+            "-r", str(int(fps)),
             "-c:a", "copy",
-            "-shortest",
+        ] + _phase1_limit + [
             base_labels
         ]
         run(cmd)
@@ -729,6 +753,8 @@ def main():
 
     # Phase 2: pause slate insertion (top-most layer)
     if not overlay_times:
+        _dur_cap = base_video_s or base_format_s
+        _logo_limit = ["-t", f"{_dur_cap + 2.0:.3f}"] if _dur_cap else ["-shortest"]
         if have_logo:
             print("[apply_overlays] No [OVERLAY] markers; applying permanent logo overlay → out")
             run([
@@ -739,6 +765,7 @@ def main():
                 "-map", "[v]", "-map", "0:a?",
                 "-c:v", "libx264", "-crf", str(int(args.crf)), "-pix_fmt", "yuv420p", "-r", str(int(fps)),
                 "-c:a", "copy",
+            ] + _logo_limit + [
                 out_path
             ])
         else:
@@ -1097,6 +1124,8 @@ def main():
         # Tail segment: from last cursor to end
         tail_path = workdir / f"seg_{seg_index:03d}.mp4"
         seg_index += 1
+        _dur_cap = base_video_s or base_format_s
+        _tail_limit = ["-t", f"{_dur_cap - t_cursor + 2.0:.3f}"] if (_dur_cap and _dur_cap > t_cursor) else ["-shortest"]
         if have_logo:
             cmd_tail = [
                 "ffmpeg", "-y",
@@ -1105,13 +1134,13 @@ def main():
                 "-loop", "1", "-i", logo_path,
                 "-filter_complex", f"[1:v]scale={logo_w}:-1,format=rgba[lg];[0:v][lg]overlay=x=(main_w-overlay_w-{logo_mx}):y=(main_h-overlay_h-{logo_my}):shortest=1:format=auto[vout]",
                 "-map", "[vout]", "-map", "0:a?",
-            ] + v_enc + a_enc + [str(tail_path)]
+            ] + _tail_limit + v_enc + a_enc + [str(tail_path)]
         else:
             cmd_tail = [
                 "ffmpeg", "-y",
                 "-ss", f"{t_cursor:.3f}",
-                    "-i", base_for_pause,
-            ] + v_enc + a_enc + [str(tail_path)]
+                "-i", base_for_pause,
+            ] + _tail_limit + v_enc + a_enc + [str(tail_path)]
         run(cmd_tail)
         add_file_to_concat(tail_path)
 
@@ -1127,7 +1156,9 @@ def main():
 
     # Phase 3: optional intro sequence
     # New animated intro (intro2) takes precedence if present; otherwise fallback to legacy single-image intro.
-    intro2_cfg = cfg.get("intro2") if cfg else None
+    intro2_cfg = cfg.get("intro2") if (cfg and can_drawtext) else None
+    if cfg and cfg.get("intro2") and not can_drawtext and args.allow_no_drawtext:
+        print("[apply_overlays] Warning: drawtext unavailable and allow_no_drawtext=true; skipping intro2.")
     if isinstance(intro2_cfg, dict):
         # Defaults and parameters
         intro_bg = str(Path(intro2_cfg.get("bg", ""))) if intro2_cfg.get("bg") else ""

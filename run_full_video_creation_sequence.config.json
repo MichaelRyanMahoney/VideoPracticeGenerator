@@ -3,7 +3,7 @@
   "default_character_blend": "assets/DefaultCharacter.blend",
   "base_scene_blend": "scenes/base_scene.blend",
   "generator_inputs_json": "manifests/generator_inputs.json",
-  "script_txt": "script2.txt",
+  "script_txt": "script.txt",
   "manifest_csv_out": "manifests/lines.csv",
   "director_json_out": "director_visemes.json",
   "out_video": "out/blender_render.mp4",
@@ -19,7 +19,15 @@
   "force_tts": false,
   "force_whisper": false,
   "skip_render": false,
-  "skip_mux": false
+  "skip_mux": false,
+  "run_apply_overlays": true,
+  "overlay_config": "scripts/apply_overlays.config.json",
+  "overlay_image": "scenes/VideoPauseOverlay1.png",
+  "overlay_out": "out/blender_render_with_overlays.mp4",
+  "overlay_fps": 24,
+  "enforce_render_frame_guard": true,
+  "render_frame_guard_pad_sec": 2.0,
+  "max_frame_end": 12000
 }
 
 

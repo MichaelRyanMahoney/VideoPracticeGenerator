@@ -32,6 +32,7 @@ CLI_OPAQUE = False
 CLI_FRAMES = False
 CLI_FRAME_START = None
 CLI_FRAME_END = None
+CLI_MAX_FRAME_END = None
 CLI_NO_CLEAN_FRAMES = False
 CLI_NO_AUDIO = False
 
@@ -821,6 +822,19 @@ def main(director_path, outpath):
             scene.frame_end = max(scene.frame_start, int(CLI_FRAME_END))
     except Exception:
         pass
+    # Safety clamp to prevent runaway frame ranges.
+    max_frame_end = CLI_MAX_FRAME_END
+    if max_frame_end is None:
+        try:
+            max_frame_end = int(os.environ.get("VPG_MAX_FRAME_END", "12000"))
+        except Exception:
+            max_frame_end = 12000
+    try:
+        if max_frame_end and int(max_frame_end) > 0 and scene.frame_end > int(max_frame_end):
+            print(f"[run_director_visemes] frame_end safety clamp: {scene.frame_end} -> {int(max_frame_end)}")
+            scene.frame_end = int(max_frame_end)
+    except Exception:
+        pass
 
     # Apply visemes
     for b in beats:
@@ -972,6 +986,7 @@ if __name__ == "__main__":
     ap.add_argument("--opaque", action="store_true", help="Disable Film Transparent (opaque background) for easier debugging.")
     ap.add_argument("--frame_start", type=int, help="Override scene.frame_start (chunked render).")
     ap.add_argument("--frame_end", type=int, help="Override scene.frame_end (chunked render).")
+    ap.add_argument("--max_frame_end", type=int, default=None, help="Safety clamp for scene.frame_end (defaults to env VPG_MAX_FRAME_END or 12000).")
     ap.add_argument("--no_clean_frames", action="store_true", help="Do not delete existing frames in the output frames directory.")
     ap.add_argument("--no_audio", action="store_true", help="Do not load audio into VSE; estimate timeline end from visemes instead (useful for distributed renders).")
     args = ap.parse_args(argv)
@@ -1000,6 +1015,7 @@ if __name__ == "__main__":
     CLI_OPAQUE = bool(args.opaque)
     CLI_FRAME_START = args.frame_start
     CLI_FRAME_END = args.frame_end
+    CLI_MAX_FRAME_END = args.max_frame_end
     CLI_NO_CLEAN_FRAMES = bool(args.no_clean_frames)
     CLI_NO_AUDIO = bool(args.no_audio)
 

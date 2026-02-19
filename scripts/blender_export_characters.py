@@ -124,6 +124,50 @@ def _configure_cycles_gpu(samples: int | None = None) -> None:
         print(f"[cycles] ERROR: failed to configure Cycles GPU: {ex}")
 
 
+def _apply_hdri(hdri_path: Path, strength: float = 0.7) -> None:
+    """Apply HDRI environment map to the world shader (matches blender_configure_roles_for_render)."""
+    try:
+        world = bpy.context.scene.world
+        if not world:
+            world = bpy.data.worlds.new("World")
+            bpy.context.scene.world = world
+        world.use_nodes = True
+        nt = world.node_tree
+        bg = out = env = None
+        for n in nt.nodes:
+            t = getattr(n, "type", "")
+            if t == "BACKGROUND" and not bg:
+                bg = n
+            elif t == "OUTPUT_WORLD" and not out:
+                out = n
+            elif t == "TEX_ENVIRONMENT" and not env:
+                env = n
+        if not bg:
+            bg = nt.nodes.new("ShaderNodeBackground")
+        if not out:
+            out = nt.nodes.new("ShaderNodeOutputWorld")
+        if not env:
+            env = nt.nodes.new("ShaderNodeTexEnvironment")
+        img = bpy.data.images.load(str(hdri_path), check_existing=True)
+        try:
+            img.colorspace_settings.name = "Non-Color"
+        except Exception:
+            pass
+        env.image = img
+        for l in list(nt.links):
+            if l.to_node == out:
+                nt.links.remove(l)
+        nt.links.new(env.outputs["Color"], bg.inputs["Color"])
+        try:
+            bg.inputs["Strength"].default_value = float(strength)
+        except Exception:
+            pass
+        nt.links.new(bg.outputs["Background"], out.inputs["Surface"])
+        print(f"[blender_export] Applied HDRI: {hdri_path} (strength={strength})")
+    except Exception as ex:
+        print(f"[blender_export] WARNING: Failed to apply HDRI: {ex}")
+
+
 def set_transparent_render(image_width: int | None = None) -> None:
     scene = bpy.context.scene
     render = scene.render
@@ -139,89 +183,101 @@ def set_transparent_render(image_width: int | None = None) -> None:
         scene.cycles.film_transparent = True
 
 
-def isolate_and_render(obj_name: str, out_path: Path) -> None:
-    # Build a lookup of objects present in the active View Layer
+def isolate_and_render(obj_name: str, out_path: Path,
+                       initial_visibility: dict[str, bool] | None = None) -> None:
+    """Isolate a single object and render. Uses initial_visibility snapshot to only
+    show children that were configured as visible (e.g. by configure_roles_for_render)."""
     layer_obj_names = {o.name for o in bpy.context.view_layer.objects}
     def safe_hide_set(o, state: bool):
-        # Only call hide_set if object exists in active View Layer
         if o.name in layer_obj_names:
             o.hide_set(state)
 
-    # Hide everything
-    for obj in bpy.data.objects:
-        # Keep cameras/lights visible so framing and lighting stay consistent
-        if getattr(obj, "type", None) in {"CAMERA", "LIGHT"}:
-            obj.hide_render = False
-            safe_hide_set(obj, False)
-        else:
-            obj.hide_render = True
-            safe_hide_set(obj, True)
-
-    # Unhide target object and its parents (if any)
     obj = bpy.data.objects.get(obj_name)
     if obj is None:
         print(f"[blender_export] WARNING: Object not found: {obj_name}")
         return
 
-    # Unhide object hierarchy (parents)
-    cur = obj
-    chain = []
-    while cur is not None:
-        chain.append(cur)
-        cur = cur.parent
-    for o in chain:
-        o.hide_render = False
-        safe_hide_set(o, False)
+    # Hide everything (cameras/lights stay visible for framing and lighting)
+    for o in bpy.data.objects:
+        if getattr(o, "type", None) in {"CAMERA", "LIGHT"}:
+            o.hide_render = False
+            safe_hide_set(o, False)
+        else:
+            o.hide_render = True
+            safe_hide_set(o, True)
 
-    # Also unhide armature/children that belong to this object (common in rigs)
+    # Unhide target object + parent chain
+    cur = obj
+    while cur is not None:
+        cur.hide_render = False
+        safe_hide_set(cur, False)
+        cur = cur.parent
+
+    # Unhide children that were initially visible (respects configure_roles setup)
     for child in obj.children_recursive:
-        child.hide_render = False
-        safe_hide_set(child, False)
+        if initial_visibility is None or initial_visibility.get(child.name, False):
+            child.hide_render = False
+            safe_hide_set(child, False)
 
     # Render
     bpy.context.scene.render.filepath = str(out_path)
     bpy.ops.render.render(write_still=True)
 
-def isolate_collection_and_render(coll_name: str, out_path: Path) -> None:
-    # Build a lookup of objects present in the active View Layer
+def isolate_collection_and_render(coll_name: str, out_path: Path,
+                                  initial_visibility: dict[str, bool] | None = None) -> None:
+    """Isolate a collection and render. Uses initial_visibility snapshot so only objects
+    that configure_roles_for_render set as visible are shown (not every object in the collection)."""
     layer_obj_names = {o.name for o in bpy.context.view_layer.objects}
     def safe_hide_set(o, state: bool):
         if o.name in layer_obj_names:
             o.hide_set(state)
-
-    # Hide everything
-    for obj in bpy.data.objects:
-        if getattr(obj, "type", None) in {"CAMERA", "LIGHT"}:
-            obj.hide_render = False
-            safe_hide_set(obj, False)
-        else:
-            obj.hide_render = True
-            safe_hide_set(obj, True)
 
     coll = bpy.data.collections.get(coll_name)
     if coll is None:
         print(f"[blender_export] WARNING: Collection not found: {coll_name}")
         return
 
-    def unhide_obj(o):
-        # Unhide object and its parents
-        cur = o
+    def _iter_coll_objects(c):
+        for o in c.objects:
+            yield o
+        for ch in c.children:
+            yield from _iter_coll_objects(ch)
+
+    coll_obj_names = {o.name for o in _iter_coll_objects(coll)}
+
+    # Determine which objects in this collection should be visible based on the
+    # pre-isolation snapshot (set up by blender_configure_roles_for_render).
+    if initial_visibility is not None:
+        visible_in_coll = {n for n in coll_obj_names if initial_visibility.get(n, False)}
+    else:
+        visible_in_coll = coll_obj_names
+
+    # Fallback: if nothing was visible (scene not yet configured), show everything
+    if not visible_in_coll:
+        print(f"[blender_export] WARNING: No initially-visible objects in '{coll_name}'; showing all.")
+        visible_in_coll = coll_obj_names
+
+    print(f"[blender_export] Collection '{coll_name}': {len(visible_in_coll)}/{len(coll_obj_names)} objects visible")
+
+    # Hide everything (cameras/lights stay visible)
+    for obj in bpy.data.objects:
+        if getattr(obj, "type", None) in {"CAMERA", "LIGHT"}:
+            obj.hide_render = False
+            safe_hide_set(obj, False)
+        else:
+            obj.hide_render = True
+            safe_hide_set(obj, True)
+
+    # Unhide only the objects that were visible before isolation + their parent chains
+    for name in visible_in_coll:
+        obj = bpy.data.objects.get(name)
+        if not obj:
+            continue
+        cur = obj
         while cur is not None:
             cur.hide_render = False
             safe_hide_set(cur, False)
             cur = cur.parent
-        # Unhide all children as well
-        for child in o.children_recursive:
-            child.hide_render = False
-            safe_hide_set(child, False)
-
-    # Unhide all objects in collection (recursively)
-    def visit_collection(c):
-        for o in c.objects:
-            unhide_obj(o)
-        for ch in c.children:
-            visit_collection(ch)
-    visit_collection(coll)
 
     # Render
     bpy.context.scene.render.filepath = str(out_path)
@@ -293,6 +349,8 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--image-width", type=int, default=0, help="Output image width (preserves aspect)")
     ap.add_argument("--camera-name", help="Optional: use a specific camera by name (defaults to scene camera)")
     ap.add_argument("--generator_inputs_json", help="Path to manifests/generator_inputs.json for role validation", default=str(Path(__file__).resolve().parents[1] / "manifests" / "generator_inputs.json"))
+    ap.add_argument("--hdri_path", help="Path to HDRI file for environment lighting")
+    ap.add_argument("--hdri_strength", type=float, default=None, help="HDRI strength (default 0.7)")
     args = ap.parse_args(argv)
 
     out_dir = Path(args.output_dir).resolve()
@@ -326,6 +384,39 @@ def main(argv: list[str]) -> int:
             bpy.context.scene.camera = cams[0]
             print(f"[blender_export] Auto-selected only camera: {cams[0].name}")
 
+    # Apply HDRI environment lighting (safety net — should already be baked into scene
+    # by blender_configure_roles_for_render, but re-apply to be sure)
+    hdri_path = None
+    hdri_strength = 0.7
+    if args.hdri_path:
+        hdri_path = Path(args.hdri_path)
+    if args.hdri_strength is not None:
+        hdri_strength = args.hdri_strength
+    if not hdri_path:
+        try:
+            import json as _json2
+            if args.generator_inputs_json:
+                _cfg2 = _json2.loads(Path(args.generator_inputs_json).read_text())
+                run_sec = _cfg2.get("run") or {}
+                if run_sec.get("hdri_path"):
+                    hdri_path = Path(run_sec["hdri_path"])
+                if hdri_strength == 0.7 and "hdri_strength" in run_sec:
+                    hdri_strength = float(run_sec["hdri_strength"])
+        except Exception:
+            pass
+    if hdri_path:
+        if not hdri_path.is_absolute():
+            hdri_path = (Path(__file__).resolve().parents[1] / hdri_path).resolve()
+        if hdri_path.exists():
+            _apply_hdri(hdri_path, hdri_strength)
+        else:
+            print(f"[blender_export] WARNING: HDRI not found: {hdri_path}")
+
+    # Snapshot the initial visibility state (as set by blender_configure_roles_for_render).
+    # This lets the isolation functions know which objects to keep visible per role,
+    # even after each isolation pass hides/unhides objects.
+    initial_visibility = {obj.name: not obj.hide_render for obj in bpy.data.objects}
+
     cfg_path = Path(args.generator_inputs_json).resolve() if args.generator_inputs_json else None
     if args.roles:
         targets = resolve_role_targets(args.roles, cfg_path)
@@ -334,15 +425,15 @@ def main(argv: list[str]) -> int:
             out_path = out_dir / f"{args.file_prefix}_{idx:02d}_{safe}.png"
             print(f"[blender_export] Rendering role={label} ({ttype}:{name}) → {out_path}")
             if ttype == "collection":
-                isolate_collection_and_render(name, out_path)
+                isolate_collection_and_render(name, out_path, initial_visibility)
             else:
-                isolate_and_render(name, out_path)
+                isolate_and_render(name, out_path, initial_visibility)
     elif args.objects:
         for idx, name in enumerate(args.objects, start=1):
             safe = "".join(c for c in name if c.isalnum() or c in ("_", "-"))
             out_path = out_dir / f"{args.file_prefix}_{idx:02d}_{safe}.png"
             print(f"[blender_export] Rendering {name} → {out_path}")
-            isolate_and_render(name, out_path)
+            isolate_and_render(name, out_path, initial_visibility)
     else:
         print("[blender_export] ERROR: Provide either --roles (MediatorA MediatorB Disputant1 Disputant2) or --objects <names...>")
         return 2

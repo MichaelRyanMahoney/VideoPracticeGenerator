@@ -32,6 +32,48 @@ def ensure_parent(path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
 
 
+def _path_from_cfg(project_root: Path, value: str | Path | None) -> Path | None:
+    if value is None:
+        return None
+    raw = str(value).strip()
+    if not raw:
+        return None
+    p = Path(raw)
+    if p.is_absolute():
+        return p
+    return project_root / p
+
+
+def _parse_tc_seconds(tc: str) -> float:
+    try:
+        h, m, s = (tc or "00:00:00.000").split(":")
+        return float(h) * 3600.0 + float(m) * 60.0 + float(s)
+    except Exception:
+        return 0.0
+
+
+def _estimate_end_seconds_from_director(director: dict) -> float:
+    end_s = 0.0
+    for b in director.get("beats", []) or []:
+        t0 = _parse_tc_seconds(str(b.get("tc_in") or "00:00:00.000"))
+        if (b.get("type") or "").lower() == "pause" or not b.get("audio"):
+            try:
+                dur = float(b.get("duration") or 1.0)
+            except Exception:
+                dur = 1.0
+            end_s = max(end_s, t0 + max(0.0, dur))
+            continue
+        vmax = t0
+        for ev in b.get("visemes", []) or []:
+            try:
+                vmax = max(vmax, float(ev.get("t") or t0))
+            except Exception:
+                pass
+        # keep minimum per-line floor so super-short viseme rows still advance
+        end_s = max(end_s, max(vmax, t0 + 1.0))
+    return max(0.0, float(end_s))
+
+
 def parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser()
     ap.add_argument(
@@ -82,6 +124,14 @@ def main():
     force_whisper = bool(cfg.get("force_whisper", False))
     skip_render = bool(cfg.get("skip_render", False))
     skip_mux = bool(cfg.get("skip_mux", False))
+    run_apply_overlays = bool(cfg.get("run_apply_overlays", False))
+    overlay_config = _path_from_cfg(project_root, cfg.get("overlay_config"))
+    overlay_image = _path_from_cfg(project_root, cfg.get("overlay_image"))
+    overlay_out = _path_from_cfg(project_root, cfg.get("overlay_out"))
+    overlay_fps = int(cfg.get("overlay_fps", 24))
+    enforce_render_frame_guard = bool(cfg.get("enforce_render_frame_guard", True))
+    render_frame_guard_pad_sec = float(cfg.get("render_frame_guard_pad_sec", 2.0))
+    max_frame_end = int(cfg.get("max_frame_end", 12000))
     # HDRI settings (kept in this orchestrator config)
     hdri_path_cfg = cfg.get("hdri_path")
     hdri_strength_cfg = cfg.get("hdri_strength", 0.7)
@@ -131,7 +181,34 @@ def main():
     elif run_generate_chars:
         print("[skip] Character generation: blender_generate_character_files.py not found.")
 
-    # 1c) (Optional) Export character PNGs from the combined temp scene (with characters appended and positioned)
+    # 2) Configure roles in scene per generator_inputs.json (HDRI, visibility, colors)
+    #    Must run BEFORE character export so stills get correct HDRI and character setup.
+    cfg_script = project_root / "scripts" / "blender_configure_roles_for_render.py"
+    if bool(cfg.get("skip_configure_roles", False)):
+        print("[skip] Configure roles step per config (skip_configure_roles=True).")
+    else:
+        if not cfg_script.exists():
+            raise SystemExit(f"Missing script: {cfg_script}")
+        pre = ["xvfb-run", "-a", "-s", "-screen 0 1920x1080x24"] if os.environ.get("VPG_XVFB") == "1" else []
+        cmd_cfg = pre + [
+            str(blender_bin),
+            "-b",
+            str(tmp_scene),
+            "--python",
+            str(cfg_script),
+            "--",
+            "--config",
+            str(generator_inputs_json),
+            "--trace",
+            "--save",
+        ]
+        if hdri_path_cfg:
+            cmd_cfg += ["--hdri_path", str(hdri_path_cfg)]
+        if hdri_strength_cfg is not None:
+            cmd_cfg += ["--hdri_strength", str(hdri_strength_cfg)]
+        run_cmd(cmd_cfg)
+
+    # 2b) Export character PNGs from the configured scene (after roles/HDRI are set)
     export_script = project_root / "scripts" / "blender_export_characters.py"
     if run_export_chars and export_script.exists():
         ensure_parent(export_chars_out_dir / "x")
@@ -157,36 +234,13 @@ def main():
             "--generator_inputs_json",
             str(generator_inputs_json),
         ]
+        if hdri_path_cfg:
+            cmd_export += ["--hdri_path", str(hdri_path_cfg)]
+        if hdri_strength_cfg is not None:
+            cmd_export += ["--hdri_strength", str(hdri_strength_cfg)]
         run_cmd(cmd_export)
     elif run_export_chars:
         print("[skip] Character export: blender_export_characters.py not found.")
-
-    # 2) Configure roles in scene per generator_inputs.json
-    cfg_script = project_root / "scripts" / "blender_configure_roles_for_render.py"
-    if bool(cfg.get("skip_configure_roles", False)):
-        print("[skip] Configure roles step per config (skip_configure_roles=True).")
-    else:
-        if not cfg_script.exists():
-            raise SystemExit(f"Missing script: {cfg_script}")
-        pre = ["xvfb-run", "-a", "-s", "-screen 0 1920x1080x24"] if os.environ.get("VPG_XVFB") == "1" else []
-        cmd_cfg = pre + [
-            str(blender_bin),
-            "-b",
-            str(tmp_scene),
-            "--python",
-            str(cfg_script),
-            "--",
-            "--config",
-            str(generator_inputs_json),
-            "--trace",
-            "--save",
-        ]
-        # Pass HDRI overrides from orchestrator config
-        if hdri_path_cfg:
-            cmd_cfg += ["--hdri_path", str(hdri_path_cfg)]
-        if hdri_strength_cfg is not None:
-            cmd_cfg += ["--hdri_strength", str(hdri_strength_cfg)]
-        run_cmd(cmd_cfg)
 
     # 3) Build manifest CSV from script.txt
     parse_script_py = project_root / "scripts" / "parse_screenplay_to_manifest.py"
@@ -266,7 +320,20 @@ def main():
             str(director_json_out),
             "--out",
             str(out_video),
+            "--max_frame_end",
+            str(max_frame_end),
         ]
+        if enforce_render_frame_guard and director_json_out.exists() and generator_inputs_json.exists():
+            try:
+                d = load_json(director_json_out)
+                gi = load_json(generator_inputs_json)
+                fps_guard = int(((gi.get("run") or {}).get("fps")) or d.get("fps") or 24)
+                est_end_s = _estimate_end_seconds_from_director(d)
+                guard_frame_end = max(1, int(round((est_end_s + render_frame_guard_pad_sec) * fps_guard)))
+                cmd_render += ["--frame_end", str(guard_frame_end)]
+                print(f"[info] render frame guard enabled: frame_end={guard_frame_end} (fps={fps_guard}, est_end_s={est_end_s:.3f})")
+            except Exception as ex:
+                print(f"[warn] failed to compute render frame guard; continuing without it: {ex}")
         run_cmd(cmd_render)
     else:
         print("[skip] Render step per config.")
@@ -292,7 +359,49 @@ def main():
     else:
         print("[skip] Mux step per config.")
 
-    # 8) Cleanup
+    # 8) Optional overlays/final polish pass
+    if run_apply_overlays:
+        apply_py = project_root / "scripts" / "apply_overlays.py"
+        if not apply_py.exists():
+            raise SystemExit(f"Missing script: {apply_py}")
+        if overlay_config and not overlay_config.exists():
+            raise SystemExit(f"Overlay config not found: {overlay_config}")
+        if not overlay_config and not overlay_image:
+            raise SystemExit(
+                "run_apply_overlays=True requires either overlay_config or overlay_image in config."
+            )
+
+        # Avoid read/write to same file path for apply_overlays.
+        desired_overlay_out = overlay_out or out_video
+        tmp_overlay_out = out_video.with_name(f"{out_video.stem}.with_overlays.mp4")
+        writing_in_place = desired_overlay_out.resolve() == out_video.resolve()
+        target_overlay_out = tmp_overlay_out if writing_in_place else desired_overlay_out
+        ensure_parent(target_overlay_out)
+
+        cmd_apply = [sys.executable, str(apply_py)]
+        if overlay_config:
+            cmd_apply += ["--config", str(overlay_config)]
+        # Explicitly override timeline I/O so apply_overlays always uses this run's artifacts.
+        cmd_apply += [
+            "--script", str(script_txt),
+            "--director", str(director_json_out),
+            "--base", str(out_video),
+            "--out", str(target_overlay_out),
+            "--fps", str(overlay_fps),
+        ]
+        if overlay_image:
+            cmd_apply += ["--overlay_image", str(overlay_image)]
+        run_cmd(cmd_apply)
+
+        if writing_in_place:
+            os.replace(target_overlay_out, out_video)
+            print(f"[info] Applied overlays in-place -> {out_video}")
+        else:
+            print(f"[info] Applied overlays -> {target_overlay_out}")
+    else:
+        print("[skip] Overlays step per config.")
+
+    # 9) Cleanup
     if cleanup_temp:
         try:
             if tmp_scene.exists():
