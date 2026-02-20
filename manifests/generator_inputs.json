@@ -1,7 +1,7 @@
 {
   "run": {
     "project_name": "Video-01",
-    "fps": 1,
+    "fps": 12,
     "resolution": { "width": 1920, "height": 1080 },
     "render_engine": "CYCLES", 
     "denoise": true,
