@@ -309,7 +309,7 @@ def resolve_paths_in_config(cfg: Dict[str, Any], cfg_dir: Path) -> Dict[str, Any
     path_keys = {
         "script", "director", "base", "overlay_image", "out",
         "pf_icon", "labels_bubble", "labels_fontfile",
-        "intro_fontfile"
+        "intro_fontfile", "final_overlay"
     }
     # intro_bg is a list of paths
     resolved = dict(cfg)
@@ -1831,6 +1831,71 @@ def main():
             str(tmp_joined)
         ])
         Path(tmp_joined).replace(final_out)
+
+    # Phase 4: optional end card overlay (FinalOverlay), faded in and held.
+    final_overlay_cfg = str(cfg.get("final_overlay") or "").strip() if cfg else ""
+    final_overlay_duration = float(cfg.get("final_overlay_duration", 6.0) or 6.0) if cfg else 6.0
+    final_overlay_fade = float(cfg.get("final_overlay_fade", 0.6) or 0.6) if cfg else 0.6
+    final_overlay_path = Path(final_overlay_cfg) if final_overlay_cfg else (Path(args.script).parent / "scenes" / "FinalOverlay.png")
+    if final_overlay_duration > 0.0 and final_overlay_path.exists():
+        try:
+            render_res = director.get("render", {}).get("resolution", [1920, 1080])
+            tgt_w, tgt_h = int(render_res[0]), int(render_res[1])
+        except Exception:
+            tgt_w, tgt_h = 1920, 1080
+
+        base_probe = ffprobe_stream_durations(out_path)
+        main_dur = base_probe.get("format") or base_probe.get("video")
+        has_audio = base_probe.get("audio") is not None
+
+        if main_dur and main_dur > 0.0:
+            tmp_dir = Path(tempfile.mkdtemp(prefix="final_overlay_"))
+            final_card = tmp_dir / "final_card.mp4"
+            final_merged = tmp_dir / "final_merged.mp4"
+            # Build the end-card clip as full-screen video with silent audio.
+            run([
+                "ffmpeg", "-y",
+                "-loop", "1", "-framerate", str(int(fps)), "-t", f"{final_overlay_duration:.3f}", "-i", str(final_overlay_path),
+                "-f", "lavfi", "-t", f"{final_overlay_duration:.3f}", "-i", "anullsrc=channel_layout=stereo:sample_rate=48000",
+                "-filter_complex",
+                f"[0:v]scale=w={tgt_w}:h={tgt_h}:force_original_aspect_ratio=increase,crop={tgt_w}:{tgt_h},format=rgba[v]",
+                "-map", "[v]", "-map", "1:a",
+                "-c:v", "libx264", "-crf", str(int(args.crf)), "-pix_fmt", "yuv420p", "-r", str(int(fps)),
+                "-c:a", "aac", "-b:a", args.audio_bitrate,
+                "-shortest",
+                str(final_card),
+            ])
+
+            xf_d = max(0.1, min(float(final_overlay_fade), float(final_overlay_duration) - 0.05))
+            xf_off = max(0.0, float(main_dur) - xf_d)
+            if has_audio:
+                run([
+                    "ffmpeg", "-y",
+                    "-i", str(out_path),
+                    "-i", str(final_card),
+                    "-filter_complex",
+                    f"[0:v][1:v]xfade=transition=fade:duration={xf_d:.3f}:offset={xf_off:.3f}[v];"
+                    f"[0:a][1:a]acrossfade=d={xf_d:.3f}[a]",
+                    "-map", "[v]", "-map", "[a]",
+                    "-c:v", "libx264", "-crf", str(int(args.crf)), "-pix_fmt", "yuv420p", "-r", str(int(fps)),
+                    "-c:a", "aac", "-b:a", args.audio_bitrate,
+                    str(final_merged),
+                ])
+            else:
+                run([
+                    "ffmpeg", "-y",
+                    "-i", str(out_path),
+                    "-i", str(final_card),
+                    "-filter_complex",
+                    f"[0:v][1:v]xfade=transition=fade:duration={xf_d:.3f}:offset={xf_off:.3f}[v]",
+                    "-map", "[v]",
+                    "-c:v", "libx264", "-crf", str(int(args.crf)), "-pix_fmt", "yuv420p", "-r", str(int(fps)),
+                    str(final_merged),
+                ])
+            Path(final_merged).replace(out_path)
+            print(f"[apply_overlays] Appended final overlay card: {final_overlay_path} ({final_overlay_duration:.2f}s, fade={xf_d:.2f}s)")
+        else:
+            print("[apply_overlays] Warning: could not determine output duration; skipping final overlay fade append.")
 
 
 if __name__ == "__main__":

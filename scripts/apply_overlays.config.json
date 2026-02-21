@@ -63,6 +63,9 @@
   },
 
   "out": "../out/blender_render_with_overlays.mp4",
+  "final_overlay": "../scenes/FinalOverlay.png",
+  "final_overlay_duration": 6.0,
+  "final_overlay_fade": 0.6,
   "overlays": [
     { "id": 1, "image": "../scenes/Overlay1.png", "duration": 12 },
     { "id": 2, "image": "../scenes/Overlay2.png", "duration": 12 },

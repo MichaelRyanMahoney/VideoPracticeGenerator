@@ -53,7 +53,7 @@ Caleb agrees to move to a different open seat in music class if Aria asks to hav
 AGREEMENT – D2:
 Aria agrees to tell Caleb it’s her usual seat without calling him annoying or insulting him in front of others.
 
-### P: PRESENT YOURSELF AND PEER MEDIATION
+### STEP 1: PRESENT YOURSELF AND PEER MEDIATION
 MEDIATOR A (EMILY)
 “Hi! You’ve been asked to do a peer mediation. You’re not in trouble and I’ll explain more once we sit down. Please come with me.”
 
@@ -86,7 +86,7 @@ DISPUTANT 2 (ARIA)
 [PAUSE]
 [PAUSE]
 
-### E: EXPLAIN THE RULES
+### STEP 2: EXPLAIN THE RULES
 MEDIATOR B (MICHAEL)
 “To have a good mediation, there are a few rules we all need to follow.”
 
@@ -110,7 +110,7 @@ DISPUTANT 2 (ARIA)
 [PAUSE]
 [PAUSE]
 
-### A: ASK BOTH SIDES TO SHARE
+### STEP 3: ASK BOTH SIDES TO SHARE
 MEDIATOR A (EMILY)
 “We want to hear both of your perspectives on what we were told: When music class was starting, Caleb and Aria started arguing about who should sit in a seat by the instruments cart while other students were watching. The music teacher had stepped into the storage room to grab drumsticks, and neither of them would move.”
 
@@ -222,7 +222,7 @@ MEDIATOR A (EMILY)
 [PAUSE]
 [PAUSE]
 
-### C: CREATE A WIN-WIN SOLUTION
+### STEP 4: CREATE A WIN-WIN SOLUTION
 MEDIATOR B (MICHAEL)
 “Alright. I’m going to restate what you both want, just to be clear.”
 
@@ -324,7 +324,7 @@ MEDIATOR B (MICHAEL)
 [PAUSE]
 [PAUSE]
 
-### E: ESTABLISH AN AGREEMENT
+### STEP 5: ESTABLISH AN AGREEMENT
 MEDIATOR A (EMILY)
 “Now we’re going to write an agreement using what you both shared, so that this doesn’t happen again.”
 
