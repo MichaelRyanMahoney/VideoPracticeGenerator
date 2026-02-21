@@ -100,7 +100,7 @@ def main():
     ap.add_argument("--out", required=True, help="Output MP4 path")
     ap.add_argument("--fps", type=int, help="Override FPS (defaults to generator_inputs.json run.fps, else director fps, else 24)")
     ap.add_argument("--background", help="Optional background image to place behind RGBA frames (e.g., SceneBackground1.png)")
-    ap.add_argument("--fg_width_ratio", type=float, default=0.98, help="Foreground width as a fraction of background width (preserve aspect). Default 0.98")
+    ap.add_argument("--fg_width_ratio", type=float, default=0.73, help="Foreground width as a fraction of output width (preserve aspect). Default 0.73")
     ap.add_argument("--fg_contrast", type=float, default=1.0, help="Foreground contrast multiplier. Default 1.0 (no change)")
     ap.add_argument("--fg_sharpen", type=float, default=0.0, help="Foreground unsharp luma amount (0-5). Default 0.0 (off)")
     ap.add_argument("--crf", type=int, default=18, help="Video quality (lower=better; default 18)")
@@ -190,6 +190,10 @@ def main():
             print(f"[mux] Frame count: {_num_frames}, fps: {fps}, hard duration cap: {_video_dur:.3f}s")
 
         # Build ffmpeg command; handle optional background overlay
+        fg_ratio = max(0.1, min(1.0, float(args.fg_width_ratio)))
+        fg_target_w = max(2, int(round(width * fg_ratio)))
+        if fg_target_w % 2:
+            fg_target_w += 1
         if args.background:
             bg_path = str(Path(args.background))
             cmd: list[str] = []
@@ -214,11 +218,11 @@ def main():
             s = float(args.fg_sharpen)
             if c != 1.0 or s > 0.0:
                 filter_parts.append(
-                    f"[1:v]format=rgba,format=yuva444p,scale=1400:-1:flags=bicubic,eq=contrast={c}" + (f",unsharp=7:7:{s}:7:7:0.0" if s > 0.0 else "") + ",format=rgba[fg]"
+                    f"[1:v]format=rgba,format=yuva444p,scale={fg_target_w}:-1:flags=bicubic,eq=contrast={c}" + (f",unsharp=7:7:{s}:7:7:0.0" if s > 0.0 else "") + ",format=rgba[fg]"
                 )
             else:
                 filter_parts.append(
-                    "[1:v]format=rgba,scale=1400:-1:flags=bicubic[fg]"
+                    f"[1:v]format=rgba,scale={fg_target_w}:-1:flags=bicubic[fg]"
                 )
             # 3) Ensure alpha on foreground for proper compositing
             filter_parts.append(f"[fg]format=rgba[fg]")
@@ -251,15 +255,47 @@ def main():
                 cmd += ["-shortest"]
             cmd += [out_mp4]
         else:
-            cmd = build_ffmpeg_cmd(
-                frames_pattern=frames_pattern,
-                fps=fps,
-                audio_offsets_ms=audio_offsets_ms,
-                out_mp4=out_mp4,
-                crf=int(args.crf),
-                audio_bitrate=args.audio_bitrate,
-                max_duration=_video_dur,
-            )
+            # No explicit background image:
+            # still keep legacy composition behavior by scaling foreground and bottom-aligning
+            # into a fixed canvas (director render resolution).
+            cmd = ["ffmpeg", "-y", "-framerate", str(int(fps)), "-i", frames_pattern]
+            for audio_path, _ms in audio_offsets_ms:
+                cmd += ["-i", audio_path]
+
+            filter_parts: list[str] = []
+            c = float(args.fg_contrast)
+            s = float(args.fg_sharpen)
+            if c != 1.0 or s > 0.0:
+                filter_parts.append(
+                    f"[0:v]format=rgba,format=yuva444p,scale={fg_target_w}:-1:flags=bicubic,eq=contrast={c}" + (f",unsharp=7:7:{s}:7:7:0.0" if s > 0.0 else "") + ",format=rgba[fg]"
+                )
+            else:
+                filter_parts.append(f"[0:v]format=rgba,scale={fg_target_w}:-1:flags=bicubic[fg]")
+            filter_parts.append(f"[fg]pad={width}:{height}:(ow-iw)/2:(oh-ih):black[outv]")
+
+            labels: list[str] = []
+            for i, (_path, delay_ms) in enumerate(audio_offsets_ms, start=1):
+                a_in = f"{i}:a"
+                a_out = f"a{i}"
+                delay_expr = f"{int(delay_ms)}|{int(delay_ms)}"
+                filter_parts.append(f"[{a_in}]adelay={delay_expr},apad[{a_out}]")
+                labels.append(f"[{a_out}]")
+            if labels:
+                amix = "".join(labels) + f"amix=inputs={len(labels)}:normalize=0, aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo[amix]"
+                filter_parts.append(amix)
+
+            cmd += ["-filter_complex", "; ".join(filter_parts)]
+            cmd += ["-map", "[outv]"]
+            if labels:
+                cmd += ["-map", "[amix]"]
+            cmd += ["-c:v", "libx264", "-crf", str(int(args.crf)), "-pix_fmt", "yuv420p"]
+            if labels:
+                cmd += ["-c:a", "aac", "-b:a", args.audio_bitrate]
+            if _video_dur:
+                cmd += ["-t", f"{_video_dur:.3f}"]
+            else:
+                cmd += ["-shortest"]
+            cmd += [out_mp4]
 
         print("[mux] ffmpeg command:")
         print(" ", shlex.join(cmd))

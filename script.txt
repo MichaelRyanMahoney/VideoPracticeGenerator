@@ -1,6 +1,6 @@
 TITLE: Caleb & Aria
 PROJECT: Mock Scenario
-VERSION: 02/19/2026
+VERSION: 02/20/2026
 
 DISPUTANT 1 NAME: Caleb
 DISPUTANT 1 PROFILE: 6th Grade Boy
@@ -53,132 +53,95 @@ Caleb agrees to move to a different open seat in music class if Aria asks to hav
 AGREEMENT – D2:
 Aria agrees to tell Caleb it’s her usual seat without calling him annoying or insulting him in front of others.
 
-
 ### P: PRESENT YOURSELF AND PEER MEDIATION
-
-MEDIATOR A (EMILY) {emotion=normal intensity=0.95 tempo=0.95}
+MEDIATOR A (EMILY)
 “Hi! You’ve been asked to do a peer mediation. You’re not in trouble and I’ll explain more once we sit down. Please come with me.”
-[PAUSE]
 
-MEDIATOR A (EMILY) {emotion=normal intensity=0.95 tempo=0.95}
-“Hi! You’ve been asked to do a peer mediation. You’re not in trouble and I’ll explain more once we sit down. Please come with me.”
-[PAUSE]
-
-MEDIATOR A (EMILY) {emotion=normal intensity=0.95 tempo=0.95}
+MEDIATOR A (EMILY)
 “Hello! My name is Emily. This is Michael and we are your peer mediators. What are your names?”
-[PAUSE]
 
-DISPUTANT 1 (CALEB) {emotion=normal intensity=0.85 tempo=0.95}
-Caleb.
-[PAUSE]
+DISPUTANT 1 (CALEB)
+“Caleb.”
 
-DISPUTANT 2 (ARIA) {emotion=normal intensity=0.85 tempo=0.95}
-Aria.
-[PAUSE]
+DISPUTANT 2 (ARIA)
+“Aria.”
 
-MEDIATOR A (EMILY) {emotion=normal intensity=0.95 tempo=0.95}
+MEDIATOR A (EMILY)
 “You’re not in trouble. We heard you had a disagreement. This is peer mediation, where students can work things out together. We won’t share what you say with other students.”
-[PAUSE]
 
-MEDIATOR A (EMILY) {emotion=normal intensity=0.95 tempo=0.95}
+MEDIATOR A (EMILY)
 “We won’t take sides. We’ll help you find a solution that gives you both something you want.”
-[PAUSE]
 
-MEDIATOR A (EMILY) {emotion=normal intensity=0.95 tempo=0.95}
+MEDIATOR A (EMILY)
 “We can help you resolve things here, instead of in the office. Does that sound okay?”
-[PAUSE]
 
-DISPUTANT 1 (CALEB) {emotion=normal intensity=0.8 tempo=0.95}
-Yeah. I guess.
-[PAUSE]
+DISPUTANT 1 (CALEB)
+“Yeah… okay.”
 
-DISPUTANT 2 (ARIA) {emotion=normal intensity=0.8 tempo=0.95}
-Yeah.
-[PAUSE]
+DISPUTANT 2 (ARIA)
+“Okay.”
 
+[PAUSE]
+[ProcessFormSwap]
+[PAUSE]
+[PAUSE]
 
 ### E: EXPLAIN THE RULES
+MEDIATOR B (MICHAEL)
+“To have a good mediation, there are a few rules we all need to follow.”
+
+MEDIATOR B (MICHAEL)
+“The Confidentiality Rule is for us mediators. We won’t share what you say with other students.”
+
+MEDIATOR B (MICHAEL)
+“The One Mic Rule is for both of you. It means that one person speaks at a time.”
+
+MEDIATOR B (MICHAEL)
+“The Respect Rule is for all of us. We have to speak respectfully. Do you both agree to the rules?”
+
+DISPUTANT 1 (CALEB)
+“Yeah, I agree.”
+
+DISPUTANT 2 (ARIA)
+“I agree.”
 
 [PAUSE]
 [ProcessFormSwap]
 [PAUSE]
 [PAUSE]
-
-MEDIATOR B (MICHAEL) {emotion=toneup intensity=0.95 tempo=0.95}
-“To have a good mediation, there are a few rules we all need to follow.”
-[PAUSE]
-
-MEDIATOR B (MICHAEL) {emotion=normal intensity=0.95 tempo=0.95}
-“The Confidentiality Rule is for us mediators. We won’t share what you say with other students.”
-[PAUSE]
-
-MEDIATOR B (MICHAEL) {emotion=normal intensity=0.95 tempo=0.95}
-“The One Mic Rule is for both of you. It means that one person speaks at a time.”
-[PAUSE]
-
-MEDIATOR B (MICHAEL) {emotion=normal intensity=0.95 tempo=0.95}
-“The Respect Rule is for all of us. We have to speak respectfully. Do you both agree to the rules?”
-[PAUSE]
-
-DISPUTANT 1 (CALEB) {emotion=normal intensity=0.8 tempo=0.95}
-Yeah, I agree.
-[PAUSE]
-
-DISPUTANT 2 (ARIA) {emotion=normal intensity=0.8 tempo=0.95}
-I agree.
-[PAUSE]
-
 
 ### A: ASK BOTH SIDES TO SHARE
-
-[PAUSE]
-[ProcessFormSwap]
-[PAUSE]
-[PAUSE]
-
-MEDIATOR A (EMILY) {emotion=normal intensity=0.95 tempo=0.95}
+MEDIATOR A (EMILY)
 “We want to hear both of your perspectives on what we were told: When music class was starting, Caleb and Aria started arguing about who should sit in a seat by the instruments cart while other students were watching. The music teacher had stepped into the storage room to grab drumsticks, and neither of them would move.”
-[PAUSE]
 
-MEDIATOR A (EMILY) {emotion=normal intensity=0.95 tempo=0.95}
+MEDIATOR A (EMILY)
 “Caleb, from your perspective, what happened between you two?”
+
 [PAUSE]
 
-DISPUTANT 1 (CALEB) {emotion=normal intensity=0.85 tempo=0.95}
-So I sat down by the instruments cart.
-[PAUSE]
+DISPUTANT 1 (CALEB)
+“Umm… I sat down by the instruments cart because it was open.”
 
-DISPUTANT 1 (CALEB) {emotion=normal intensity=0.85 tempo=0.95}
-And Aria was like, calling me “annoying” and saying I always sit in the wrong spot.
-[PAUSE]
+DISPUTANT 1 (CALEB)
+“And Aria told me I was in her spot, and she called me ‘annoying’ and said I always sit in the wrong spot.”
 
-DISPUTANT 1 (CALEB) {emotion=normal intensity=0.85 tempo=0.95}
-I didn’t even know she usually sits there. I thought you could sit anywhere if you got there first.
-[PAUSE]
+DISPUTANT 1 (CALEB)
+“I didn’t know she usually sits there. I thought you could sit anywhere if you got there first.”
 
-MEDIATOR A (EMILY) {emotion=tonedown intensity=0.95 tempo=0.9}
-“What I heard you say is Aria called you ‘annoying’ and said you always sit in the wrong spot.”
-[PAUSE]
+MEDIATOR A (EMILY)
+“What I heard you say is: you sat in an open seat near the instruments cart, and you didn’t know Aria usually sits there.”
 
-MEDIATOR A (EMILY) {emotion=tonedown intensity=0.95 tempo=0.9}
-“And you didn’t know that was her usual seat, and you thought it was first come, first sit.”
-[PAUSE]
+MEDIATOR A (EMILY)
+“And you felt called out when she said you were ‘annoying’ and said you always sit in the wrong spot, especially because other students were watching. Is that right?”
 
-MEDIATOR A (EMILY) {emotion=normal intensity=0.95 tempo=0.95}
-“Is that right?”
-[PAUSE]
+DISPUTANT 1 (CALEB)
+“Yeah. That’s right.”
 
-DISPUTANT 1 (CALEB) {emotion=normal intensity=0.8 tempo=0.95}
-Yeah. That’s right.
-[PAUSE]
+MEDIATOR A (EMILY)
+“Is there anything else you want to share about what happened?”
 
-MEDIATOR A (EMILY) {emotion=normal intensity=0.95 tempo=0.95}
-“Is there anything else you want to share?”
-[PAUSE]
-
-DISPUTANT 1 (CALEB) {emotion=normal intensity=0.75 tempo=0.95}
-No. That’s basically it.
-[PAUSE]
+DISPUTANT 1 (CALEB)
+“No. That’s basically it.”
 
 [PAUSE]
 [PAUSE]
@@ -186,45 +149,34 @@ No. That’s basically it.
 [PAUSE]
 [PAUSE]
 
-MEDIATOR A (EMILY) {emotion=normal intensity=0.95 tempo=0.95}
+MEDIATOR A (EMILY)
 “Aria, from your perspective, what happened between you two?”
+
 [PAUSE]
 
-DISPUTANT 2 (ARIA) {emotion=normal intensity=0.85 tempo=0.95}
-I always sit in that seat in music.
-[PAUSE]
+DISPUTANT 2 (ARIA)
+“I walked in and Caleb was sitting in the seat I usually sit in.”
 
-DISPUTANT 2 (ARIA) {emotion=normal intensity=0.85 tempo=0.95}
-He took it, and I told him it’s my normal spot, and he just wasn’t listening.
-[PAUSE]
+DISPUTANT 2 (ARIA)
+“It’s like my normal spot in music, and it’s near my friends.”
 
-DISPUTANT 2 (ARIA) {emotion=normal intensity=0.85 tempo=0.95}
-And people were watching, and it was awkward.
-[PAUSE]
+DISPUTANT 2 (ARIA)
+“I told him that, but he wasn’t listening. He just stayed there, and I got really frustrated.”
 
-MEDIATOR A (EMILY) {emotion=tonedown intensity=0.95 tempo=0.9}
-“What I heard you say is Caleb sat in the seat you usually sit in during music class.”
-[PAUSE]
+MEDIATOR A (EMILY)
+“What I heard you say is: Caleb took the seat you usually sit in during music class, and when you tried to tell him it’s your normal spot, you felt like he ignored you and wouldn’t move.”
 
-MEDIATOR A (EMILY) {emotion=tonedown intensity=0.95 tempo=0.9}
-“And when you tried to tell him it was your normal spot, you felt like he wasn’t listening to you.”
-[PAUSE]
+MEDIATOR A (EMILY)
+“Is that accurate?”
 
-MEDIATOR A (EMILY) {emotion=normal intensity=0.95 tempo=0.95}
-“Is that right?”
-[PAUSE]
+DISPUTANT 2 (ARIA)
+“Yeah. That’s accurate.”
 
-DISPUTANT 2 (ARIA) {emotion=normal intensity=0.8 tempo=0.95}
-Yes.
-[PAUSE]
+MEDIATOR A (EMILY)
+“Is there anything else you want to add?”
 
-MEDIATOR A (EMILY) {emotion=normal intensity=0.95 tempo=0.95}
-“Is there anything else you want to share?”
-[PAUSE]
-
-DISPUTANT 2 (ARIA) {emotion=normal intensity=0.75 tempo=0.95}
-No.
-[PAUSE]
+DISPUTANT 2 (ARIA)
+“No.”
 
 [PAUSE]
 [PAUSE]
@@ -232,85 +184,65 @@ No.
 [PAUSE]
 [PAUSE]
 
-MEDIATOR A (EMILY) {emotion=normal intensity=0.95 tempo=0.95}
+MEDIATOR A (EMILY)
+“Okay. Now a couple questions about what bothered you most, and how you felt.”
+
+MEDIATOR A (EMILY)
 “Caleb, what bothered you most in this situation?”
-[PAUSE]
 
-DISPUTANT 1 (CALEB) {emotion=sad intensity=0.75 tempo=0.9}
-Being called out in front of everyone.
-[PAUSE]
+DISPUTANT 1 (CALEB)
+“Being called out in front of everybody.”
 
-MEDIATOR A (EMILY) {emotion=tonedown intensity=0.95 tempo=0.9}
-“Thank you for sharing.”
-[PAUSE]
-
-MEDIATOR A (EMILY) {emotion=normal intensity=0.95 tempo=0.95}
+MEDIATOR A (EMILY)
 “How did you feel when Aria called you annoying while other students were watching?”
-[PAUSE]
 
-DISPUTANT 1 (CALEB) {emotion=sad intensity=0.75 tempo=0.9}
-Put on the spot. Like everyone was looking at me.
-[PAUSE]
+DISPUTANT 1 (CALEB)
+“I felt put on the spot. Like… embarrassed.”
 
-MEDIATOR A (EMILY) {emotion=tonedown intensity=0.95 tempo=0.9}
-“Okay. Put on the spot.”
-[PAUSE]
+MEDIATOR A (EMILY)
+“Thank you for sharing that.”
 
-MEDIATOR A (EMILY) {emotion=normal intensity=0.95 tempo=0.95}
+MEDIATOR A (EMILY)
 “Aria, what bothered you most in this situation?”
-[PAUSE]
 
-DISPUTANT 2 (ARIA) {emotion=normal intensity=0.8 tempo=0.95}
-That he wouldn’t move, and he didn’t listen when I told him it’s my regular seat.
-[PAUSE]
+DISPUTANT 2 (ARIA)
+“That he wouldn’t move and he didn’t listen when I told him it was my regular seat.”
 
-MEDIATOR A (EMILY) {emotion=tonedown intensity=0.95 tempo=0.9}
-“Thank you for sharing.”
-[PAUSE]
-
-MEDIATOR A (EMILY) {emotion=normal intensity=0.95 tempo=0.95}
+MEDIATOR A (EMILY)
 “How did you feel when Caleb stayed in the seat and ignored what you were saying?”
-[PAUSE]
 
-DISPUTANT 2 (ARIA) {emotion=angry intensity=0.6 tempo=0.95}
-Frustrated.
-[PAUSE]
+DISPUTANT 2 (ARIA)
+“Frustrated. Like he just didn’t care.”
 
-MEDIATOR A (EMILY) {emotion=tonedown intensity=0.95 tempo=0.9}
-“Okay. Frustrated.”
-[PAUSE]
-
-
-### C: CREATE A WIN-WIN SOLUTION
+MEDIATOR A (EMILY)
+“Thank you.”
 
 [PAUSE]
 [ProcessFormSwap]
 [PAUSE]
 [PAUSE]
 
-MEDIATOR B (MICHAEL) {emotion=normal intensity=0.95 tempo=0.95}
-“Now we’re going to talk about what you both want, and what can change so this doesn’t happen again.”
-[PAUSE]
+### C: CREATE A WIN-WIN SOLUTION
+MEDIATOR B (MICHAEL)
+“Alright. I’m going to restate what you both want, just to be clear.”
 
-MEDIATOR B (MICHAEL) {emotion=normal intensity=0.95 tempo=0.95}
+MEDIATOR B (MICHAEL)
+“Caleb, you want Aria to not insult you in front of other people.”
+
+MEDIATOR B (MICHAEL)
+“And Aria, you want Caleb to let you have your usual seat, since it’s near your friends.”
+
+MEDIATOR B (MICHAEL)
 “Caleb, what’s something you want Aria to do, or to stop doing?”
-[PAUSE]
 
-DISPUTANT 1 (CALEB) {emotion=normal intensity=0.85 tempo=0.95}
-I want her to not insult me in front of other people.
-[PAUSE]
+DISPUTANT 1 (CALEB)
+“I want her to not call me names. Like, not in front of everyone.”
 
-MEDIATOR B (MICHAEL) {emotion=tonedown intensity=0.95 tempo=0.9}
-“So you want no insults, especially in front of the class.”
-[PAUSE]
+MEDIATOR B (MICHAEL)
+“So you want her to tell you the problem without insulting you, especially in front of other people?”
 
-MEDIATOR B (MICHAEL) {emotion=normal intensity=0.95 tempo=0.95}
-“Is that what you mean?”
-[PAUSE]
-
-DISPUTANT 1 (CALEB) {emotion=normal intensity=0.8 tempo=0.95}
-Yeah.
-[PAUSE]
+DISPUTANT 1 (CALEB)
+“Yeah.”
 
 [PAUSE]
 [PAUSE]
@@ -318,25 +250,20 @@ Yeah.
 [PAUSE]
 [PAUSE]
 
-MEDIATOR B (MICHAEL) {emotion=normal intensity=0.95 tempo=0.95}
+MEDIATOR B (MICHAEL)
 “Aria, what’s something you want Caleb to do, or to stop doing?”
-[PAUSE]
 
-DISPUTANT 2 (ARIA) {emotion=normal intensity=0.85 tempo=0.95}
-I want him to let me have my usual seat since it’s near my friends.
-[PAUSE]
+DISPUTANT 2 (ARIA)
+“I want him to just move if it’s my usual seat.”
 
-MEDIATOR B (MICHAEL) {emotion=tonedown intensity=0.95 tempo=0.9}
-“So you want to be able to sit in your usual spot by your friends in music.”
-[PAUSE]
+DISPUTANT 2 (ARIA)
+“Or at least listen when I tell him it’s my spot.”
 
-MEDIATOR B (MICHAEL) {emotion=normal intensity=0.95 tempo=0.95}
-“Is that right?”
-[PAUSE]
+MEDIATOR B (MICHAEL)
+“So you want him to let you have your regular seat near your friends, and you want him to listen when you explain it?”
 
-DISPUTANT 2 (ARIA) {emotion=normal intensity=0.8 tempo=0.95}
-Yes.
-[PAUSE]
+DISPUTANT 2 (ARIA)
+“Yes.”
 
 [PAUSE]
 [PAUSE]
@@ -344,57 +271,47 @@ Yes.
 [PAUSE]
 [PAUSE]
 
-MEDIATOR B (MICHAEL) {emotion=normal intensity=0.95 tempo=0.95}
+MEDIATOR B (MICHAEL)
 “Now let’s think about what you can both do differently, so you each get something you want.”
-[PAUSE]
 
-MEDIATOR B (MICHAEL) {emotion=normal intensity=0.95 tempo=0.95}
+MEDIATOR B (MICHAEL)
 “Caleb, what’s one thing you could do differently to help this work?”
-[PAUSE]
 
-DISPUTANT 1 (CALEB) {emotion=normal intensity=0.85 tempo=0.95}
-I can ask if someone usually sits there before I take a seat.
-[PAUSE]
+DISPUTANT 1 (CALEB)
+“I can ask if someone usually sits there before I sit down.”
 
-DISPUTANT 1 (CALEB) {emotion=normal intensity=0.85 tempo=0.95}
-And I can actually listen if they’re telling me something.
-[PAUSE]
+DISPUTANT 1 (CALEB)
+“And if they say they do, I can actually listen, and not just be like ‘whatever.’”
 
-MEDIATOR B (MICHAEL) {emotion=normal intensity=0.95 tempo=0.95}
+MEDIATOR B (MICHAEL)
 “Aria, what’s one thing you could do differently to help this work?”
-[PAUSE]
 
-DISPUTANT 2 (ARIA) {emotion=normal intensity=0.85 tempo=0.95}
-I can explain calmly that it’s my seat.
-[PAUSE]
+DISPUTANT 2 (ARIA)
+“I can explain it calmly.”
 
-DISPUTANT 2 (ARIA) {emotion=normal intensity=0.85 tempo=0.95}
-And not call him annoying or say stuff like that.
-[PAUSE]
+DISPUTANT 2 (ARIA)
+“And I won’t call him annoying or say stuff like that.”
 
-MEDIATOR B (MICHAEL) {emotion=normal intensity=0.95 tempo=0.95}
+MEDIATOR B (MICHAEL)
 “Is there anything else you’d like each other to do differently?”
-[PAUSE]
 
-DISPUTANT 1 (CALEB) {emotion=normal intensity=0.75 tempo=0.95}
-Just don’t say it in front of everyone.
-[PAUSE]
+DISPUTANT 1 (CALEB)
+“Just… say it in a normal voice.”
 
-DISPUTANT 2 (ARIA) {emotion=normal intensity=0.75 tempo=0.95}
-And just, like, answer me instead of ignoring me.
-[PAUSE]
+DISPUTANT 2 (ARIA)
+“And I want you to not argue back in front of everyone.”
 
-MEDIATOR B (MICHAEL) {emotion=normal intensity=0.95 tempo=0.95}
+MEDIATOR B (MICHAEL)
 “Is there something you could both do differently?”
-[PAUSE]
 
-DISPUTANT 2 (ARIA) {emotion=normal intensity=0.8 tempo=0.95}
-Use calm voices.
-[PAUSE]
+DISPUTANT 1 (CALEB)
+“We could use calm voices.”
 
-DISPUTANT 1 (CALEB) {emotion=normal intensity=0.8 tempo=0.95}
-And if it’s not working, ask the teacher for help instead of arguing.
-[PAUSE]
+DISPUTANT 2 (ARIA)
+“And if it’s still not working, we can ask the teacher for help instead of arguing.”
+
+MEDIATOR B (MICHAEL)
+“Okay. That sounds like a win-win direction.”
 
 [PAUSE]
 [PAUSE]
@@ -402,20 +319,14 @@ And if it’s not working, ask the teacher for help instead of arguing.
 [PAUSE]
 [PAUSE]
 
-
-### E: ESTABLISH AN AGREEMENT
-
 [PAUSE]
 [ProcessFormSwap]
 [PAUSE]
 [PAUSE]
 
-MEDIATOR A (EMILY) {emotion=normal intensity=0.95 tempo=0.95}
+### E: ESTABLISH AN AGREEMENT
+MEDIATOR A (EMILY)
 “Now we’re going to write an agreement using what you both shared, so that this doesn’t happen again.”
-[PAUSE]
-[PAUSE]
-[PAUSE]
-[PAUSE]
 
 [PAUSE]
 [PAUSE]
@@ -423,51 +334,40 @@ MEDIATOR A (EMILY) {emotion=normal intensity=0.95 tempo=0.95}
 [PAUSE]
 [PAUSE]
 
-MEDIATOR A (EMILY) {emotion=normal intensity=0.95 tempo=0.95}
+MEDIATOR A (EMILY)
 “Here’s what we have.”
-[PAUSE]
 
-MEDIATOR A (EMILY) {emotion=toneup intensity=0.95 tempo=0.95}
+MEDIATOR A (EMILY)
 “Caleb agrees to move to a different open seat in music class if Aria asks to have a seat that is close to her friends.”
-[PAUSE]
 
-MEDIATOR A (EMILY) {emotion=toneup intensity=0.95 tempo=0.95}
+MEDIATOR A (EMILY)
 “Aria agrees to tell Caleb it’s her usual seat without calling him annoying or insulting him in front of others.”
-[PAUSE]
 
-MEDIATOR A (EMILY) {emotion=normal intensity=0.95 tempo=0.95}
+MEDIATOR A (EMILY)
 “Do you both agree to do these things?”
-[PAUSE]
 
-DISPUTANT 1 (CALEB) {emotion=happy intensity=0.55 tempo=0.95}
-Yeah. I agree.
-[PAUSE]
+DISPUTANT 1 (CALEB)
+“Yeah. I agree.”
 
-DISPUTANT 2 (ARIA) {emotion=happy intensity=0.55 tempo=0.95}
-I agree.
-[PAUSE]
+DISPUTANT 2 (ARIA)
+“I agree.”
 
-MEDIATOR A (EMILY) {emotion=normal intensity=0.95 tempo=0.95}
+MEDIATOR A (EMILY) 
 “Please read it and sign below.”
+
+[PAUSE]
 [PAUSE]
 [PAUSE]
 
-MEDIATOR A (EMILY) {emotion=normal intensity=0.95 tempo=0.95}
+MEDIATOR A (EMILY)
 “Is there anything you want to say to each other before we finish?”
-[PAUSE]
 
-DISPUTANT 2 (ARIA) {emotion=normal intensity=0.75 tempo=0.95}
-Sorry I called you annoying.
-[PAUSE]
+DISPUTANT 1 (CALEB)
+“Sorry I didn’t listen at first.”
 
-DISPUTANT 1 (CALEB) {emotion=normal intensity=0.75 tempo=0.95}
-It’s fine. Sorry I didn’t listen.
-[PAUSE]
+DISPUTANT 2 (ARIA)
+“I’m sorry I called you annoying. I’ll just say it normally.”
 
-MEDIATOR B (MICHAEL) {emotion=happy intensity=0.55 tempo=0.95}
-Thanks for saying that.
-[PAUSE]
-
-MEDIATOR A (EMILY) {emotion=happy intensity=0.55 tempo=0.95}
+MEDIATOR A (EMILY)
 “Thanks for doing this mediation with us. We’ll walk you back to class now.”
 

@@ -27,13 +27,19 @@ ALIASES = {
 }
 
 # Allow digits in role labels (e.g., DISPUTANT 1); support optional inline {key=value ...}
-SPEAKER_LINE = re.compile(r'^\s*([A-Z0-9 ]+?)(?:\s*\(([A-Z \.]+)\))?\s*(?:\{([^}]*)\})?\s*$')
+SPEAKER_LINE = re.compile(r'^\s*([A-Z0-9 ]+)(?:\s*\(([A-Z \.]+)\))?\s*(?:\{([^}]*)\})?\s*$')
+# One-line speaker + dialogue format:
+# MEDIATOR A (EMILY) {emotion=normal ...} "Hello there."
+INLINE_SPEAKER_LINE = re.compile(
+    r'^\s*([A-Z0-9 ]+)(?:\s*\(([A-Z \.]+)\))?\s*(?:\{([^}]*)\})?\s+(.+?)\s*$'
+)
 
 # Standalone defaults directive:
 # {DEFAULTS emotion=normal intensity=1.0 tempo=1.0 pitch=1.0 volume=100}
 # pitch accepts either semitone shift (0 neutral) or ratio (1.0 neutral).
 DEFAULTS_LINE = re.compile(r'^\s*\{\s*DEFAULTS\s+([^}]*)\}\s*$')
 VALID_EMOTION_PRESETS = {"normal", "happy", "sad", "angry", "whisper", "toneup", "tonedown"}
+EMOTION_KEYS = {"emotion", "emotion_preset"}
 
 def normalize_speaker(raw_role, raw_name):
     """
@@ -100,6 +106,10 @@ def _coerce_types(d: dict) -> dict:
                 pass
     return out
 
+
+def _has_explicit_emotion_key(raw_kv: dict) -> bool:
+    return any(str(k).strip().lower() in EMOTION_KEYS for k in raw_kv.keys())
+
 def parse_script(lines):
     entries=[]
     i=0; cur_speaker=None
@@ -120,11 +130,36 @@ def parse_script(lines):
             i += 1
             continue
 
+        # Handle one-line entries where speaker label and spoken text are on the same line.
+        mi = INLINE_SPEAKER_LINE.match(line)
+        if mi:
+            try:
+                cur_speaker = normalize_speaker(mi.group(1), mi.group(2))
+            except ValueError:
+                cur_speaker = None
+            if cur_speaker:
+                raw_inline_kv = _parse_kv_blob(mi.group(3) or "")
+                inline_kv = _coerce_types(raw_inline_kv)
+                has_explicit_emotion = _has_explicit_emotion_key(raw_inline_kv)
+                spoken_inline = (mi.group(4) or "").strip()
+                has_inline_attrs = bool((mi.group(3) or "").strip())
+                looks_like_quote = spoken_inline.startswith(("“", "\"", "'"))
+                # Avoid misclassifying metadata lines like "DISPUTANT 1 NAME: Caleb".
+                if spoken_inline and (has_inline_attrs or looks_like_quote):
+                    attrs = dict(current_defaults)
+                    attrs.update(inline_kv)
+                    attrs["typecast_mode"] = "preset" if has_explicit_emotion else "smart"
+                    entries.append((cur_speaker, spoken_inline, attrs))
+                    i += 1
+                    continue
+
         m = SPEAKER_LINE.match(line)
         if m and i+1 < len(lines):
             # Next non-empty line(s) until blank or bracketed stage dir
             cur_speaker = normalize_speaker(m.group(1), m.group(2))
-            inline_kv = _coerce_types(_parse_kv_blob(m.group(3) or ""))
+            raw_inline_kv = _parse_kv_blob(m.group(3) or "")
+            inline_kv = _coerce_types(raw_inline_kv)
+            has_explicit_emotion = _has_explicit_emotion_key(raw_inline_kv)
             j = i+1
             spoken=[]
             row_kv = dict(inline_kv)
@@ -143,7 +178,10 @@ def parse_script(lines):
                     j += 1
                     continue
                 if t.startswith("{") and t.endswith("}") and "=" in t:
-                    kv3 = _coerce_types(_parse_kv_blob(t.strip()[1:-1]))
+                    raw_kv3 = _parse_kv_blob(t.strip()[1:-1])
+                    if _has_explicit_emotion_key(raw_kv3):
+                        has_explicit_emotion = True
+                    kv3 = _coerce_types(raw_kv3)
                     row_kv.update(kv3)
                     j += 1
                     continue
@@ -153,6 +191,7 @@ def parse_script(lines):
                 # Merge defaults -> row overrides
                 attrs = dict(current_defaults)
                 attrs.update(row_kv)
+                attrs["typecast_mode"] = "preset" if has_explicit_emotion else "smart"
                 entries.append((cur_speaker, " ".join(spoken), attrs))
             i = j
         else:
@@ -209,6 +248,7 @@ def main():
             "role": role,
             "voice_id": vid,
             "transcript": transcript,
+            "typecast_mode": str(attrs.get("typecast_mode", "smart")).strip().lower() or "smart",
             # include the per-line delivery attrs so cache invalidates correctly
             "emotion_preset": attrs.get("emotion_preset", "normal"),
             "emotion_intensity": float(attrs.get("emotion_intensity", 1.0)),
@@ -226,6 +266,7 @@ def main():
             "audio",        # either relative file path or s3:// uri (depending on args)
             "audio_hash",   # sha256 of stable audio identity
             "transcript",
+            "typecast_mode",
             "emotion_preset","emotion_intensity","tempo","pitch","volume"
         ])
         for idx, (spk, txt, attrs) in enumerate(entries, start=1):
@@ -243,6 +284,7 @@ def main():
                 audio,
                 ah,
                 txt,
+                attrs.get("typecast_mode","smart"),
                 attrs.get("emotion_preset","normal"),
                 attrs.get("emotion_intensity",1.0),
                 attrs.get("tempo",1.0),

@@ -118,9 +118,12 @@ def main():
     # Legacy voice_map_json no longer required; use generator_inputs_json for Typecast voices
     director_json_out = Path(cfg.get("director_json_out") or (project_root / "director_visemes.json"))
     out_video = Path(cfg.get("out_video") or (project_root / "out" / "visemes.mp4"))
-    background_image = Path(cfg.get("background_image")) if cfg.get("background_image") else None
+    background_image = _path_from_cfg(project_root, cfg.get("background_image"))
     cleanup_temp = bool(cfg.get("cleanup_temp", True))
     force_tts = bool(cfg.get("force_tts", False))
+    use_smart_prompt_tts = bool(cfg.get("use_smart_prompt_tts", False))
+    smart_prompt_context_char_limit = int(cfg.get("smart_prompt_context_char_limit", 2000))
+    smart_prompt_include_speaker_labels = bool(cfg.get("smart_prompt_include_speaker_labels", True))
     force_whisper = bool(cfg.get("force_whisper", False))
     skip_render = bool(cfg.get("skip_render", False))
     skip_mux = bool(cfg.get("skip_mux", False))
@@ -129,6 +132,7 @@ def main():
     overlay_image = _path_from_cfg(project_root, cfg.get("overlay_image"))
     overlay_out = _path_from_cfg(project_root, cfg.get("overlay_out"))
     overlay_fps = int(cfg.get("overlay_fps", 24))
+    mux_fg_width_ratio = float(cfg.get("mux_fg_width_ratio", 0.73))
     enforce_render_frame_guard = bool(cfg.get("enforce_render_frame_guard", True))
     render_frame_guard_pad_sec = float(cfg.get("render_frame_guard_pad_sec", 2.0))
     max_frame_end = int(cfg.get("max_frame_end", 12000))
@@ -141,6 +145,8 @@ def main():
     export_chars_out_dir = Path(cfg.get("export_characters_output_dir") or (project_root / "out" / "exports" / "characters"))
     export_image_width = int(cfg.get("export_image_width", 1200))
     export_file_prefix = str(cfg.get("export_file_prefix", "Char"))
+    export_table_object_name = str(cfg.get("export_table_object_name", "Dining table round for 4 people")).strip()
+    export_table_file_prefix = str(cfg.get("export_table_file_prefix", "Table"))
 
     # Derived paths
     tmp_dir = project_root / "out" / "_tmp"
@@ -239,6 +245,31 @@ def main():
         if hdri_strength_cfg is not None:
             cmd_export += ["--hdri_strength", str(hdri_strength_cfg)]
         run_cmd(cmd_export)
+
+        if export_table_object_name:
+            cmd_export_table = pre + [
+                str(blender_bin),
+                "-b",
+                str(tmp_scene),
+                "--python",
+                str(export_script),
+                "--",
+                "--output-dir",
+                str(export_chars_out_dir),
+                "--objects",
+                export_table_object_name,
+                "--file-prefix",
+                export_table_file_prefix,
+                "--image-width",
+                str(export_image_width),
+                "--generator_inputs_json",
+                str(generator_inputs_json),
+            ]
+            if hdri_path_cfg:
+                cmd_export_table += ["--hdri_path", str(hdri_path_cfg)]
+            if hdri_strength_cfg is not None:
+                cmd_export_table += ["--hdri_strength", str(hdri_strength_cfg)]
+            run_cmd(cmd_export_table)
     elif run_export_chars:
         print("[skip] Character export: blender_export_characters.py not found.")
 
@@ -261,21 +292,32 @@ def main():
     # 4) TTS (Typecast) if needed
     generated_audio = False
     if force_tts or need_tts(manifest_csv_out):
-        tts_script = project_root / "scripts" / "tts_typecast_from_manifest.py"
+        tts_script_name = (
+            "tts_typecast_smartprompt_from_manifest.py"
+            if use_smart_prompt_tts
+            else "tts_typecast_from_manifest.py"
+        )
+        tts_script = project_root / "scripts" / tts_script_name
         if not tts_script.exists():
             raise SystemExit(f"Missing script: {tts_script}")
         if not os.environ.get("TYPECAST_API_KEY"):
             raise SystemExit("TYPECAST_API_KEY not set; export it to create audio.")
-        run_cmd(
-            [
-                sys.executable,
-                str(tts_script),
-                "--manifest_csv",
-                str(manifest_csv_out),
-                "--generator_inputs_json",
-                str(generator_inputs_json),
+        tts_cmd = [
+            sys.executable,
+            str(tts_script),
+            "--manifest_csv",
+            str(manifest_csv_out),
+            "--generator_inputs_json",
+            str(generator_inputs_json),
+        ]
+        if use_smart_prompt_tts:
+            tts_cmd += [
+                "--context_char_limit",
+                str(smart_prompt_context_char_limit),
+                "--include_speaker_labels",
+                "true" if smart_prompt_include_speaker_labels else "false",
             ]
-        )
+        run_cmd(tts_cmd)
         generated_audio = True
     else:
         print("[skip] TTS: all audio files already exist and match manifest.")
@@ -352,6 +394,8 @@ def main():
             str(frames_pattern),
             "--out",
             str(out_video),
+            "--fg_width_ratio",
+            str(mux_fg_width_ratio),
         ]
         if background_image and background_image.exists():
             cmd_mux += ["--background", str(background_image)]

@@ -50,6 +50,7 @@ def parse_script_tokens(script_text: str) -> list[str]:
       - "pause" for a standalone [PAUSE]
       - "overlay" for a standalone [OVERLAY] or [OVERLAYn]
       - "pf_swap" for a standalone [ProcessFormSwap]
+      - "section_change" for a standalone markdown section header line (### ...)
     """
     lines = script_text.splitlines()
     i = 0
@@ -68,6 +69,10 @@ def parse_script_tokens(script_text: str) -> list[str]:
             continue
         if stripped == "[ProcessFormSwap]":
             tokens.append("pf_swap")
+            i += 1
+            continue
+        if stripped.startswith("###"):
+            tokens.append("section_change")
             i += 1
             continue
         # Speaker blocks
@@ -217,6 +222,38 @@ def map_pf_swaps_to_times(script_tokens: list[str], beat_tokens: list[BeatToken]
     return times
 
 
+def map_section_changes_to_times(script_tokens: list[str], beat_tokens: list[BeatToken], anchor: str = "prev_end") -> list[float]:
+    """
+    Align script token sequence to beat token sequence; collect times for markdown
+    section-change markers ("### ..."). Uses the same anchoring strategy as overlays.
+    """
+    times: list[float] = []
+    beat_has_pause = any(bt.kind == "pause" for bt in beat_tokens)
+    si = 0
+    bi = 0
+    while si < len(script_tokens):
+        st = script_tokens[si]
+        if st in ("line", "pause"):
+            if st == "pause" and not beat_has_pause:
+                si += 1
+                continue
+            while bi < len(beat_tokens) and beat_tokens[bi].kind != st:
+                bi += 1
+            if bi < len(beat_tokens):
+                bi += 1
+            si += 1
+            continue
+        if st == "section_change":
+            if bi < len(beat_tokens):
+                times.append(beat_tokens[bi].tc_in_sec)
+            else:
+                print(f"[apply_overlays] Warning: section change at script token {si} dropped (no remaining beats to anchor)")
+            si += 1
+            continue
+        si += 1
+    return times
+
+
 def parse_overlay_ids(script_text: str) -> list[int | None]:
     """
     Extract overlay numeric IDs in order of appearance in the script:
@@ -279,6 +316,8 @@ def resolve_paths_in_config(cfg: Dict[str, Any], cfg_dir: Path) -> Dict[str, Any
     for k in list(resolved.keys()):
         if k in path_keys:
             resolved[k] = _resolve_path(cfg_dir, resolved[k])
+        if k == "step_overlays":
+            resolved[k] = _resolve_path(cfg_dir, resolved[k])
         if k == "intro_bg":
             resolved[k] = _resolve_path(cfg_dir, resolved[k])
         # Resolve new intro2 nested assets
@@ -290,6 +329,10 @@ def resolve_paths_in_config(cfg: Dict[str, Any], cfg_dir: Path) -> Dict[str, Any
                 intro2["title_slide"] = _resolve_path(cfg_dir, intro2.get("title_slide"))
             if "process_form_overlay" in intro2:
                 intro2["process_form_overlay"] = _resolve_path(cfg_dir, intro2.get("process_form_overlay"))
+            if "table_overlay" in intro2:
+                intro2["table_overlay"] = _resolve_path(cfg_dir, intro2.get("table_overlay"))
+            if "conflict_description_overlay" in intro2:
+                intro2["conflict_description_overlay"] = _resolve_path(cfg_dir, intro2.get("conflict_description_overlay"))
             if "chars" in intro2 and isinstance(intro2["chars"], list):
                 new_chars = []
                 for item in intro2["chars"]:
@@ -593,11 +636,37 @@ def main():
     beat_tokens = build_beats_tokens(director)
     overlay_times = map_overlays_to_times(script_tokens, beat_tokens, anchor=args.anchor)
     pf_swap_times = map_pf_swaps_to_times(script_tokens, beat_tokens, anchor=args.anchor)
+    section_change_times = map_section_changes_to_times(script_tokens, beat_tokens, anchor=args.anchor)
     overlay_ids = parse_overlay_ids(script_text)
+
+    # Optional section-step overlays (Step1Overlay..StepNOverlay): can be provided
+    # explicitly in config as "step_overlays", otherwise auto-discovered in scenes/.
+    step_overlays: list[str] = []
+    if isinstance(cfg.get("step_overlays"), list):
+        for p in cfg.get("step_overlays") or []:
+            if p and Path(str(p)).exists():
+                step_overlays.append(str(Path(str(p))))
+    if not step_overlays:
+        scenes_dir = Path(args.script).parent / "scenes"
+        found_any = False
+        for n in range(1, 21):
+            cand = None
+            for ext in (".png", ".PNG", ".webp", ".jpg", ".jpeg"):
+                c = scenes_dir / f"Step{n}Overlay{ext}"
+                if c.exists():
+                    cand = c
+                    break
+            if cand:
+                found_any = True
+                step_overlays.append(str(cand))
+            elif found_any:
+                break
+    step_overlay_fade = float(cfg.get("step_overlay_fade", 0.35))
+    num_step_overlays = min(len(section_change_times), len(step_overlays))
 
     # Phase 1: optional pre-slate compositing (ProcessForm icon + labels)
     base_for_pause = base
-    if (args.pf_icon and pf_swap_times) or args.labels:
+    if (args.pf_icon and pf_swap_times) or args.labels or num_step_overlays > 0:
         # Build x(t) expression for right<->left moves with animation (will be overridden below)
         ANIM = max(0.01, float(args.pf_anim_sec))
         # Process Form icon positions and animation:
@@ -637,12 +706,30 @@ def main():
         # Positions (fractions of width for center points)
         # Left to right: D1, Mediator A, Mediator B, D2
         # Hard-coded geometry from user spec
-        bubble_width = 289
+        bubble_width = 320
         cx_px = [483, 771, 1124, 1443]  # D1, MA, MB, D2 centerlines
+        intro2_labels_cfg = cfg.get("intro2") if isinstance(cfg.get("intro2"), dict) else {}
+        cfg_cx = intro2_labels_cfg.get("bubble_centers_x")
+        if isinstance(cfg_cx, list) and len(cfg_cx) == 4:
+            try:
+                cx_px = [int(float(v)) for v in cfg_cx]
+            except Exception:
+                pass
+        if bool(intro2_labels_cfg.get("equalize_bubble_spacing", False)):
+            d1x = float(cx_px[0])
+            d2x = float(cx_px[3])
+            step = (d2x - d1x) / 3.0
+            cx_px = [int(round(d1x + step * i)) for i in range(4)]
+        mediator_gap_extra_px = int(intro2_labels_cfg.get("mediator_gap_extra_px", 20))
+        if mediator_gap_extra_px != 0:
+            half = mediator_gap_extra_px / 2.0
+            cx_px[1] = int(round(cx_px[1] - half))
+            cx_px[2] = int(round(cx_px[2] + half))
         bottom_px = [694, 812, 812, 694]  # bubble bottoms (original positions)
-        title_size = 34  # ~10% larger
-        name_size = 23   # ~10% larger
+        title_size = int(intro2_labels_cfg.get("title_font_size", 40))
+        name_size = max(1, title_size - 1)
         line_spacing = 6
+        bubble_text_y_offset = int(intro2_labels_cfg.get("bubble_text_y_offset", 10))
         # Title fonts: try Inter Bold, fallback to Inter
         default_inter = Path("/Library/Fonts/Inter.ttf")
         bold_candidates = [
@@ -705,7 +792,7 @@ def main():
                 else:
                     s = prev_stream
                 # Title (bold), aligned center on cx, vertical approx centered in bubble using bottom distance
-                title_y = f"(main_h - {bottom_px[i]} - ({title_size}+{line_spacing}+{name_size})/2 - {name_size} - 35)"
+                title_y = f"(main_h - {bottom_px[i]} - ({title_size}+{line_spacing}+{name_size})/2 - {name_size} - 35 + {bubble_text_y_offset})"
                 draw_title = ":".join([
                     f"fontfile='{bold_font}'",
                     "fontcolor=white",
@@ -734,6 +821,42 @@ def main():
             next_stream = add_label(next_stream, 1, "Mediator A", first_name(ma_name) or "Unknown", "nb2")
             next_stream = add_label(next_stream, 2, "Mediator B", first_name(mb_name) or "Unknown", "nb3")
             final_stream = add_label(next_stream, 3, "Disputant 2", first_name(d2_name) or "Unknown", "nb4")
+
+        # Optional full-screen step overlays keyed to script section changes (### ...).
+        if num_step_overlays > 0:
+            print(f"[apply_overlays] Applying {num_step_overlays} section-step overlay(s)")
+            for sidx in range(num_step_overlays):
+                overlay_path = step_overlays[sidx]
+                t0 = float(section_change_times[sidx])
+                t1 = float(section_change_times[sidx + 1]) if (sidx + 1) < num_step_overlays else None
+                input_args += ["-loop", "1", "-i", overlay_path]
+                this_idx = next_input_idx
+                next_input_idx += 1
+                scale_tag = f"step{sidx}_s"
+                ref_tag = f"step{sidx}_r"
+                ov_tag = f"step{sidx}_ov"
+                out_tag = f"step{sidx}_out"
+                # Match overlay to main video dimensions exactly.
+                filter_parts.append(f"[{this_idx}:v][{final_stream}]scale2ref=w=main_w:h=main_h[{scale_tag}][{ref_tag}]")
+                if t1 is not None and t1 > t0:
+                    fade_d = max(0.01, min(float(step_overlay_fade), (t1 - t0) / 2.0))
+                    fade_out_st = max(t0, t1 - fade_d)
+                    filter_parts.append(
+                        f"[{scale_tag}]format=rgba,"
+                        f"fade=t=in:st={t0:.3f}:d={fade_d:.3f}:alpha=1,"
+                        f"fade=t=out:st={fade_out_st:.3f}:d={fade_d:.3f}:alpha=1[{ov_tag}]"
+                    )
+                    enable_expr = f"between(t,{t0:.3f},{t1:.3f})"
+                else:
+                    fade_d = max(0.01, float(step_overlay_fade))
+                    filter_parts.append(
+                        f"[{scale_tag}]format=rgba,fade=t=in:st={t0:.3f}:d={fade_d:.3f}:alpha=1[{ov_tag}]"
+                    )
+                    enable_expr = f"gte(t,{t0:.3f})"
+                filter_parts.append(
+                    f"[{ref_tag}][{ov_tag}]overlay=x=0:y=0:format=auto:enable='{enable_expr}'[{out_tag}]"
+                )
+                final_stream = out_tag
 
         base_labels = str(Path(out_path).with_suffix(".pre_slates.mp4"))
         print("[apply_overlays] Compositing labels/icon (pre-slate) →", base_labels)
@@ -1167,6 +1290,8 @@ def main():
         placement = str(intro2_cfg.get("placement", "camera")).lower()  # "camera" or "slots"
         conflict_start = float(intro2_cfg.get("conflict_text_time", 2.0))
         conflict_duration = float(intro2_cfg.get("conflict_text_duration", 2.5))
+        conflict_reading_wpm = float(intro2_cfg.get("conflict_reading_wpm", 0.0) or 0.0)
+        conflict_overlay_fade = float(intro2_cfg.get("conflict_overlay_fade", max(0.75, intro_fade * 1.5)))
         # Global/default bubbles delay
         bubble_delay = float(intro2_cfg.get("bubbles_delay", 0.6))
         # Optional timeline-style controls
@@ -1177,20 +1302,43 @@ def main():
         m_bubbles_delay = float(intro2_cfg.get("m_bubbles_delay", bubble_delay))
         process_after_m_bubbles = float(intro2_cfg.get("process_after_m_bubbles", 1.0))
         process_overlay = str(Path(intro2_cfg.get("process_form_overlay", ""))) if intro2_cfg.get("process_form_overlay") else ""
+        table_overlay = str(Path(intro2_cfg.get("table_overlay", ""))) if intro2_cfg.get("table_overlay") else ""
+        conflict_overlay = str(Path(intro2_cfg.get("conflict_description_overlay", ""))) if intro2_cfg.get("conflict_description_overlay") else ""
         process_time = float(intro2_cfg.get("process_form_time", max(0.0, intro_total - 2.0)))
-        process_duration = float(intro2_cfg.get("process_form_duration", 1.5))
+        process_duration = float(intro2_cfg.get("process_form_duration", 4.0))
+        table_time = float(intro2_cfg.get("table_time", process_time))
+        table_duration = float(intro2_cfg.get("table_duration", process_duration))
+        process_after_table = float(intro2_cfg.get("process_after_table", max(0.5, intro_fade)))
         char_width = int(intro2_cfg.get("char_width", 620))
+        table_width = int(intro2_cfg.get("table_width", char_width))
+        y_offset = float(intro2_cfg.get("y_offset", 0.0))
         intro_logo_scale = float(intro2_cfg.get("intro_logo_scale", 1.0))
 
         # Prepare conflict description text (prefixed)
         conflict = extract_header_value(script_text, "CONFLICT DESCRIPTION:")
         if not conflict:
             conflict = "Conflict description not found."
-        conflict_prefixed = f"Conflict Description: {conflict}"
-        intro_text_wrapped = wrap_text(conflict_prefixed, max_chars=64)
+        # Normalize embedded newlines/whitespace, then re-wrap cleanly for drawtext.
+        conflict_text_max_chars = int(intro2_cfg.get("conflict_text_max_chars", 52))
+        conflict_clean = re.sub(r"\s+", " ", conflict).strip()
+        conflict_word_count = len(re.findall(r"\b[\w']+\b", conflict_clean))
+        if conflict_reading_wpm > 0.0 and conflict_word_count > 0:
+            # Dynamic read-time model: seconds = words * 60 / words-per-minute.
+            conflict_duration = (float(conflict_word_count) * 60.0) / float(conflict_reading_wpm)
+            print(
+                f"[apply_overlays] intro2 conflict duration from reading speed: "
+                f"words={conflict_word_count} wpm={conflict_reading_wpm:.1f} duration={conflict_duration:.3f}s"
+            )
+        intro_text_wrapped = wrap_text(conflict_clean, max_chars=max(8, conflict_text_max_chars))
         tmp_dir = Path(tempfile.mkdtemp(prefix="intro2_"))
-        txt_file = tmp_dir / "intro_text.txt"
-        txt_file.write_text(intro_text_wrapped)
+        conflict_lines = [ln.strip() for ln in intro_text_wrapped.splitlines() if ln.strip()]
+        if not conflict_lines:
+            conflict_lines = [conflict_clean]
+        conflict_line_files: list[Path] = []
+        for i, line in enumerate(conflict_lines):
+            line_file = tmp_dir / f"intro_text_line_{i:02d}.txt"
+            line_file.write_text(line)
+            conflict_line_files.append(line_file)
 
         # Resolution target
         try:
@@ -1202,6 +1350,22 @@ def main():
         # Character layout defaults by role
         # Horizontal centers for D1, MA, MB, D2
         cx_px = [483, 771, 1124, 1443]
+        cfg_cx = intro2_cfg.get("bubble_centers_x")
+        if isinstance(cfg_cx, list) and len(cfg_cx) == 4:
+            try:
+                cx_px = [int(float(v)) for v in cfg_cx]
+            except Exception:
+                pass
+        if bool(intro2_cfg.get("equalize_bubble_spacing", False)):
+            d1x = float(cx_px[0])
+            d2x = float(cx_px[3])
+            step = (d2x - d1x) / 3.0
+            cx_px = [int(round(d1x + step * i)) for i in range(4)]
+        mediator_gap_extra_px = int(intro2_cfg.get("mediator_gap_extra_px", 20))
+        if mediator_gap_extra_px != 0:
+            half = mediator_gap_extra_px / 2.0
+            cx_px[1] = int(round(cx_px[1] - half))
+            cx_px[2] = int(round(cx_px[2] + half))
         # Bubbles baseline distances (from bottom)
         bottom_px = [694, 812, 812, 694]
         role_to_idx = {"d1": 0, "ma": 1, "mb": 2, "d2": 3}
@@ -1240,8 +1404,11 @@ def main():
                     c["appear"] = m_appear_abs
             # 4) Process overlay after mediator bubbles start + hold
             mediators_bubbles_start = m_appear_abs + m_bubbles_delay
-            process_time_default = mediators_bubbles_start + process_after_m_bubbles
-            # Only override if not explicitly set
+            table_time_default = mediators_bubbles_start + process_after_m_bubbles
+            process_time_default = table_time_default + process_after_table
+            # Keep explicit config values authoritative; otherwise use sequenced defaults.
+            if "table_time" not in intro2_cfg:
+                table_time = table_time_default
             if "process_form_time" not in intro2_cfg:
                 process_time = process_time_default
         else:
@@ -1265,6 +1432,10 @@ def main():
                 process_time = float(process_time) + title_offset  # type: ignore
             except Exception:
                 pass
+            try:
+                table_time = float(table_time) + title_offset  # type: ignore
+            except Exception:
+                pass
 
         # Auto-compute duration if not explicitly provided in config
         if "duration" not in intro2_cfg:
@@ -1282,9 +1453,11 @@ def main():
             conflict_end = conflict_start + conflict_duration
             # - Process overlay end (if present)
             process_end = (process_time + process_duration) if process_overlay else 0.0
+            # - Table overlay end (if present)
+            table_end = (table_time + table_duration) if table_overlay else 0.0
             # Pad a bit to avoid abrupt cuts
             tail_pad = max(0.25, float(intro_fade) * 0.5)
-            computed_total = max(char_end, d_bubbles_end, m_bubbles_end, conflict_end, process_end) + tail_pad
+            computed_total = max(char_end, d_bubbles_end, m_bubbles_end, conflict_end, process_end, table_end) + tail_pad
             intro_total = round(computed_total, 3)
 
         # Build inputs and filter graph
@@ -1329,6 +1502,16 @@ def main():
             input_args += ["-loop", "1", "-t", f"{intro_total:.3f}", "-i", process_overlay]
             pf_idx = next_idx
             next_idx += 1
+        table_idx = None
+        if table_overlay:
+            input_args += ["-loop", "1", "-t", f"{intro_total:.3f}", "-i", table_overlay]
+            table_idx = next_idx
+            next_idx += 1
+        conflict_overlay_idx = None
+        if conflict_overlay:
+            input_args += ["-loop", "1", "-t", f"{intro_total:.3f}", "-i", conflict_overlay]
+            conflict_overlay_idx = next_idx
+            next_idx += 1
         # Optional logo overlay (match permanent logo position/size)
         logo_idx = None
         if have_logo:
@@ -1362,7 +1545,8 @@ def main():
 
         # Prepare bubbles: scale and split
         if bubble_idx is not None:
-            filter_parts.append(f"[{bubble_idx}:v]scale=289:-1,format=rgba,split=4[nb1][nb2][nb3][nb4]")
+            intro_bubble_width = int(intro2_cfg.get("bubble_width", 320))
+            filter_parts.append(f"[{bubble_idx}:v]scale={intro_bubble_width}:-1,format=rgba,split=4[nb1][nb2][nb3][nb4]")
 
         # Overlay characters
         # placement == "camera": assume PNGs match camera framing; optionally scale to char_width and center-bottom align
@@ -1377,7 +1561,7 @@ def main():
                     # Fade in alpha on the character
                     filter_parts.append(f"[ch{j}]fade=t=in:st={start:.3f}:d={intro_fade:.3f}:alpha=1[ch{j}f]")
                     filter_parts.append(
-                        f"[{cur}][ch{j}f]overlay=x=(main_w-overlay_w)/2:y=(main_h-overlay_h):format=auto:enable='between(t,{start:.3f},{intro_total:.3f})'[v{j+1}]"
+                        f"[{cur}][ch{j}f]overlay=x=(main_w-overlay_w)/2:y=(main_h-overlay_h+{y_offset:.3f}):format=auto:enable='between(t,{start:.3f},{intro_total:.3f})'[v{j+1}]"
                     )
                 else:
                     # No scaling: overlay full-frame at 0,0
@@ -1409,9 +1593,12 @@ def main():
             return full.split()[0].title()
         titles = ["Disputant 1", "Mediator A", "Mediator B", "Disputant 2"]
         names = [first_name(d1_name) or "Unknown", first_name(ma_name) or "Unknown", first_name(mb_name) or "Unknown", first_name(d2_name) or "Unknown"]
-        title_size = 34
-        name_size = 23
+        title_size = int(intro2_cfg.get("title_font_size", 40))
+        name_size = int(intro2_cfg.get("name_font_size", max(1, title_size - 1)))
+        if "name_font_size" not in intro2_cfg:
+            name_size = max(1, title_size - 1)
         line_spacing = 6
+        bubble_text_y_offset = int(intro2_cfg.get("bubble_text_y_offset", 10))
         # Fonts (reuse labels font if provided)
         if args.labels_fontfile:
             provided_font = Path(args.labels_fontfile).resolve()
@@ -1445,7 +1632,7 @@ def main():
                 )
                 cur = f"vb{ridx}"
             # title text
-            title_y = f"(main_h - {bottom_px[ridx]} - ({title_size}+{line_spacing}+{name_size})/2 - {name_size} - 35)"
+            title_y = f"(main_h - {bottom_px[ridx]} - ({title_size}+{line_spacing}+{name_size})/2 - {name_size} - 35 + {bubble_text_y_offset})"
             draw_title = ":".join([
                 f"fontfile='{bold_font}'",
                 "fontcolor=white",
@@ -1470,22 +1657,62 @@ def main():
             filter_parts.append(f"[vt{ridx}]drawtext={draw_name}[vo{ridx}]")
             cur = f"vo{ridx}"
 
-        # Conflict description (top center), appear then disappear
+        # Conflict description overlay + text, appear together and disappear together.
+        conflict_end = conflict_start + conflict_duration
+        conflict_fade = max(0.0, min(conflict_overlay_fade, max(0.0, conflict_duration / 2.0)))
+        conflict_fade_out_st = max(conflict_start, conflict_end - conflict_fade)
+        conflict_alpha_expr = (
+            f"if(lt(t\\,{conflict_start:.3f})\\,0\\,"
+            f"if(lt(t\\,{conflict_start + conflict_fade:.3f})\\,(t-{conflict_start:.3f})/{max(conflict_fade, 0.001):.3f}\\,"
+            f"if(lt(t\\,{conflict_fade_out_st:.3f})\\,1\\,"
+            f"if(lt(t\\,{conflict_end:.3f})\\,({conflict_end:.3f}-t)/{max(conflict_fade, 0.001):.3f}\\,0))))"
+        )
+        if conflict_overlay_idx is not None:
+            filter_parts.append(
+                f"[{conflict_overlay_idx}:v]scale={tgt_w}:{tgt_h},format=rgba,"
+                f"fade=t=in:st={conflict_start:.3f}:d={conflict_fade:.3f}:alpha=1,"
+                f"fade=t=out:st={conflict_fade_out_st:.3f}:d={conflict_fade:.3f}:alpha=1[vconfbg]"
+            )
+            filter_parts.append(
+                f"[{cur}][vconfbg]overlay=x=0:y=0:format=auto:enable='between(t,{conflict_start:.3f},{conflict_end:.3f})'[vconf0]"
+            )
+            cur = "vconf0"
+
+        # Conflict description text centered inside a 1340x540 area with top at y=340.
+        # Draw one line per drawtext to avoid newline glyph artifacts ("NO GLYPH").
         fontopt = []
         if args.intro_fontfile:
             fontopt = [f"fontfile='{str(Path(args.intro_fontfile))}'"]
-        drawtext_opts = ":".join([
-            *fontopt,
-            f"textfile='{str(txt_file)}'",
-            f"fontcolor={args.intro_fontcolor}",
-            f"fontsize={int(args.intro_fontsize)}",
-            "line_spacing=10",
-            "x=(w-text_w)/2",
-            "y=80",
-            f"enable='between(t,{conflict_start:.3f},{(conflict_start+conflict_duration):.3f})'",
-        ])
-        filter_parts.append(f"[{cur}]drawtext={drawtext_opts}[vconf]")
-        cur = "vconf"
+        _line_spacing = 10
+        _font_size = int(args.intro_fontsize)
+        _n_lines = max(1, len(conflict_line_files))
+        _total_text_h = (_n_lines * _font_size) + ((_n_lines - 1) * _line_spacing)
+        _y_top = 340 + ((540 - _total_text_h) / 2.0)
+        for i, line_file in enumerate(conflict_line_files):
+            drawtext_opts = ":".join([
+                *fontopt,
+                f"textfile='{str(line_file)}'",
+                f"fontcolor={args.intro_fontcolor}",
+                f"fontsize={_font_size}",
+                "line_spacing=10",
+                "x=(w-text_w)/2",
+                f"y={_y_top + (i * (_font_size + _line_spacing)):.3f}",
+                f"alpha='{conflict_alpha_expr}'",
+                f"enable='between(t,{conflict_start:.3f},{conflict_end:.3f})'",
+            ])
+            out_tag = "vconf" if i == (_n_lines - 1) else f"vconf_{i}"
+            filter_parts.append(f"[{cur}]drawtext={drawtext_opts}[{out_tag}]")
+            cur = out_tag
+
+        # Table overlay and process form overlay near end (same timing by default)
+        if table_idx is not None:
+            filter_parts.append(
+                f"[{table_idx}:v]scale={int(table_width)}:-1,format=rgba,fade=t=in:st={table_time:.3f}:d={intro_fade:.3f}:alpha=1[table]"
+            )
+            filter_parts.append(
+                f"[{cur}][table]overlay=x=(main_w-overlay_w)/2:y=(main_h-overlay_h+{y_offset:.3f}):format=auto:enable='between(t,{table_time:.3f},{min(intro_total, table_time+table_duration):.3f})'[vtable]"
+            )
+            cur = "vtable"
 
         # Process form overlay on top near end
         if pf_idx is not None:
