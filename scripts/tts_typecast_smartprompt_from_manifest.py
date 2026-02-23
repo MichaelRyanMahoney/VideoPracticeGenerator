@@ -86,6 +86,62 @@ def normalize_emotion_preset(value: str) -> str:
     return emotion if emotion in VALID_EMOTION_PRESETS else DEFAULT_EMOTION_PRESET
 
 
+def parse_float_or_default(value: object, default: float) -> float:
+    try:
+        return float(value)
+    except Exception:
+        return float(default)
+
+
+def parse_int_or_default(value: object, default: int) -> int:
+    try:
+        return int(value)
+    except Exception:
+        return int(default)
+
+
+def parse_character_typecast_defaults(tc: dict) -> dict[str, object]:
+    defaults: dict[str, object] = {}
+    if not isinstance(tc, dict):
+        return defaults
+
+    pitch = tc.get("pitch")
+    if pitch is not None and str(pitch).strip() != "":
+        defaults["pitch"] = parse_float_or_default(pitch, DEFAULT_PITCH)
+
+    speed = tc.get("speed")
+    if speed is None or str(speed).strip() == "":
+        speed = tc.get("tempo")
+    if speed is not None and str(speed).strip() != "":
+        defaults["tempo"] = parse_float_or_default(speed, DEFAULT_TEMPO)
+
+    volume = tc.get("volume")
+    if volume is not None and str(volume).strip() != "":
+        defaults["volume"] = parse_int_or_default(volume, DEFAULT_VOLUME)
+
+    emotion = tc.get("emotion")
+    if emotion is not None and str(emotion).strip() != "":
+        defaults["emotion_preset"] = normalize_emotion_preset(str(emotion))
+
+    return defaults
+
+
+def pick_csv_or_character_default(
+    row: dict,
+    row_key: str,
+    character_defaults: dict[str, object],
+    character_key: str,
+    fallback: object,
+    parser,
+):
+    row_value = row.get(row_key)
+    if row_value is not None and str(row_value).strip() != "":
+        return parser(row_value, fallback)
+    if character_key in character_defaults:
+        return character_defaults.get(character_key)
+    return fallback
+
+
 def _is_s3_uri(s: str) -> bool:
     return isinstance(s, str) and s.startswith("s3://")
 
@@ -373,6 +429,7 @@ def main():
 
     voice_map: dict[str, str] = {}
     role_to_name: dict[str, str] = {}
+    typecast_defaults_by_role: dict[str, dict[str, object]] = {}
     try:
         gen_inputs = load_json(args.generator_inputs_json)
         chars = (gen_inputs.get("characters") or {})
@@ -384,9 +441,11 @@ def main():
             display_name = (conf.get("name") or "").strip()
             if display_name:
                 role_to_name[role] = display_name
+            typecast_defaults_by_role[role] = parse_character_typecast_defaults(tc)
     except Exception:
         voice_map = {}
         role_to_name = {}
+        typecast_defaults_by_role = {}
 
     if not voice_map and args.voice_map:
         try:
@@ -413,25 +472,48 @@ def main():
         audio_hash = (row.get("audio_hash") or "").strip()
         text = row["transcript"].strip()
         typecast_mode = (row.get("typecast_mode") or "smart").strip().lower()
-        use_preset_mode = typecast_mode == "preset"
+        character_defaults = (
+            typecast_defaults_by_role.get(speaker)
+            or typecast_defaults_by_role.get(speaker.capitalize())
+            or typecast_defaults_by_role.get(speaker.upper())
+            or {}
+        )
+        character_has_emotion_override = "emotion_preset" in character_defaults
+        use_preset_mode = (typecast_mode == "preset") or character_has_emotion_override
 
-        try:
-            r_tempo = float(row.get("tempo") or DEFAULT_TEMPO)
-        except Exception:
-            r_tempo = DEFAULT_TEMPO
-        try:
-            r_pitch = float(row.get("pitch") or DEFAULT_PITCH)
-        except Exception:
-            r_pitch = DEFAULT_PITCH
-        try:
-            r_volume = int(row.get("volume") or DEFAULT_VOLUME)
-        except Exception:
-            r_volume = DEFAULT_VOLUME
-        r_emotion = (row.get("emotion_preset") or DEFAULT_EMOTION_PRESET).strip().lower()
-        try:
-            r_intensity = float(row.get("emotion_intensity") or DEFAULT_EMOTION_INTENSITY)
-        except Exception:
-            r_intensity = DEFAULT_EMOTION_INTENSITY
+        r_tempo = pick_csv_or_character_default(
+            row=row,
+            row_key="tempo",
+            character_defaults=character_defaults,
+            character_key="tempo",
+            fallback=DEFAULT_TEMPO,
+            parser=parse_float_or_default,
+        )
+        r_pitch = pick_csv_or_character_default(
+            row=row,
+            row_key="pitch",
+            character_defaults=character_defaults,
+            character_key="pitch",
+            fallback=DEFAULT_PITCH,
+            parser=parse_float_or_default,
+        )
+        r_volume = pick_csv_or_character_default(
+            row=row,
+            row_key="volume",
+            character_defaults=character_defaults,
+            character_key="volume",
+            fallback=DEFAULT_VOLUME,
+            parser=parse_int_or_default,
+        )
+        r_emotion = (
+            (row.get("emotion_preset") or "").strip().lower()
+            or str(character_defaults.get("emotion_preset") or DEFAULT_EMOTION_PRESET)
+        )
+        r_emotion = normalize_emotion_preset(r_emotion)
+        r_intensity = parse_float_or_default(
+            row.get("emotion_intensity") or DEFAULT_EMOTION_INTENSITY,
+            DEFAULT_EMOTION_INTENSITY,
+        )
 
         audio_is_s3 = _is_s3_uri(audio_raw)
         if audio_is_s3:

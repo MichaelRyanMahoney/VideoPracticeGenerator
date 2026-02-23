@@ -9,6 +9,7 @@ CPU-side finalizer:
 """
 
 import argparse
+import concurrent.futures
 import os
 import subprocess
 import sys
@@ -35,6 +36,7 @@ def s3_download_file(s3, uri: str, dst: Path) -> None:
 def s3_sync_down_prefix(s3, prefix_uri: str, local_dir: Path) -> None:
     b, k_prefix = s3_parse(prefix_uri)
     paginator = s3.get_paginator("list_objects_v2")
+    to_download: list[tuple[str, Path]] = []
     for page in paginator.paginate(Bucket=b, Prefix=k_prefix.rstrip("/") + "/"):
         for obj in page.get("Contents", []) or []:
             key = obj["Key"]
@@ -43,8 +45,22 @@ def s3_sync_down_prefix(s3, prefix_uri: str, local_dir: Path) -> None:
             rel = key[len(k_prefix.rstrip("/") + "/") :]
             dst = local_dir / rel
             dst.parent.mkdir(parents=True, exist_ok=True)
-            print(f"[s3] get s3://{b}/{key} -> {dst}")
-            s3.download_file(b, key, str(dst))
+            to_download.append((key, dst))
+
+    if not to_download:
+        return
+
+    workers = max(1, int(os.environ.get("VPG_S3_DOWNLOAD_WORKERS", "32")))
+
+    def _download_one(key: str, dst: Path) -> None:
+        print(f"[s3] get s3://{b}/{key} -> {dst}")
+        s3.download_file(b, key, str(dst))
+
+    print(f"[s3] parallel download: files={len(to_download)} workers={workers}")
+    with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as ex:
+        futs = [ex.submit(_download_one, key, dst) for key, dst in to_download]
+        for fut in concurrent.futures.as_completed(futs):
+            fut.result()
 
 
 def s3_upload_file(s3, src: Path, uri: str) -> None:

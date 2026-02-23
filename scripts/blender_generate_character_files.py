@@ -371,6 +371,23 @@ def clear_animation_for_character(root_col: bpy.types.Collection, dry_run: bool)
           f"(objects:{obj_total}, collections:{col_total}).")
 
 
+def _looks_like_saved_blend(path: Path) -> bool:
+    """Best-effort check for Blender's headless 'Error: Success' false negatives."""
+    try:
+        return path.exists() and path.is_file() and path.stat().st_size > 0
+    except Exception:
+        return False
+
+
+def _file_signature(path: Path):
+    """Return (size, mtime_ns) for change detection, else None."""
+    try:
+        st = path.stat()
+        return (int(st.st_size), int(getattr(st, "st_mtime_ns", int(st.st_mtime * 1e9))))
+    except Exception:
+        return None
+
+
 def main():
     base_dir = Path(__file__).resolve().parents[1]
     opts = parse_args(base_dir)
@@ -390,7 +407,16 @@ def main():
             print(f"[DRY] Would save copy: {dest}")
         else:
             print(f"[SAVE] {dest}")
-            bpy.ops.wm.save_as_mainfile(filepath=str(dest), copy=False)
+            try:
+                try:
+                    bpy.ops.wm.save_as_mainfile(filepath=str(dest), copy=True, check_existing=False)
+                except TypeError:
+                    bpy.ops.wm.save_as_mainfile(filepath=str(dest), copy=True)
+            except Exception as ex:
+                if _looks_like_saved_blend(dest):
+                    print(f"[WARN] save_as_mainfile raised but role file exists; continuing: {dest} size={dest.stat().st_size} err={ex}")
+                else:
+                    raise
 
     print("[OK] Generated role files.")
 
@@ -486,6 +512,7 @@ def main():
         else:
             if opts["scene_save_as"]:
                 scene_save_as = Path(opts["scene_save_as"])
+                before_sig = _file_signature(scene_save_as)
                 # Ensure destination directory exists; Blender will fail with a
                 # generic "No such file or directory" if it doesn't.
                 scene_save_as.parent.mkdir(parents=True, exist_ok=True)
@@ -500,46 +527,125 @@ def main():
                     print(f"[SAVE] preflight ok: parent W_OK={can_write} X_OK={can_exec}")
                 except Exception as ex:
                     print(f"[WARN] preflight write probe failed: {ex}")
+                recovered = False
                 try:
-                    # In headless Batch, it's safer to avoid any interactive overwrite checks.
-                    # Also, copy=True avoids some edge cases around moving/renaming the currently-open file.
-                    try:
-                        bpy.ops.wm.save_as_mainfile(filepath=str(scene_save_as), copy=True, check_existing=False)
-                    except TypeError:
-                        bpy.ops.wm.save_as_mainfile(filepath=str(scene_save_as), copy=True)
+                    # If target equals currently-open file, try true in-place save first.
+                    # This mirrors the "save as new file then continue" behavior that has proven
+                    # more reliable in some environments when appending data.
+                    current_fp = str(Path(bpy.data.filepath).resolve()) if bpy.data.filepath else ""
+                    target_fp = str(scene_save_as.resolve())
+                    if current_fp and current_fp == target_fp:
+                        try:
+                            bpy.ops.wm.save_mainfile(filepath=str(scene_save_as))
+                            after_sig = _file_signature(scene_save_as)
+                            changed = bool(after_sig and after_sig != before_sig)
+                            recovered = bool(_looks_like_saved_blend(scene_save_as) and changed)
+                        except Exception as ex_main:
+                            print(f"[WARN] save_mainfile failed: {ex_main}")
+                    if not recovered:
+                        # In headless Batch, save_as_mainfile(copy=True) can avoid overwrite checks.
+                        try:
+                            bpy.ops.wm.save_as_mainfile(filepath=str(scene_save_as), copy=True, check_existing=False)
+                        except TypeError:
+                            bpy.ops.wm.save_as_mainfile(filepath=str(scene_save_as), copy=True)
+                        recovered = True
                 except Exception as ex:
                     print(f"[WARN] save_as_mainfile failed: {ex}")
                     print(f"[WARN] scene_save_as exists? {scene_save_as.exists()} parent_dir={scene_save_as.parent} parent_exists={scene_save_as.parent.exists()}")
+                    after_sig = _file_signature(scene_save_as)
+                    changed = bool(after_sig and after_sig != before_sig)
+                    if _looks_like_saved_blend(scene_save_as) and changed:
+                        print(f"[WARN] save_as_mainfile raised but output changed; continuing: {scene_save_as} size={scene_save_as.stat().st_size}")
                     # Fallback: save into outdir (already proven writable earlier), then copy into place.
-                    recovered = False
-                    try:
-                        outdir = Path(opts["outdir"])
-                        outdir.mkdir(parents=True, exist_ok=True)
-                        fallback = outdir / f"__prepared_scene_fallback_{scene_save_as.name}"
-                        print(f"[WARN] retry save -> {fallback}")
+                    recovered = bool(_looks_like_saved_blend(scene_save_as) and changed)
+                    if not recovered:
                         try:
-                            bpy.ops.wm.save_as_mainfile(filepath=str(fallback), copy=True, check_existing=False)
-                        except TypeError:
-                            bpy.ops.wm.save_as_mainfile(filepath=str(fallback), copy=True)
-                        # Copy into final destination
-                        scene_save_as.parent.mkdir(parents=True, exist_ok=True)
-                        shutil.copy2(str(fallback), str(scene_save_as))
-                        print(f"[WARN] copied fallback scene -> {scene_save_as} size={scene_save_as.stat().st_size}")
-                        recovered = True
-                    except Exception as ex2:
-                        print(f"[WARN] fallback save/copy failed: {ex2}")
+                            # Save fallback in same parent dir we already preflighted as writable.
+                            fallback = scene_save_as.parent / f"__prepared_scene_fallback_{scene_save_as.name}"
+                            print(f"[WARN] retry save -> {fallback}")
+                            try:
+                                bpy.ops.wm.save_as_mainfile(filepath=str(fallback), copy=True, check_existing=False)
+                            except TypeError:
+                                bpy.ops.wm.save_as_mainfile(filepath=str(fallback), copy=True)
+                            # Copy into final destination
+                            scene_save_as.parent.mkdir(parents=True, exist_ok=True)
+                            shutil.copy2(str(fallback), str(scene_save_as))
+                            print(f"[WARN] copied fallback scene -> {scene_save_as} size={scene_save_as.stat().st_size}")
+                            recovered = True
+                        except Exception as ex2:
+                            print(f"[WARN] fallback save/copy failed: {ex2}")
+                            final_sig = _file_signature(scene_save_as)
+                            final_changed = bool(final_sig and final_sig != before_sig)
+                            if _looks_like_saved_blend(scene_save_as) and final_changed:
+                                print(f"[WARN] fallback failed but target changed; continuing: {scene_save_as} size={scene_save_as.stat().st_size}")
+                                recovered = True
                     if not recovered:
                         raise
             elif opts["scene_save"]:
                 if bpy.data.filepath:
-                    print(f"[SAVE] Scene in place: {bpy.data.filepath}")
+                    scene_in_place = Path(bpy.data.filepath)
+                    before_sig = _file_signature(scene_in_place)
+                    print(f"[SAVE] Scene in place: {scene_in_place}")
                     try:
-                        bpy.ops.wm.save_mainfile(filepath=bpy.data.filepath)
+                        can_write = os.access(str(scene_in_place.parent), os.W_OK)
+                        can_exec = os.access(str(scene_in_place.parent), os.X_OK)
+                        tmp_probe = scene_in_place.parent / ".vpg_write_probe"
+                        tmp_probe.write_text("ok", encoding="utf-8")
+                        tmp_probe.unlink(missing_ok=True)
+                        print(f"[SAVE] preflight ok: parent W_OK={can_write} X_OK={can_exec}")
                     except Exception as ex:
-                        # Blender sometimes throws a confusing RuntimeError like "Error: Success"
-                        # even though the file may be writable. Fall back to save_as_mainfile.
-                        print(f"[WARN] save_mainfile failed ({ex}); retrying with save_as_mainfile...")
-                        bpy.ops.wm.save_as_mainfile(filepath=bpy.data.filepath, copy=False)
+                        print(f"[WARN] preflight write probe failed: {ex}")
+                    recovered = False
+                    try:
+                        # In headless Batch, save_as_mainfile(copy=True) is often more reliable
+                        # than save_mainfile when writing over an opened file path.
+                        try:
+                            bpy.ops.wm.save_as_mainfile(
+                                filepath=str(scene_in_place),
+                                copy=True,
+                                check_existing=False,
+                            )
+                        except TypeError:
+                            bpy.ops.wm.save_as_mainfile(
+                                filepath=str(scene_in_place),
+                                copy=True,
+                            )
+                        recovered = True
+                    except Exception as ex:
+                        print(f"[WARN] in-place save_as_mainfile failed: {ex}")
+                        after_sig = _file_signature(scene_in_place)
+                        changed = bool(after_sig and after_sig != before_sig)
+                        if _looks_like_saved_blend(scene_in_place) and changed:
+                            print(f"[WARN] in-place save raised but output changed; continuing: {scene_in_place} size={scene_in_place.stat().st_size}")
+                            recovered = True
+                        if not recovered:
+                            fallback = scene_in_place.parent / f"__prepared_scene_fallback_{scene_in_place.name}"
+                            try:
+                                print(f"[WARN] retry save -> {fallback}")
+                                try:
+                                    bpy.ops.wm.save_as_mainfile(
+                                        filepath=str(fallback),
+                                        copy=True,
+                                        check_existing=False,
+                                    )
+                                except TypeError:
+                                    bpy.ops.wm.save_as_mainfile(
+                                        filepath=str(fallback),
+                                        copy=True,
+                                    )
+                                scene_in_place.parent.mkdir(parents=True, exist_ok=True)
+                                shutil.copy2(str(fallback), str(scene_in_place))
+                                print(f"[WARN] copied fallback scene -> {scene_in_place} size={scene_in_place.stat().st_size}")
+                                recovered = True
+                            except Exception as ex2:
+                                print(f"[WARN] fallback save/copy failed: {ex2}")
+                                final_sig = _file_signature(scene_in_place)
+                                final_changed = bool(final_sig and final_sig != before_sig)
+                                if _looks_like_saved_blend(scene_in_place) and final_changed:
+                                    print(f"[WARN] fallback failed but target changed; continuing: {scene_in_place} size={scene_in_place.stat().st_size}")
+                                    recovered = True
+                    if not recovered:
+                        raise RuntimeError(f"Failed to save scene in place: {scene_in_place}")
                 else:
                     print("[WARN] No scene path; use --scene-save-as.")
 

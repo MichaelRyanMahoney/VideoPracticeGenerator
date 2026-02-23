@@ -53,8 +53,10 @@
       "name": "Caleb",
       "typecast": {
         "voice_name": "Placeholder",
-        "voice_id": "tc_633d530f093ca33db95de02b",
-        "languages": ["English"]
+        "voice_id": "tc_672c5f5ce59fac2a48faeaee",
+        "languages": ["English"],
+        "pitch": 1,
+        "speed": 0.95
       },
       "blender": {
         "gender": "M",

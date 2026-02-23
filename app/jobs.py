@@ -100,7 +100,23 @@ def _run_orchestrator(job_id: str) -> None:
     with open(log_path, "ab", buffering=0) as logf:
         logf.write(f"[start] {' '.join(cmd)}\n".encode())
         try:
-            proc = subprocess.Popen(cmd, cwd=str(project_root), env=env, stdout=logf, stderr=subprocess.STDOUT)
+            # Stream child output to both job.log and container stdout so `docker logs -f`
+            # shows live progress while preserving per-job files on disk.
+            proc = subprocess.Popen(
+                cmd,
+                cwd=str(project_root),
+                env=env,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                bufsize=1,
+                text=True,
+            )
+            if proc.stdout is not None:
+                for line in proc.stdout:
+                    data = line.encode("utf-8", errors="replace")
+                    logf.write(data)
+                    sys.stdout.write(f"[job:{job_id}] {line}")
+                    sys.stdout.flush()
             rc = proc.wait()
             if rc == 0:
                 out_mp4 = jdir / "out" / "blender_render.mp4"

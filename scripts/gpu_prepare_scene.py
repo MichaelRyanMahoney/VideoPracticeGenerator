@@ -140,6 +140,8 @@ def main():
             *blender_flags,
             "-b",
             str(default_char_blend),
+            "--python-exit-code",
+            "1",
             "--python",
             str(gen_script),
             "--",
@@ -157,11 +159,14 @@ def main():
 
         # 2) Configure roles/colors/selectors in the prepared scene
         cfg_script = project_root / "scripts" / "blender_configure_roles_for_render.py"
+        prepared_scene_cfg = work / "prepared_scene_configured.blend"
         run([
             str(blender_bin),
             *blender_flags,
             "-b",
             str(prepared_scene),
+            "--python-exit-code",
+            "1",
             "--python",
             str(cfg_script),
             "--",
@@ -172,8 +177,10 @@ def main():
             # config file (our repo-level run_full_video_creation_sequence.config.json).
             "--hdri_from_config",
             str(cfg_path),
-            "--save",
+            "--save-as",
+            str(prepared_scene_cfg),
         ], cwd=project_root, env=blender_env)
+        prepared_scene = prepared_scene_cfg
 
         # 3) Verify role collections exist (fail fast if not)
         verify_py = project_root / "scripts" / "blender_verify_roles_in_scene.py"
@@ -182,6 +189,8 @@ def main():
             *blender_flags,
             "-b",
             str(prepared_scene),
+            "--python-exit-code",
+            "1",
             "--python",
             str(verify_py),
             "--",

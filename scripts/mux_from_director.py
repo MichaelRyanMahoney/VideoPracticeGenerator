@@ -99,6 +99,11 @@ def main():
     ap.add_argument("--frames", required=True, help="Image sequence pattern (e.g., /path/.../%04d.png)")
     ap.add_argument("--out", required=True, help="Output MP4 path")
     ap.add_argument("--fps", type=int, help="Override FPS (defaults to generator_inputs.json run.fps, else director fps, else 24)")
+    ap.add_argument(
+        "--generator_inputs_json",
+        default="",
+        help="Optional path to generator_inputs.json (preferred over repo default for FPS lookup).",
+    )
     ap.add_argument("--background", help="Optional background image to place behind RGBA frames (e.g., SceneBackground1.png)")
     ap.add_argument("--fg_width_ratio", type=float, default=0.73, help="Foreground width as a fraction of output width (preserve aspect). Default 0.73")
     ap.add_argument("--fg_contrast", type=float, default=1.0, help="Foreground contrast multiplier. Default 1.0 (no change)")
@@ -112,7 +117,7 @@ def main():
     data = json.loads(director_path.read_text())
     # Resolve FPS priority:
     # 1) CLI --fps
-    # 2) manifests/generator_inputs.json run.fps (project default)
+    # 2) job-scoped generator_inputs.json (CLI/env/inferred), else repo default
     # 3) fps from director JSON
     # 4) fallback 24
     fps = None
@@ -120,7 +125,20 @@ def main():
         fps = int(args.fps)
     else:
         try:
-            gen_inputs_path = Path(__file__).resolve().parents[1] / "manifests" / "generator_inputs.json"
+            gen_inputs_path = None
+            if args.generator_inputs_json:
+                gen_inputs_path = Path(args.generator_inputs_json).expanduser()
+            if (not gen_inputs_path) or (not gen_inputs_path.exists()):
+                env_path = (os.environ.get("VPG_GENERATOR_INPUTS_JSON") or "").strip()
+                if env_path:
+                    gen_inputs_path = Path(env_path).expanduser()
+            if (not gen_inputs_path) or (not gen_inputs_path.exists()):
+                # Common job layout: <job>/director_visemes.json with sibling <job>/inputs/generator_inputs.json
+                inferred = director_path.parent / "inputs" / "generator_inputs.json"
+                if inferred.exists():
+                    gen_inputs_path = inferred
+            if (not gen_inputs_path) or (not gen_inputs_path.exists()):
+                gen_inputs_path = Path(__file__).resolve().parents[1] / "manifests" / "generator_inputs.json"
             if gen_inputs_path.exists():
                 gen_inputs = json.loads(gen_inputs_path.read_text())
                 run_cfg = gen_inputs.get("run") or {}

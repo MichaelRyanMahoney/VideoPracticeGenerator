@@ -6,6 +6,7 @@ sys.path.insert(0, str(_Path(__file__).parent.resolve()))
 import bpy, json, argparse, random
 from pathlib import Path
 import os
+from mathutils import Vector
 from ovr_viseme_map import OVR_VISEME_KEYS
 
 # -----------------------
@@ -181,6 +182,207 @@ def _for_each_part(parts_dict, fn):
             fn(_obj)
         except Exception:
             pass
+
+
+def _ensure_world_hdri_usable(scene):
+    """
+    Best-effort recovery for headless runs where env.image exists but stays has_data=False.
+    """
+    world = getattr(scene, "world", None)
+    if not world or not getattr(world, "use_nodes", False):
+        return
+    nt = getattr(world, "node_tree", None)
+    if not nt:
+        return
+    env = None
+    for node in nt.nodes:
+        if getattr(node, "type", "") == "TEX_ENVIRONMENT":
+            env = node
+            break
+    if env is None:
+        return
+    img = getattr(env, "image", None)
+    if img is None:
+        return
+    try:
+        if getattr(img, "has_data", False):
+            return
+    except Exception:
+        pass
+
+    # Try to hydrate current datablock.
+    try:
+        img.reload()
+    except Exception:
+        pass
+    try:
+        _ = tuple(img.size)
+    except Exception:
+        pass
+    try:
+        if getattr(img, "has_data", False):
+            return
+    except Exception:
+        pass
+
+    # Rebind from filepath if available.
+    try:
+        src_path = Path(bpy.path.abspath(img.filepath)).resolve()
+    except Exception:
+        src_path = Path(str(getattr(img, "filepath", "") or ""))
+    try:
+        if src_path and src_path.exists():
+            fresh = bpy.data.images.load(str(src_path), check_existing=True)
+            try:
+                fresh.reload()
+            except Exception:
+                pass
+            env.image = fresh
+            try:
+                bpy.context.view_layer.update()
+            except Exception:
+                pass
+            print(
+                f"[vpg] hdri_rebind path={src_path} has_data={getattr(fresh, 'has_data', None)} "
+                f"packed={bool(getattr(fresh, 'packed_file', None))}",
+                flush=True,
+            )
+    except Exception as ex:
+        print(f"[vpg] hdri_rebind failed: {ex}", flush=True)
+
+
+def _ensure_world_chain(scene):
+    """Ensure env texture is actually connected to world surface."""
+    world = getattr(scene, "world", None)
+    if not world:
+        return
+    try:
+        world.use_nodes = True
+    except Exception:
+        pass
+    nt = getattr(world, "node_tree", None)
+    if not nt:
+        return
+    nodes = nt.nodes
+    links = nt.links
+    env = None
+    bg = None
+    out = None
+    for n in nodes:
+        t = getattr(n, "type", "")
+        if t == "TEX_ENVIRONMENT" and env is None:
+            env = n
+        elif t == "BACKGROUND" and bg is None:
+            bg = n
+        elif t == "OUTPUT_WORLD" and out is None:
+            out = n
+    if bg is None:
+        bg = nodes.new("ShaderNodeBackground")
+    if out is None:
+        out = nodes.new("ShaderNodeOutputWorld")
+    if env is not None:
+        try:
+            links.new(env.outputs["Color"], bg.inputs["Color"])
+        except Exception:
+            pass
+    try:
+        # Force world output surface to come from background node.
+        for l in list(links):
+            if l.to_node == out and getattr(l, "to_socket", None) == out.inputs.get("Surface"):
+                links.remove(l)
+    except Exception:
+        pass
+    try:
+        links.new(bg.outputs["Background"], out.inputs["Surface"])
+    except Exception:
+        pass
+
+
+def _ensure_cycles_sane(scene):
+    """Guard against black renders from pathological bounce settings in source .blend."""
+    if getattr(scene.render, "engine", "") != "CYCLES":
+        return
+    c = getattr(scene, "cycles", None)
+    if c is None:
+        return
+    minima = {
+        "max_bounces": 2,
+        "diffuse_bounces": 1,
+        "glossy_bounces": 1,
+        "transmission_bounces": 1,
+        "transparent_max_bounces": 2,
+    }
+    for attr, min_val in minima.items():
+        try:
+            cur = getattr(c, attr, None)
+            if cur is not None and int(cur) < int(min_val):
+                setattr(c, attr, int(min_val))
+        except Exception:
+            pass
+
+
+def _camera_frame_diagnostics(scene):
+    """
+    Estimate whether render-visible mesh content is actually inside camera view.
+    Uses mesh bbox centers as a lightweight proxy.
+    """
+    cam = getattr(scene, "camera", None)
+    if cam is None:
+        print("[vpg] camera_frame cam=None", flush=True)
+        return
+    try:
+        from bpy_extras.object_utils import world_to_camera_view
+    except Exception as ex:
+        print(f"[vpg] camera_frame unavailable: {ex}", flush=True)
+        return
+    try:
+        cam_loc = cam.matrix_world.translation.copy()
+    except Exception:
+        cam_loc = getattr(cam, "location", None)
+    total_mesh = 0
+    render_visible = 0
+    centers_in_frame = 0
+    nearest_name = None
+    nearest_dist = None
+    for obj in bpy.data.objects:
+        if getattr(obj, "type", "") != "MESH":
+            continue
+        total_mesh += 1
+        try:
+            vis = bool(obj.visible_get(view_layer=bpy.context.view_layer)) and (not bool(getattr(obj, "hide_render", False)))
+        except Exception:
+            vis = not bool(getattr(obj, "hide_render", False))
+        if not vis:
+            continue
+        render_visible += 1
+        try:
+            corners = [obj.matrix_world @ Vector(c) for c in obj.bound_box]
+            center = sum(corners, Vector((0.0, 0.0, 0.0))) / 8.0
+            ndc = world_to_camera_view(scene, cam, center)
+            in_frame = (ndc.z >= 0.0) and (0.0 <= ndc.x <= 1.0) and (0.0 <= ndc.y <= 1.0)
+            if in_frame:
+                centers_in_frame += 1
+            if cam_loc is not None:
+                d = (center - cam_loc).length
+                if nearest_dist is None or d < nearest_dist:
+                    nearest_dist = d
+                    nearest_name = obj.name
+        except Exception:
+            continue
+    try:
+        clip_start = getattr(cam.data, "clip_start", None)
+        clip_end = getattr(cam.data, "clip_end", None)
+        lens = getattr(cam.data, "lens", None)
+    except Exception:
+        clip_start = None
+        clip_end = None
+        lens = None
+    print(
+        f"[vpg] camera_frame total_mesh={total_mesh} render_visible={render_visible} "
+        f"bbox_centers_in_frame={centers_in_frame} nearest_obj={nearest_name} nearest_dist={nearest_dist} "
+        f"clip_start={clip_start} clip_end={clip_end} lens={lens}",
+        flush=True,
+    )
 
 EYE_KEYS = {"eyeBlinkLeft", "eyeBlinkRight"}
 
@@ -479,6 +681,13 @@ def main(director_path, outpath):
         scene.render.use_sequencer = bool(use_sequencer)
     except Exception:
         pass
+    # IMPORTANT: Some source scenes carry compositor node trees that output black.
+    # Disable compositing by default for direct scene renders; allow explicit opt-in.
+    use_compositing = (os.environ.get("VPG_USE_COMPOSITING") or "0").strip() == "1"
+    try:
+        scene.render.use_compositing = bool(use_compositing)
+    except Exception:
+        pass
     # Transparent background toggle (JSON: render.transparent, CLI: --transparent/--opaque)
     # Default behavior: render PNG frames with alpha (transparent=True) unless explicitly overridden.
     _render_cfg = (data.get("render") or {})
@@ -758,6 +967,9 @@ def main(director_path, outpath):
         ee = scene.eevee
         print(
             f"[vpg] final render.engine={scene.render.engine} "
+            f"use_compositing={getattr(scene.render, 'use_compositing', None)} "
+            f"use_sequencer={getattr(scene.render, 'use_sequencer', None)} "
+            f"film_transparent={getattr(scene.render, 'film_transparent', None)} "
             f"cycles.samples={getattr(getattr(scene,'cycles',None),'samples',None)} "
             f"eevee.taa_render_samples={getattr(ee,'taa_render_samples',None)}",
             flush=True,
@@ -778,6 +990,134 @@ def main(director_path, outpath):
         _for_each_part(parts, lambda o: clear_shape_key_animation(o))
         _for_each_part(parts, lambda o: zero_all_shapes(o, frame=1))
         char_map[role] = parts
+
+    # Diagnostics: log basic camera + visibility state to help debug black renders on workers.
+    try:
+        cam = scene.camera
+        if cam:
+            print(
+                f"[vpg] active_camera={cam.name} "
+                f"loc={tuple(round(v, 4) for v in cam.location)} "
+                f"rot={tuple(round(v, 4) for v in cam.rotation_euler)}",
+                flush=True,
+            )
+        else:
+            print("[vpg] active_camera=None", flush=True)
+    except Exception as ex:
+        print(f"[vpg] camera diagnostics unavailable: {ex}", flush=True)
+    _camera_frame_diagnostics(scene)
+
+    try:
+        total_mesh = 0
+        visible_mesh = 0
+        try:
+            view_layer = bpy.context.view_layer
+        except Exception:
+            view_layer = None
+        for obj in bpy.data.objects:
+            if getattr(obj, "type", "") != "MESH":
+                continue
+            total_mesh += 1
+            vis = False
+            try:
+                vis = bool(obj.visible_get(view_layer=view_layer)) if view_layer else bool(obj.visible_get())
+            except Exception:
+                vis = not bool(getattr(obj, "hide_render", False))
+            if vis and (not bool(getattr(obj, "hide_render", False))):
+                visible_mesh += 1
+        print(f"[vpg] mesh_visibility total={total_mesh} render_visible={visible_mesh}", flush=True)
+        if visible_mesh <= 0:
+            raise RuntimeError("No render-visible mesh objects detected in scene.")
+    except Exception:
+        raise
+
+    # Attempt a late HDRI datablock recovery before render begins.
+    _ensure_world_hdri_usable(scene)
+    _ensure_world_chain(scene)
+    _ensure_cycles_sane(scene)
+
+    # Diagnostics: inspect world/HDRI and light presence to debug black frames.
+    try:
+        world = scene.world
+        if not world:
+            print("[vpg] world=None", flush=True)
+        else:
+            print(f"[vpg] world={world.name} use_nodes={getattr(world, 'use_nodes', None)}", flush=True)
+            env_node = None
+            bg_node = None
+            nt = getattr(world, "node_tree", None)
+            if nt:
+                for n in nt.nodes:
+                    t = getattr(n, "type", "")
+                    if t == "TEX_ENVIRONMENT" and env_node is None:
+                        env_node = n
+                    elif t == "BACKGROUND" and bg_node is None:
+                        bg_node = n
+            if env_node is None:
+                print("[vpg] world_env_node=None", flush=True)
+            else:
+                env_img = getattr(env_node, "image", None)
+                if env_img is None:
+                    print("[vpg] world_env_image=None", flush=True)
+                else:
+                    try:
+                        env_path = str(Path(bpy.path.abspath(env_img.filepath)).resolve())
+                    except Exception:
+                        env_path = str(getattr(env_img, "filepath", ""))
+                    print(
+                        f"[vpg] world_env_image name={env_img.name} "
+                        f"path={env_path} has_data={getattr(env_img, 'has_data', None)} "
+                        f"packed={bool(getattr(env_img, 'packed_file', None))}",
+                        flush=True,
+                    )
+            if bg_node is None:
+                print("[vpg] world_background_node=None", flush=True)
+            else:
+                try:
+                    bg_strength = bg_node.inputs["Strength"].default_value
+                except Exception:
+                    bg_strength = None
+                print(f"[vpg] world_background_strength={bg_strength}", flush=True)
+    except Exception as ex:
+        print(f"[vpg] world diagnostics unavailable: {ex}", flush=True)
+
+    try:
+        vl = bpy.context.view_layer
+        use_sky = getattr(vl, "use_sky", None)
+        mat_override = getattr(vl, "material_override", None)
+        print(
+            f"[vpg] view_layer use_sky={use_sky} material_override={getattr(mat_override, 'name', None)}",
+            flush=True,
+        )
+    except Exception as ex:
+        print(f"[vpg] view_layer diagnostics unavailable: {ex}", flush=True)
+
+    try:
+        total_lights = 0
+        visible_lights = 0
+        for obj in bpy.data.objects:
+            if getattr(obj, "type", "") != "LIGHT":
+                continue
+            total_lights += 1
+            if (not bool(getattr(obj, "hide_render", False))) and bool(getattr(obj, "visible_get", lambda **_: True)()):
+                visible_lights += 1
+        print(f"[vpg] lights total={total_lights} render_visible={visible_lights}", flush=True)
+    except Exception as ex:
+        print(f"[vpg] light diagnostics unavailable: {ex}", flush=True)
+
+    try:
+        if scene.render.engine == "CYCLES":
+            c = scene.cycles
+            print(
+                f"[vpg] cycles_bounces max={getattr(c,'max_bounces',None)} "
+                f"diffuse={getattr(c,'diffuse_bounces',None)} "
+                f"glossy={getattr(c,'glossy_bounces',None)} "
+                f"transmission={getattr(c,'transmission_bounces',None)} "
+                f"transparent={getattr(c,'transparent_max_bounces',None)}",
+                flush=True,
+            )
+    except Exception as ex:
+        print(f"[vpg] cycles diagnostics unavailable: {ex}", flush=True)
 
     # All characters visible from the beginning; no scripted show/hide or fades
 

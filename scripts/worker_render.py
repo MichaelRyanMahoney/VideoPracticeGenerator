@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import concurrent.futures
 import json
 import os
 import subprocess
@@ -37,11 +38,22 @@ def s3_download(s3, uri: str, dest: Path) -> None:
 
 def s3_upload_dir(s3, src_dir: Path, s3_prefix: str, include_suffix: str = ".png") -> None:
     b, k_prefix = s3_parse_uri(s3_prefix)
-    for f in sorted(src_dir.rglob(f"*{include_suffix}")):
+    files = sorted(src_dir.rglob(f"*{include_suffix}"))
+    if not files:
+        return
+    workers = max(1, int(os.environ.get("VPG_S3_UPLOAD_WORKERS", "32")))
+
+    def _upload_one(f: Path) -> None:
         rel = f.relative_to(src_dir)
         key = f"{k_prefix.rstrip('/')}/{rel.as_posix()}"
         print(f"[s3] upload {f} -> s3://{b}/{key}")
         s3.upload_file(str(f), b, key)
+
+    print(f"[s3] parallel upload: files={len(files)} workers={workers}")
+    with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as ex:
+        futs = [ex.submit(_upload_one, f) for f in files]
+        for fut in concurrent.futures.as_completed(futs):
+            fut.result()
 
 
 def main():
@@ -119,12 +131,31 @@ def main():
             if not base_scene_path.exists():
                 raise SystemExit(f"Base scene not found: {base_scene_path}")
             ts_scene.write_bytes(base_scene_path.read_bytes())
+            ts_scene_cfg = work / "work_scene_configured.blend"
             cfg_script = project_root / "scripts" / "blender_configure_roles_for_render.py"
             run_cmd(pre + [
                 str(blender_bin), "-b", str(ts_scene),
+                "--python-exit-code", "1",
                 "--python", str(cfg_script),
-                "--", "--config", str(local_gen_inputs), "--save"
+                "--", "--config", str(local_gen_inputs), "--save-as", str(ts_scene_cfg)
             ])
+            ts_scene = ts_scene_cfg
+
+        # Safety: force HDRI/world configuration immediately before render.
+        # This guards against stale/missing world data in prepared scenes and keeps
+        # render-worker behavior deterministic across environments.
+        cfg_script = project_root / "scripts" / "blender_configure_roles_for_render.py"
+        ts_scene_reassert = work / "work_scene_pre_render.blend"
+        run_cmd(pre + [
+            str(blender_bin), "-b", str(ts_scene),
+            "--python-exit-code", "1",
+            "--python", str(cfg_script),
+            "--",
+            "--config", str(local_gen_inputs),
+            "--hdri_from_config", str(cfg_path),
+            "--save-as", str(ts_scene_reassert),
+        ])
+        ts_scene = ts_scene_reassert
 
         # Render the requested range with transparent frames
         # Use a unique output per run to avoid cross-job contamination.
@@ -148,6 +179,7 @@ def main():
         run_director_py = project_root / "scripts" / "run_director_visemes.py"
         render_cmd = pre + [
             str(blender_bin), "-b", str(ts_scene),
+            "--python-exit-code", "1",
             "--python", str(run_director_py),
             "--",
             "--director", str(local_director),

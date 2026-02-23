@@ -94,6 +94,8 @@ def main() -> None:
             str(blender_bin),
             "-b",
             str(local_scene),
+            "--python-exit-code",
+            "1",
             "--python",
             str(project_root / "scripts" / "run_director_visemes.py"),
             "--",

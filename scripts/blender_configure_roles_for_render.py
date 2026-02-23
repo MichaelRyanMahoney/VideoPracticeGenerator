@@ -1,4 +1,5 @@
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
@@ -6,6 +7,13 @@ from typing import Dict, List, Optional, Tuple
 import bpy
 
 TRACE = False
+
+
+def _looks_like_saved_blend(path: Path) -> bool:
+    try:
+        return path.exists() and path.is_file() and path.stat().st_size > 0
+    except Exception:
+        return False
 
 # Hard-coded top colors per role (sRGB hex), per request
 TOP_COLOR_HEX_BY_ROLE = {
@@ -149,13 +157,50 @@ def apply_hdri_environment(hdri_path: Path, strength: float = 0.7) -> None:
             out = nodes.new("ShaderNodeOutputWorld")
         if env is None:
             env = nodes.new("ShaderNodeTexEnvironment")
-        # Load image
+        # Load image and force Blender to resolve file pixels now (not lazily at render time).
         img = bpy.data.images.load(str(hdri_path), check_existing=True)
+        try:
+            img.source = "FILE"
+        except Exception:
+            pass
+        try:
+            img.filepath = str(hdri_path)
+            img.filepath_raw = str(hdri_path)
+        except Exception:
+            pass
+        try:
+            img.reload()
+        except Exception:
+            pass
+        # Accessing size forces some Blender builds to touch the file immediately.
+        try:
+            _ = tuple(img.size)
+        except Exception:
+            pass
+        # In some headless Linux builds, has_data may remain False until render-time
+        # even when the image is valid and readable from disk.
+        if not getattr(img, "has_data", False):
+            try:
+                img.reload()
+            except Exception:
+                pass
+        # Make prepared scenes portable across machines/paths by embedding HDRI bytes.
+        # Without this, Blender may save a relative path (e.g. //../assets/...) that
+        # becomes invalid once the .blend is downloaded to another directory.
+        try:
+            img.pack()
+        except Exception:
+            # If already packed or packing not supported for this datablock, continue.
+            pass
         try:
             img.colorspace_settings.name = "Non-Color"
         except Exception:
             pass
         env.image = img
+        try:
+            bpy.context.view_layer.update()
+        except Exception:
+            pass
         # Position nodes (cosmetic)
         try:
             env.location = (-600, 0)
@@ -183,10 +228,33 @@ def apply_hdri_environment(hdri_path: Path, strength: float = 0.7) -> None:
         except Exception:
             pass
         link(bg, "Background", out, "Surface")
+        # Validate node assignment so we fail fast instead of rendering black frames later.
+        bound_img = getattr(env, "image", None)
+        if bound_img is None:
+            raise RuntimeError(f"HDRI not bound to environment node: {hdri_path}")
+        has_data = bool(getattr(bound_img, "has_data", False))
+        packed = bool(getattr(bound_img, "packed_file", None))
+        disk_ok = False
+        try:
+            candidate = Path(str(getattr(bound_img, "filepath", "") or "")).expanduser()
+            if not candidate.is_absolute():
+                candidate = hdri_path
+            disk_ok = candidate.exists() and candidate.is_file() and candidate.stat().st_size > 0
+        except Exception:
+            disk_ok = False
+        if not (has_data or packed or disk_ok):
+            raise RuntimeError(
+                f"HDRI not usable after bind: {hdri_path} "
+                f"(has_data={has_data} packed={packed} disk_ok={disk_ok})"
+            )
         if TRACE:
-            print(f"[TRACE] Applied HDRI: {hdri_path} (strength={strength})")
+            print(
+                f"[TRACE] Applied HDRI: {hdri_path} (strength={strength}) "
+                f"has_data={has_data} packed={packed} disk_ok={disk_ok}"
+            )
     except Exception as ex:
         print(f"[WARN] Failed to apply HDRI '{hdri_path}': {ex}")
+        raise
 
 
 def ensure_scene(scene_path: Optional[str]) -> None:
@@ -237,6 +305,17 @@ def iter_collection_objects(col: bpy.types.Collection):
         yield o
     for c in col.children:
         yield from iter_collection_objects(c)
+
+
+def count_render_visible_objects(col: bpy.types.Collection) -> int:
+    n = 0
+    for obj in iter_collection_objects(col):
+        try:
+            if not bool(getattr(obj, "hide_render", False)):
+                n += 1
+        except Exception:
+            pass
+    return n
 
 
 def set_all_hidden(col: bpy.types.Collection, dry: bool) -> None:
@@ -664,6 +743,19 @@ def configure_role(role: str, cfg: dict, dry: bool) -> None:
     set_visible(teeth, dry)
     set_visible(basement, dry)
 
+    # Fail fast: if we can't resolve a body mesh for this role, the role will render invisible.
+    if body is None:
+        sample_names = []
+        try:
+            sample_names = sorted(list(objs_by_name.keys()))[:12]
+        except Exception:
+            sample_names = []
+        raise RuntimeError(
+            f"Role '{role}' (prefix '{prefix}') did not resolve a body mesh. "
+            f"Expected one of '{prefix}geo_body.001' or '{prefix}geo_body'. "
+            f"Sample objects under role: {sample_names}"
+        )
+
     # Explicitly ensure opposite-gender eyes/nose remain hidden (defensive)
     try:
         other_gender = "boy" if gender_key == "girl" else "girl"
@@ -740,6 +832,14 @@ def configure_role(role: str, cfg: dict, dry: bool) -> None:
     if top_hex:
         set_object_all_principled_color(shirt_obj, top_hex, dry)
 
+    # Final guard: after hide/show toggles, role must have at least one render-visible object.
+    vis_count = count_render_visible_objects(root_col)
+    if vis_count <= 0:
+        raise RuntimeError(
+            f"Role '{role}' has zero render-visible objects after configuration "
+            f"(prefix '{prefix}'). Check selector names and appended character object names."
+        )
+
 
 def main():
     base_dir = Path(__file__).resolve().parents[1]
@@ -750,6 +850,7 @@ def main():
 
     ensure_scene(opts["scene"])
     # World/HDRI setup from config (preferred), else attempt to resolve missing files
+    hdri_was_explicitly_configured = False
     try:
         # Priority: explicit CLI -> external config file -> generator_inputs.json run section
         hdri_path_raw = opts.get("hdri_path")
@@ -773,6 +874,7 @@ def main():
                     hdri_strength = float(run_cfg.get("hdri_strength", 0.7))
             except Exception:
                 pass
+        hdri_was_explicitly_configured = bool(hdri_path_raw)
         if hdri_path_raw:
             hdri_path = Path(hdri_path_raw).expanduser()
             if not hdri_path.is_absolute():
@@ -780,13 +882,15 @@ def main():
             if hdri_path.exists():
                 apply_hdri_environment(hdri_path, hdri_strength)
             else:
-                print(f"[WARN] Configured HDRI not found: {hdri_path}. Falling back to find_missing_files.")
-                try_resolve_missing_files(base_dir)
+                raise RuntimeError(f"Configured HDRI not found: {hdri_path}")
         else:
             try_resolve_missing_files(base_dir)
-    except Exception:
-        # Never fail the pipeline on HDRI prep
-        pass
+    except Exception as ex:
+        # If HDRI was explicitly configured, fail fast to avoid silent black renders.
+        if hdri_was_explicitly_configured:
+            raise RuntimeError(f"HDRI setup failed: {ex}")
+        # Otherwise keep backward-compatible behavior when no HDRI is configured.
+        print(f"[WARN] HDRI setup skipped: {ex}")
 
     for role in ["Disputant1", "MediatorA", "MediatorB", "Disputant2"]:
         if role in cfg.get("characters", {}):
@@ -796,12 +900,45 @@ def main():
         print("[DRY] Completed configuration without saving.")
         return
     if opts["save_as"]:
-        print(f"[SAVE] Scene as: {opts['save_as']}")
-        bpy.ops.wm.save_as_mainfile(filepath=opts["save_as"], copy=False)
+        save_as = Path(opts["save_as"])
+        save_as.parent.mkdir(parents=True, exist_ok=True)
+        print(f"[SAVE] Scene as: {save_as}")
+        try:
+            can_write = os.access(str(save_as.parent), os.W_OK)
+            can_exec = os.access(str(save_as.parent), os.X_OK)
+            print(f"[SAVE] preflight ok: parent W_OK={can_write} X_OK={can_exec}")
+        except Exception:
+            pass
+        try:
+            try:
+                bpy.ops.wm.save_as_mainfile(filepath=str(save_as), copy=True, check_existing=False)
+            except TypeError:
+                bpy.ops.wm.save_as_mainfile(filepath=str(save_as), copy=True)
+        except Exception as ex:
+            if _looks_like_saved_blend(save_as):
+                print(f"[WARN] save_as_mainfile raised but output exists; continuing: {save_as} size={save_as.stat().st_size} err={ex}")
+            else:
+                raise
     elif opts["save"]:
         if bpy.data.filepath:
-            print(f"[SAVE] Scene in place: {bpy.data.filepath}")
-            bpy.ops.wm.save_mainfile(filepath=bpy.data.filepath)
+            scene_in_place = Path(bpy.data.filepath)
+            print(f"[SAVE] Scene in place: {scene_in_place}")
+            try:
+                can_write = os.access(str(scene_in_place.parent), os.W_OK)
+                can_exec = os.access(str(scene_in_place.parent), os.X_OK)
+                print(f"[SAVE] preflight ok: parent W_OK={can_write} X_OK={can_exec}")
+            except Exception:
+                pass
+            try:
+                try:
+                    bpy.ops.wm.save_as_mainfile(filepath=str(scene_in_place), copy=True, check_existing=False)
+                except TypeError:
+                    bpy.ops.wm.save_as_mainfile(filepath=str(scene_in_place), copy=True)
+            except Exception as ex:
+                if _looks_like_saved_blend(scene_in_place):
+                    print(f"[WARN] in-place save raised but output exists; continuing: {scene_in_place} size={scene_in_place.stat().st_size} err={ex}")
+                else:
+                    raise
         else:
             print("[WARN] No scene path; use --save-as to specify a destination.")
 
