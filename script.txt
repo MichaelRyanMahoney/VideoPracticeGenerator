@@ -1,103 +1,94 @@
-TITLE: Caleb & Aria
+TITLE: Christina & Monica
 PROJECT: Mock Scenario
 VERSION: 02/24/2026
 
-DISPUTANT 1 NAME: Caleb
-DISPUTANT 1 PROFILE: 6th Grade Boy
+DISPUTANT 1 NAME: Christina
+DISPUTANT 1 PROFILE: 7th Grade Girl
 
-DISPUTANT 2 NAME: Aria
-DISPUTANT 2 PROFILE: 6th Grade Girl
+DISPUTANT 2 NAME: Monica
+DISPUTANT 2 PROFILE: 7th Grade Girl
 
-MEDIATOR A NAME: Emily
-MEDIATOR B NAME: Michael
+MEDIATOR A NAME: David
+MEDIATOR B NAME: Sara
 
-CONFLICT DESCRIPTION: When music class was starting, Caleb and Aria started arguing about who should sit in a seat by the instruments cart while other students were watching. The music teacher had stepped into the storage room to grab drumsticks, and neither of them would move.
-CONFLICT BEHAVIORS: Insulting, Arguing in class
+CONFLICT DESCRIPTION: Monica shared a screenshot of a private group chat message that Christina sent. Another student showed Christina the screenshot at school, and other students started talking about her. Christina yelled at Monica in the hallway the next day.
+CONFLICT BEHAVIORS: Posting or messaging
 
 WHAT HAPPENED (ACCORDING TO D1):
-Caleb says that Aria called him “annoying” and said he always sits in the wrong spot. He also says he didn’t know Aria usually sits there and thought you could sit anywhere if you got there first.
+Christina says Monica screenshotted a private Snapchat group chat and sent it to other people without asking, and someone showed it to her at school.
 
 WHAT HAPPENED (ACCORDING TO D2):
-Aria says that Caleb took the seat she usually sits in during music class, and he wasn’t listening to her when she tried to tell him it was her normal spot.
+Monica says she shared the screenshot with one friend who asked for proof and didn’t realize it would spread. She says that Christina yelled at her and called her fake in the hallway where other students could hear.
 
 WHAT D1 WAS MOST BOTHERED BY:
-Caleb was bothered by being called out in front of the class.
+Christina was bothered by her private message being screenshotted and sent around without her permission.
 
 WHAT D2 WAS MOST BOTHERED BY:
-Aria was bothered by the fact that Caleb wouldn’t move and didn’t listen when she told him it was her regular seat.
+Monica was bothered by getting yelled at in front of other students.
 
 WHAT D1 FELT:
-Caleb felt put on the spot when Aria called him annoying while other students were watching.
+Christina felt betrayed when she saw the screenshot and realized people at school were talking about her behind her back.
 
 WHAT D2 FELT:
-Aria felt frustrated when Caleb stayed in the seat and ignored what she was saying.
+Monica felt embarrassed when Christina yelled at her and called her fake in front of other students.
 
 WHAT D1 WANTS:
-Caleb wants Aria to not insult him in front of other people.
+Christina wants Monica to delete the screenshot and to not share her messages with other people.
 
 WHAT D2 WANTS:
-Aria wants Caleb to let her have her usual seat since it’s near her friends.
+Monica wants Christina to talk to her privately and address the problem calmly instead of calling her out publicly.
 
 WHAT D1 CAN DO DIFFERENTLY:
-Caleb can ask if someone usually sits in a seat before taking it and listen when someone explains something.
+Christina can talk to Monica privately instead of yelling at her in the hallway.
 
 WHAT D2 CAN DO DIFFERENTLY:
-Aria can explain calmly that it is her seat and not call names.
+Monica can think before screenshotting messages and say no if friends ask for proof.
 
 WHAT BOTH CAN DO DIFFERENTLY:
-Both can use calm voices and ask the teacher for help instead of arguing.
+Both can try to respect each other’s privacy both online and in school.
 
 AGREEMENT – D1:
-Caleb agrees to move to a different open seat in music class if Aria asks to have a seat that is close to her friends.
+Christina agrees to not yell or call Monica names and to talk to her one-on-one if something bothers her.
 
 AGREEMENT – D2:
-Aria agrees to tell Caleb it’s her usual seat without calling him annoying or insulting him in front of others.
-
-
-
-
-
+Monica agrees to delete the screenshot and to not share private messages again.
 
 ### STEP 1: PRESENT YOURSELF AND PEER MEDIATION
-MEDIATOR A (EMILY)
+MEDIATOR A (DAVID)
 “Hi! You’ve been asked to do a peer mediation. You’re not in trouble and I’ll explain more once we sit down. Please come with me.”
 
 [PAUSE]
+[PAUSE]
 
-MEDIATOR A (EMILY)
-“Hello! My name is Emily. This is Michael and we are your peer mediators. What are your names?”
+MEDIATOR A (DAVID)
+“Hello! My name is David. This is Sara and we are your peer mediators. What are your names?”
 
 [PAUSE]
 
-DISPUTANT 1 (CALEB)
-“I’m Caleb.”
+DISPUTANT 1 (CHRISTINA)
+“Christina...”
+
+DISPUTANT 2 (MONICA)
+“Monica...”
 
 [PAUSE]
 
-DISPUTANT 2 (ARIA)
-“I’m Aria.”
-
-[PAUSE]
-[PAUSE]
-
-MEDIATOR A (EMILY)
+MEDIATOR A (DAVID)
 “You’re not in trouble. We heard you had a disagreement. This is peer mediation, where students can work things out together. We won’t share what you say with other students.”
 
-MEDIATOR A (EMILY)
+MEDIATOR A (DAVID)
 “We won’t take sides. We’ll help you find a solution that gives you both something you want.”
 
-MEDIATOR A (EMILY)
+MEDIATOR A (DAVID)
 “We can help you resolve things here, instead of in the office. Does that sound okay?”
 
 [PAUSE]
 
-DISPUTANT 1 (CALEB)
+DISPUTANT 1 (CHRISTINA)
 “Yeah… okay.”
 
-[PAUSE]
-
-DISPUTANT 2 (ARIA)
-“Yeah.”
+DISPUTANT 2 (MONICA)
+“Okay...”
 
 ### STEP 2: EXPLAIN THE RULES
 [PAUSE]
@@ -105,26 +96,25 @@ DISPUTANT 2 (ARIA)
 [PAUSE]
 [PAUSE]
 
-MEDIATOR B (MICHAEL)
+MEDIATOR B (SARA)
 “To have a good mediation, there are a few rules we all need to follow.”
 
-MEDIATOR B (MICHAEL)
+MEDIATOR B (SARA)
 “The Confidentiality Rule is for us mediators. We won’t share what you say with other students.”
 
-MEDIATOR B (MICHAEL)
+MEDIATOR B (SARA)
 “The One Mic Rule is for both of you. It means that one person speaks at a time.”
 
-MEDIATOR B (MICHAEL)
+MEDIATOR B (SARA)
 “The Respect Rule is for all of us. We have to speak respectfully. Do you both agree to the rules?”
-[PAUSE]
-
-DISPUTANT 1 (CALEB)
-“Yeah, I agree.”
 
 [PAUSE]
 
-DISPUTANT 2 (ARIA)
-“I agree.”
+DISPUTANT 1 (CHRISTINA)
+“Yeah. I agree...”
+
+DISPUTANT 2 (MONICA)
+“I agree...”
 
 ### STEP 3: ASK BOTH SIDES TO SHARE
 [PAUSE]
@@ -132,35 +122,42 @@ DISPUTANT 2 (ARIA)
 [PAUSE]
 [PAUSE]
 
-MEDIATOR A (EMILY)
-“We want to hear both of your perspectives on what we were told”
+MEDIATOR A (DAVID)
+“We want to hear both of your perspectives on what we were told: Monica shared a screenshot of a private group chat message that Christina sent. Another student showed Christina the screenshot at school, and other students started talking about her. Christina yelled at Monica in the hallway the next day.”
 
 [PAUSE]
-[PAUSE]
 
-MEDIATOR A (EMILY)
-“When music class was starting, Caleb and Aria started arguing about who should sit in a seat by the instruments cart while other students were watching. The music teacher had stepped into the storage room to grab drumsticks, and neither of them would move.”
-
-[PAUSE]
-[PAUSE]
-
-MEDIATOR A (EMILY)
-“Caleb, from your perspective, what happened between you two?”
+MEDIATOR A (DAVID)
+“Christina, from your perspective, what happened between you two?”
 
 [PAUSE]
+
+DISPUTANT 1 (CHRISTINA)
+“Ummm… I sent something in our private Snapchat group chat.”
+
+DISPUTANT 1 (CHRISTINA)
+“And then Monica screenshotted it and sent it to other people without asking me.”
+
+DISPUTANT 1 (CHRISTINA)
+“Someone showed me at school, and then people were, like, talking about me.”
+
 [PAUSE]
 
-DISPUTANT 1 (CALEB)
-“Okay, so… I sat down by the instruments cart.”
+MEDIATOR A (DAVID)
+“What I heard you say is you posted a message in a private Snapchat group chat, and then Monica screenshotted it and sent it to other people without asking. And you found out at school when someone showed you, and then other students started talking about you. Is that right?”
 
-DISPUTANT 1 (CALEB)
-“Then Aria was like, ‘That’s my seat,’ and she called me annoying.”
+[PAUSE]
 
-DISPUTANT 1 (CALEB)
-“She said I always sit in the wrong spot, and everyone was looking.”
+DISPUTANT 1 (CHRISTINA)
+“Yes. That’s what happened.”
 
-DISPUTANT 1 (CALEB)
-“I didn’t even know she usually sits there. I thought you could sit anywhere if you got there first.”
+MEDIATOR A (DAVID)
+“Is there anything else you want to share?”
+
+[PAUSE]
+
+DISPUTANT 1 (CHRISTINA)
+“No… that’s basically it.”
 
 [PAUSE]
 [PAUSE]
@@ -168,41 +165,40 @@ DISPUTANT 1 (CALEB)
 [PAUSE]
 [PAUSE]
 
-MEDIATOR A (EMILY)
-“What I heard you say is you sat there because you thought it was open, and you didn’t know Aria usually sits there.”
-
-MEDIATOR A (EMILY)
-“And when she called you ‘annoying’ and said you sit in the wrong spot, it felt like you got called out in front of everyone. Is that right?”
-
-DISPUTANT 1 (CALEB)
-“Yeah. That’s it.”
-
-MEDIATOR A (EMILY)
-“Is there anything else you want to share about what happened?”
-
-DISPUTANT 1 (CALEB)
-“No, that’s basically it.”
-
-MEDIATOR A (EMILY)
-“Thanks, Caleb.”
-
-MEDIATOR A (EMILY)
-“Aria, from your perspective, what happened between you two?”
+MEDIATOR A (DAVID)
+“Monica, from your perspective, what happened between you two?”
 
 [PAUSE]
+
+DISPUTANT 2 (MONICA)
+“Okay, so… I did screenshot it.”
+
+DISPUTANT 2 (MONICA)
+“But I only sent it to one friend because they were like, ‘Show me proof,’ and I didn’t really think.”
+
+DISPUTANT 2 (MONICA)
+“I honestly didn’t think it would spread.”
+
+DISPUTANT 2 (MONICA)
+“Then the next day Christina yelled at me in the hallway and called me fake, and people were there.”
+
 [PAUSE]
 
-DISPUTANT 2 (ARIA)
-“Umm… I always sit in that seat in music.”
+MEDIATOR A (DAVID)
+“What I heard you say is you shared the screenshot with one friend who asked for proof, and you didn’t realize it would spread. And then Christina yelled at you and called you fake in the hallway where other students could hear. Is that right?”
 
-DISPUTANT 2 (ARIA)
-“It’s near my friends.”
+[PAUSE]
 
-DISPUTANT 2 (ARIA)
-“And Caleb just took it, and I told him it’s my normal spot, but he wasn’t listening.”
+DISPUTANT 2 (MONICA)
+“Yeah. That’s right.”
 
-DISPUTANT 2 (ARIA)
-“He just stayed there, and it got like… awkward because people were watching.”
+MEDIATOR A (DAVID)
+“Is there anything else you want to share?”
+
+[PAUSE]
+
+DISPUTANT 2 (MONICA)
+“No.”
 
 [PAUSE]
 [PAUSE]
@@ -210,101 +206,84 @@ DISPUTANT 2 (ARIA)
 [PAUSE]
 [PAUSE]
 
-MEDIATOR A (EMILY)
-“What I heard you say is that’s your usual seat in music class, and you tried to tell Caleb, but it felt like he didn’t listen and wouldn’t move.”
-
-MEDIATOR A (EMILY)
-“Is that accurate?”
-
-DISPUTANT 2 (ARIA)
-“Yeah.”
-
-MEDIATOR A (EMILY)
-“Is there anything else you want to add?”
-
-DISPUTANT 2 (ARIA)
- “Not really.”
-
-MEDIATOR A (EMILY)
-“Okay.”
-
-[PAUSE]
-[PAUSE]
-
-MEDIATOR A (EMILY)
-“Caleb, what bothered you most in this situation?”
-
-DISPUTANT 1 (CALEB)
-“Getting called out in front of the class.”
+MEDIATOR A (DAVID)
+“Christina, what bothered you most in this situation?”
 
 [PAUSE]
 
-MEDIATOR A (EMILY)
-“How did you feel when Aria called you annoying while other students were watching?”
+DISPUTANT 1 (CHRISTINA)
+“That it was private.”
 
-DISPUTANT 1 (CALEB)
-“I felt put on the spot. Like everyone was staring.”
+DISPUTANT 1 (CHRISTINA)
+“Like… I didn’t give permission for my message to be screenshotted and sent around.”
 
-MEDIATOR A (EMILY)
+[PAUSE]
+
+MEDIATOR A (DAVID)
+“How did you feel when you saw the screenshot and realized people at school were talking about you?”
+
+[PAUSE]
+
+DISPUTANT 1 (CHRISTINA)
+“I felt betrayed.”
+
+DISPUTANT 1 (CHRISTINA)
+“And just… stupid, because everyone knew.”
+
+MEDIATOR A (DAVID)
 “Thank you for sharing.”
 
 [PAUSE]
-[PAUSE]
 
-MEDIATOR A (EMILY)
-“Aria, what bothered you most in this situation?”
-
-DISPUTANT 2 (ARIA)
-“That he wouldn’t move and he wasn’t listening when I said it was my regular seat.”
-
-MEDIATOR A (EMILY)
-“How did you feel when Caleb stayed in the seat and ignored what you were saying?”
-
-DISPUTANT 2 (ARIA)
-“Frustrated. Like… why won’t you just  listen to me?”
-
-MEDIATOR A (EMILY)
-“Thank you.”
-
-[PAUSE]
-[ProcessFormSwap]
-[PAUSE]
-[PAUSE]
-
-MEDIATOR B (MICHAEL)
-“Okay, I’m going to restate what I’m hearing you both want.”
-
-MEDIATOR B (MICHAEL)
-“Caleb, you want Aria to not insult you in front of other people.”
-
-MEDIATOR B (MICHAEL)
-“Aria, you want Caleb to let you have your usual seat since it’s near your friends.”
-
-[PAUSE]
-[PAUSE]
-
-MEDIATOR B (MICHAEL)
-“Caleb, what’s something you want Aria to do, or to stop doing?”
+MEDIATOR A (DAVID)
+“Monica, what bothered you most in this situation?”
 
 [PAUSE]
 
-DISPUTANT 1 (CALEB)
-“I want her to not call me annoying.”
+DISPUTANT 2 (MONICA)
+“Getting yelled at in front of everyone.”
 
-DISPUTANT 1 (CALEB)
-“Like, especially not in front of everyone.”
+DISPUTANT 2 (MONICA)
+“I didn’t like people staring.”
 
 [PAUSE]
+
+MEDIATOR A (DAVID)
+“How did you feel when Christina yelled at you and called you fake in front of other students?”
+
 [PAUSE]
 
-MEDIATOR B (MICHAEL)
-“So your want is: no insults, and talk to you respectfully even if she’s annoyed.”
+DISPUTANT 2 (MONICA)
+“Embarrassed.”
 
-MEDIATOR B (MICHAEL)
-“Is that right?”
+DISPUTANT 2 (MONICA)
+“Like… I wanted to disappear.”
 
-DISPUTANT 1 (CALEB)
-“Yeah.”
+MEDIATOR A (DAVID)
+“Thank you for sharing.”
+
+[PAUSE]
+
+MEDIATOR A (DAVID)
+“Christina, what’s something you want Monica to do, or to stop doing?”
+
+[PAUSE]
+
+DISPUTANT 1 (CHRISTINA)
+“I want her to delete the screenshot.”
+
+DISPUTANT 1 (CHRISTINA)
+“And I want her to not share my messages with other people.”
+
+[PAUSE]
+
+MEDIATOR A (DAVID)
+“So you want Monica to delete the screenshot, and you want her to not share your private messages with other people. Is that right?”
+
+[PAUSE]
+
+DISPUTANT 1 (CHRISTINA)
+“Yes.”
 
 [PAUSE]
 [PAUSE]
@@ -312,22 +291,25 @@ DISPUTANT 1 (CALEB)
 [PAUSE]
 [PAUSE]
 
-MEDIATOR B (MICHAEL)
-“Aria, what’s something you want Caleb to do, or to stop doing?”
+MEDIATOR A (DAVID)
+“Monica, what’s something you want Christina to do, or to stop doing?”
 
 [PAUSE]
+
+DISPUTANT 2 (MONICA)
+“I want her to talk to me privately.”
+
+DISPUTANT 2 (MONICA)
+“Like, tell me there’s a problem, but calmly, and not call me out in the hallway.”
+
 [PAUSE]
 
-DISPUTANT 2 (ARIA)
-“I want him to let me sit in my usual seat. Because my friends sit near there.”
+MEDIATOR A (DAVID)
+“So you want Christina to address the problem with you one-on-one, and do it calmly instead of calling you out publicly. Is that right?”
 
-MEDIATOR B (MICHAEL)
-“So you want Caleb to move to a different open seat if you ask for your usual spot.”
+[PAUSE]
 
-MEDIATOR B (MICHAEL)
-“Is that what you mean?”
-
-DISPUTANT 2 (ARIA)
+DISPUTANT 2 (MONICA)
 “Yeah.”
 
 [PAUSE]
@@ -337,77 +319,100 @@ DISPUTANT 2 (ARIA)
 [PAUSE]
 
 ### STEP 4: CREATE A WIN-WIN SOLUTION
+[PAUSE]
+[ProcessFormSwap]
+[PAUSE]
+[PAUSE]
 
-MEDIATOR B (MICHAEL)
+MEDIATOR B (SARA)
+“Christina, it sounds like you want Monica to delete the screenshot and not share your private messages with other people. Is that right?”
+
+DISPUTANT 1 (CHRISTINA)
+“Yeah.”
+
+MEDIATOR B (SARA)
+“Monica, it sounds like you want Christina to talk to you privately and address the problem calmly instead of calling you out publicly. Is that right?”
+
+DISPUTANT 2 (MONICA)
+“Yes.”
+
+[PAUSE]
+
+MEDIATOR B (SARA)
 “Now let’s think about what you can both do differently, so you each get something you want.”
 
-MEDIATOR B (MICHAEL)
-“Caleb, what’s one thing you could do differently to help this work?”
-
-DISPUTANT 1 (CALEB)
-“I can ask if someone usually sits there before I take the seat.”
-
-DISPUTANT 1 (CALEB)
-And I can let Aria have her seat. 
-
-MEDIATOR B (MICHAEL)
-“Thank you.”
-
-[PAUSE]
-[PAUSE]
-
-MEDIATOR B (MICHAEL)
-“Aria, what’s one thing you could do differently to help this work?”
-
-DISPUTANT 2 (ARIA)
-“I can say it calmly.”
+MEDIATOR B (SARA)
+“Christina, what’s one thing you could do differently to help this work for both of you?”
 
 [PAUSE]
 
-DISPUTANT 2 (ARIA)
-“And I won’t call him annoying or anything.”
+DISPUTANT 1 (CHRISTINA)
+“I can not yell.”
 
-[PAUSE]
-[PAUSE]
-
-MEDIATOR B (MICHAEL)
-“Is there anything else you’d like Caleb to do differently?”
-
-DISPUTANT 2 (ARIA)
-“Just… if I tell you it’s my seat, don’t argue about it.”
-
-DISPUTANT 1 (CALEB)
-“Okay. I can just move, if there are other open seats.”
-
-[PAUSE]
-[PAUSE]
-
-MEDIATOR B (MICHAEL)
-“Caleb, is there anything else you’d like Aria to do differently?”
+DISPUTANT 1 (CHRISTINA)
+“And I can just ask her to talk somewhere private if I’m mad.”
 
 [PAUSE]
 
-DISPUTANT 1 (CALEB)
-“Just talk to me normal.”
-
-DISPUTANT 1 (CALEB)
-“Like, she can say it’s her seat, but not in a mean way.”
+MEDIATOR B (SARA)
+“Monica, what’s one thing you could do differently to help this work?”
 
 [PAUSE]
+
+DISPUTANT 2 (MONICA)
+“I can think before I screenshot anything.”
+
+DISPUTANT 2 (MONICA)
+“And if someone asks for proof, I can just say no.”
+
 [PAUSE]
 
-MEDIATOR B (MICHAEL)
+MEDIATOR B (SARA)
+“Christina, is there anything else you’d like Monica to do differently?”
+
+[PAUSE]
+
+DISPUTANT 1 (CHRISTINA)
+“Just… don’t share private stuff. Even if it’s one person.”
+
+[PAUSE]
+
+MEDIATOR B (SARA)
+“Monica, is there anything else you’d like Christina to do differently?”
+
+[PAUSE]
+
+DISPUTANT 2 (MONICA)
+“Don’t call me names.”
+
+DISPUTANT 2 (MONICA)
+“And don’t do it in front of people.”
+
+[PAUSE]
+
+MEDIATOR B (SARA)
 “Is there something you could both do differently?”
 
-DISPUTANT 1 (CALEB)
- I’m not sure.
+[PAUSE]
 
-DISPUTANT 2 (ARIA)
-“If we can’t work it out, maybe  we can ask the teacher for help instead of arguing.”
+DISPUTANT 1 (CHRISTINA)
+“I guess we can both respect privacy.”
 
+DISPUTANT 2 (MONICA)
+“Yeah, like… online and at school.”
 
-DISPUTANT 1 (CALEB)
-“Yeah I guess we can do that.
+[PAUSE]
+
+MEDIATOR B (SARA)
+“So how about if Christina talks to Monica one-on-one and doesn’t yell or call her names, and Monica deletes the screenshot and doesn’t share private messages again, even if someone asks for proof. Would that work?”
+
+[PAUSE]
+
+DISPUTANT 1 (CHRISTINA)
+“Yes. That would work.”
+
+DISPUTANT 2 (MONICA)
+“Yeah. I can do that.”
 
 [PAUSE]
 [PAUSE]
@@ -421,13 +426,8 @@ DISPUTANT 1 (CALEB)
 [PAUSE]
 [PAUSE]
 
-MEDIATOR A (EMILY)
+MEDIATOR A (DAVID)
 “Now we’re going to write an agreement using what you both shared, so that this doesn’t happen again.”
-
-[PAUSE]
-[PAUSE]
-[PAUSE]
-[PAUSE]
 
 [PAUSE]
 [PAUSE]
@@ -435,56 +435,57 @@ MEDIATOR A (EMILY)
 [PAUSE]
 [PAUSE]
 
-MEDIATOR A (EMILY)
+[PAUSE]
+[PAUSE]
+
+MEDIATOR A (DAVID)
 “Here’s what we have.”
 
-MEDIATOR A (EMILY)
-“Caleb agrees to move to a different open seat in music class if Aria asks to have a seat that is close to her friends.”
+MEDIATOR A (DAVID)
+“Christina agrees to not yell or call Monica names and to talk to her one-on-one if something bothers her.”
 
-MEDIATOR A (EMILY)
-“Aria agrees to tell Caleb it’s her usual seat without calling him annoying or insulting him in front of others.”
+MEDIATOR A (DAVID)
+“Monica agrees to delete the screenshot and to not share private messages again.”
 
-[PAUSE]
-[PAUSE]
-
-MEDIATOR A (EMILY)
+MEDIATOR A (DAVID)
 “Do you both agree to do these things?”
 
 [PAUSE]
 
-DISPUTANT 1 (CALEB)
-“Yeah, I agree.”
+DISPUTANT 1 (CHRISTINA)
+“Yes.”
 
-[PAUSE]
+DISPUTANT 2 (MONICA)
+“Yes.”
 
-DISPUTANT 2 (ARIA)
-“I agree.”
-
-MEDIATOR A (EMILY)
+MEDIATOR A (DAVID)
 “Please read it and sign below.”
 
 [PAUSE]
 [PAUSE]
+[PAUSE]
 
-MEDIATOR A (EMILY)
+MEDIATOR A (DAVID)
 “Is there anything you want to say to each other before we finish?”
 
 [PAUSE]
 
-DISPUTANT 2 (ARIA)
-“Sorry I said it like that. I was mad.”
+DISPUTANT 1 (CHRISTINA)
+“I’m sorry I yelled in the hallway.”
+
+DISPUTANT 1 (CHRISTINA)
+“I should’ve just talked to you.”
 
 [PAUSE]
 
-DISPUTANT 1 (CALEB)
-“It’s fine. I didn’t know it was your seat.”
+DISPUTANT 2 (MONICA)
+“I’m sorry I screenshotted it.”
 
-DISPUTANT 1 (CALEB)
-“I’ll just move next time.”
+DISPUTANT 2 (MONICA)
+“I deleted it, and I won’t do that again.”
 
 [PAUSE]
-[PAUSE]
 
-MEDIATOR A (EMILY)
+MEDIATOR A (DAVID)
 “Thanks for doing this mediation with us. We’ll walk you back to class now.”
 

@@ -410,6 +410,27 @@ def batch_mode_with_stage(manifest_csv, generator_inputs_json, fps, out_path, sc
         st_path = Path(__file__).resolve().parents[1] / "script.txt"
     if st_path and st_path.exists():
         pauses_map, start_mediator, pauses_before_first = _parse_stage_from_script(str(st_path))
+
+    rows: list[dict] = []
+    with open(manifest_csv, newline="") as f:
+        rdr = csv.DictReader(f)
+        for row in rdr:
+            rows.append(row)
+
+    def _is_manifest_pause_row(row: dict) -> bool:
+        speaker = (row.get("speaker") or "").strip()
+        transcript = (row.get("transcript") or "").strip()
+        return (
+            speaker.upper() in {"PAUSE", "BREAK"} or
+            PAUSE_TOKEN.search(transcript) is not None
+        )
+
+    manifest_has_pause_rows = any(_is_manifest_pause_row(r) for r in rows)
+    if manifest_has_pause_rows:
+        # Pause timing is now encoded directly in the manifest; avoid script-derived duplication.
+        pauses_map = {}
+        pauses_before_first = 0
+
     # Apply any initial [PAUSE]s before first speech as explicit pause beats
     if pauses_before_first and pause_seconds:
         try:
@@ -428,94 +449,93 @@ def batch_mode_with_stage(manifest_csv, generator_inputs_json, fps, out_path, sc
     cache_dir = Path(audio_cache_dir) if audio_cache_dir else Path(tempfile.gettempdir()) / "vpg_audio_cache"
     cache_dir.mkdir(parents=True, exist_ok=True)
 
-    with open(manifest_csv, newline="") as f:
-        rdr = csv.DictReader(f)
-        speech_idx = 0  # counts only spoken lines (aligns [PAUSE]s from script)
-        for row in rdr:
-            speaker = (row.get("speaker") or "").strip()
-            if speaker not in allowed_roles:
-                raise RuntimeError(f"Speaker '{speaker}' is not a valid role. Use one of: {sorted(allowed_roles)}")
-            transcript = (row.get("transcript") or "").strip()
-            audio_ref = (row.get("audio") or "").strip()
-            # Allow explicit pauses in the manifest:
-            # - speaker "PAUSE" or "BREAK"
-            # - transcript contains [PAUSE]
-            # - empty audio cell
-            is_manifest_pause = (
-                speaker.upper() in {"PAUSE", "BREAK"} or
-                PAUSE_TOKEN.search(transcript) is not None or
-                audio_ref == ""
+    speech_idx = 0  # counts only spoken lines (aligns [PAUSE]s from script)
+    for row in rows:
+        speaker = (row.get("speaker") or "").strip()
+        transcript = (row.get("transcript") or "").strip()
+        audio_ref = (row.get("audio") or "").strip()
+        # Allow explicit pauses in the manifest:
+        # - speaker "PAUSE" or "BREAK"
+        # - transcript contains [PAUSE]
+        is_manifest_pause = (
+            speaker.upper() in {"PAUSE", "BREAK"} or
+            PAUSE_TOKEN.search(transcript) is not None
+        )
+        if is_manifest_pause:
+            try:
+                dur = float(row.get("duration") or pause_seconds or 1.0)
+            except Exception:
+                dur = float(pause_seconds or 1.0)
+            beats.append({
+                "type": "pause",
+                "tc_in": f"00:00:{t_cursor:06.3f}",
+                "duration": float(dur)
+            })
+            t_cursor += float(dur)
+            # Do not increment speech_idx for pause rows
+            continue
+
+        if speaker not in allowed_roles:
+            raise RuntimeError(f"Speaker '{speaker}' is not a valid role. Use one of: {sorted(allowed_roles)}")
+        if not audio_ref:
+            raise RuntimeError(
+                f"Manifest speech row id={row.get('id', '?')} speaker={speaker} is missing audio. "
+                "Use a PAUSE/BREAK row for non-spoken timeline gaps."
             )
-            if is_manifest_pause:
-                try:
-                    dur = float(row.get("duration") or pause_seconds or 1.0)
-                except Exception:
-                    dur = float(pause_seconds or 1.0)
+        audio_local = _ensure_local_audio(audio_ref, cache_dir, s3 if _is_s3_uri(audio_ref) else None)
+
+        aligned = align_line(audio_local, transcript, align_model, metadata, device_align)
+        # Use actual WAV duration to space beats (prevents overlap eating pauses)
+        wav_dur = get_wav_duration_seconds(audio_local)
+
+        words = []
+        for seg in aligned.get("segments", []):
+            for w in seg.get("words", []):
+                if "start" in w and "end" in w and w.get("word"):
+                    words.append((w["word"], float(w["start"]), float(w["end"])))
+
+        vis = []
+        for wd, t0, t1 in words:
+            word_vis = select_visemes_for_word(
+                wd, t0, t1, g2p,
+                strategy=strategy,
+                max_events_per_word=max_events_per_word
+            )
+            # shift by running cursor
+            for ev in word_vis:
+                ev["t"] = round(t_cursor + ev["t"], 3)
+            vis += word_vis
+        if collapse_adjacent:
+            vis = collapse_adjacent_identical(vis)
+        if min_event_gap_sec and min_event_gap_sec > 0:
+            vis = enforce_min_gap(vis, min_event_gap_sec)
+
+        beats.append({
+            "tc_in": f"00:00:{t_cursor:06.3f}",
+            "char": speaker,
+            "audio": audio_ref,
+            "visemes": vis,
+        })
+
+        # Advance by the full WAV duration to avoid overlaps, then add default gap
+        try:
+            t_cursor += float(wav_dur) + float(gap_sec)
+        except Exception:
+            t_cursor += float(gap_sec)
+        # Insert additional explicit pause beat(s) for [PAUSE] markers after this speech
+        speech_idx += 1
+        if pauses_map and pause_seconds:
+            try:
+                num_pauses = int(pauses_map.get(speech_idx, 0))
+            except Exception:
+                num_pauses = 0
+            for _ in range(num_pauses):
                 beats.append({
                     "type": "pause",
                     "tc_in": f"00:00:{t_cursor:06.3f}",
-                    "duration": float(dur)
+                    "duration": float(pause_seconds)
                 })
-                t_cursor += float(dur)
-                # Do not increment speech_idx for pause rows
-                continue
-
-            if not audio_ref:
-                raise RuntimeError("Manifest row missing audio")
-            audio_local = _ensure_local_audio(audio_ref, cache_dir, s3 if _is_s3_uri(audio_ref) else None)
-
-            aligned = align_line(audio_local, transcript, align_model, metadata, device_align)
-            # Use actual WAV duration to space beats (prevents overlap eating pauses)
-            wav_dur = get_wav_duration_seconds(audio_local)
-
-            words = []
-            for seg in aligned.get("segments", []):
-                for w in seg.get("words", []):
-                    if "start" in w and "end" in w and w.get("word"):
-                        words.append((w["word"], float(w["start"]), float(w["end"])))
-
-            vis = []
-            for wd, t0, t1 in words:
-                word_vis = select_visemes_for_word(
-                    wd, t0, t1, g2p,
-                    strategy=strategy,
-                    max_events_per_word=max_events_per_word
-                )
-                # shift by running cursor
-                for ev in word_vis:
-                    ev["t"] = round(t_cursor + ev["t"], 3)
-                vis += word_vis
-            if collapse_adjacent:
-                vis = collapse_adjacent_identical(vis)
-            if min_event_gap_sec and min_event_gap_sec > 0:
-                vis = enforce_min_gap(vis, min_event_gap_sec)
-
-            beats.append({
-                "tc_in": f"00:00:{t_cursor:06.3f}",
-                "char": speaker,
-                "audio": audio_ref,
-                "visemes": vis,
-            })
-
-            # Advance by the full WAV duration to avoid overlaps, then add default gap
-            try:
-                t_cursor += float(wav_dur) + float(gap_sec)
-            except Exception:
-                t_cursor += float(gap_sec)
-            # Insert additional explicit pause beat(s) for [PAUSE] markers after this speech
-            speech_idx += 1
-            if pauses_map and pause_seconds:
-                try:
-                    num_pauses = int(pauses_map.get(speech_idx, 0))
-                except Exception:
-                    num_pauses = 0
-                for _ in range(num_pauses):
-                    beats.append({
-                        "type": "pause",
-                        "tc_in": f"00:00:{t_cursor:06.3f}",
-                        "duration": float(pause_seconds)
-                    })
-                    t_cursor += float(pause_seconds)
+                t_cursor += float(pause_seconds)
 
     director = {
         "project": "FourHeadDemo",

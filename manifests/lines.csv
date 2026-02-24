@@ -1,95 +1,180 @@
-id,speaker,audio,audio_hash,transcript,typecast_mode,emotion_preset,emotion_intensity,tempo,pitch,volume
-001,MediatorA,audio/MEDIATORA_001.wav,0c7cc58531702b0eb03f18020f62eb7edda3ab38a22d27e55c94c473e452bdf3,“Hi! You’ve been asked to do a peer mediation. You’re not in trouble and I’ll explain more once we sit down. Please come with me.”,smart,normal,1.0,1.0,0.0,100
-002,MediatorA,audio/MEDIATORA_002.wav,6d07daffd1c5010beb7fffdfb01117787098e10031399961167a052cb1109ba9,“Hello! My name is Emily. This is Michael and we are your peer mediators. What are your names?”,smart,normal,1.0,1.0,0.0,100
-003,Disputant1,audio/DISPUTANT1_003.wav,a3f3f3a1443e2f9746289bffc3806083ef00f26bec6727e6a1fe6945c825098e,“I’m Caleb.”,smart,normal,1.0,1.0,0.0,100
-004,Disputant2,audio/DISPUTANT2_004.wav,2f151e1b7bd61cfc9bb259c182ec13d542c2f0f7e1f11d14a8ff3e798e1d5562,“I’m Aria.”,smart,normal,1.0,1.0,0.0,100
-005,MediatorA,audio/MEDIATORA_005.wav,7d893e15dea6316def51a35dd00f191ca17dffb907bcd509cdbe5566ab22871f,"“You’re not in trouble. We heard you had a disagreement. This is peer mediation, where students can work things out together. We won’t share what you say with other students.”",smart,normal,1.0,1.0,0.0,100
-006,MediatorA,audio/MEDIATORA_006.wav,0403d9de4640036df4bad96866a68d335ff53e898f4fbadfc94db10e07adcc5d,“We won’t take sides. We’ll help you find a solution that gives you both something you want.”,smart,normal,1.0,1.0,0.0,100
-007,MediatorA,audio/MEDIATORA_007.wav,7583f70a9180595d45f784df23ec6ed7aaa43c95f0f4a799308963144db2375b,"“We can help you resolve things here, instead of in the office. Does that sound okay?”",smart,normal,1.0,1.0,0.0,100
-008,Disputant1,audio/DISPUTANT1_008.wav,ec2871af207521d1b10d8c1a13a3966f9a61d01565f94abf3ff4e3f3ecd57b27,“Yeah… okay.”,smart,normal,1.0,1.0,0.0,100
-009,Disputant2,audio/DISPUTANT2_009.wav,ba080dfa9eeb4b17115a46c9c3867029b6cfa6ab467a00a7441ecdbc63674b70,“Yeah.”,smart,normal,1.0,1.0,0.0,100
-010,MediatorB,audio/MEDIATORB_010.wav,bc5f6b90db2ac90fa620e33b423dec0b663ff0f88b83ff4d198b711c3220b82e,"“To have a good mediation, there are a few rules we all need to follow.”",smart,normal,1.0,1.0,0.0,100
-011,MediatorB,audio/MEDIATORB_011.wav,82c556c76be772b6143333fbc88f5213cd45f4177c4b19f4371184f9bd459711,“The Confidentiality Rule is for us mediators. We won’t share what you say with other students.”,smart,normal,1.0,1.0,0.0,100
-012,MediatorB,audio/MEDIATORB_012.wav,9ec69b6010c0e438734136f9eaec635418abdc8a7fb5893f00174ae9f60bbd14,“The One Mic Rule is for both of you. It means that one person speaks at a time.”,smart,normal,1.0,1.0,0.0,100
-013,MediatorB,audio/MEDIATORB_013.wav,dc72ff7c603a2f1130b143db7ed82f0783c22ba435195b7e1726746bdff9e995,“The Respect Rule is for all of us. We have to speak respectfully. Do you both agree to the rules?”,smart,normal,1.0,1.0,0.0,100
-014,Disputant1,audio/DISPUTANT1_014.wav,06108bb99b16a6a269683d7573806505f579e4501dbb3c7ea66d2205572fb3fe,"“Yeah, I agree.”",smart,normal,1.0,1.0,0.0,100
-015,Disputant2,audio/DISPUTANT2_015.wav,f75ff72f1f1652942ede97a3abc727b0fb1ec82b16dce90b842292d68a4ed71c,“I agree.”,smart,normal,1.0,1.0,0.0,100
-016,MediatorA,audio/MEDIATORA_016.wav,a459e79e63a62484f66b899f211591e116c8ce3244a5e50204e831fcaa9f49cd,“We want to hear both of your perspectives on what we were told”,smart,normal,1.0,1.0,0.0,100
-017,MediatorA,audio/MEDIATORA_017.wav,3ed78b87baa0f42ca35ea01765f2f9a24406f274492a6c852c8f9731d8aeb8f5,"“When music class was starting, Caleb and Aria started arguing about who should sit in a seat by the instruments cart while other students were watching. The music teacher had stepped into the storage room to grab drumsticks, and neither of them would move.”",smart,normal,1.0,1.0,0.0,100
-018,MediatorA,audio/MEDIATORA_018.wav,038e8355c30408ae96d5a7fc45b198a724c47e8139515010131d230084e853bc,"“Caleb, from your perspective, what happened between you two?”",smart,normal,1.0,1.0,0.0,100
-019,Disputant1,audio/DISPUTANT1_019.wav,5470dba6cc8420c9e512522042fb02c09bc3cb2fe1ce33df8c48111cd0a03173,"“Okay, so… I sat down by the instruments cart.”",smart,normal,1.0,1.0,0.0,100
-020,Disputant1,audio/DISPUTANT1_020.wav,47017c5d3e255f77c6cb646dde6e78a5babf51d4e703e261178d5220cae2765a,"“Then Aria was like, ‘That’s my seat,’ and she called me annoying.”",smart,normal,1.0,1.0,0.0,100
-021,Disputant1,audio/DISPUTANT1_021.wav,62df399761c9e85c36246457173bb8e5a0f3a71b00d8c79c75368e77dec53840,"“She said I always sit in the wrong spot, and everyone was looking.”",smart,normal,1.0,1.0,0.0,100
-022,Disputant1,audio/DISPUTANT1_022.wav,e517dd030ae3872253efbf1085582a38a194c00c3da10a17da953451d60109d0,“I didn’t even know she usually sits there. I thought you could sit anywhere if you got there first.”,smart,normal,1.0,1.0,0.0,100
-023,MediatorA,audio/MEDIATORA_023.wav,243493336b9db84418c94df792bed33dadf9fe5bcfb5c6c33234cc9c64cb1201,"“What I heard you say is you sat there because you thought it was open, and you didn’t know Aria usually sits there.”",smart,normal,1.0,1.0,0.0,100
-024,MediatorA,audio/MEDIATORA_024.wav,28becdc9723f94184db3f9d6dd18db98b07bde751ff1ddbcc830d0af48817bf0,"“And when she called you ‘annoying’ and said you sit in the wrong spot, it felt like you got called out in front of everyone. Is that right?”",smart,normal,1.0,1.0,0.0,100
-025,Disputant1,audio/DISPUTANT1_025.wav,c5efa36aa0d0ffa357020b58172e3ce986946f40a5e176d5fb093cc41507801e,“Yeah. That’s it.”,smart,normal,1.0,1.0,0.0,100
-026,MediatorA,audio/MEDIATORA_026.wav,632d494700df15717404018833e9e3cb8ba28c20b598ce814b10ff69b1867c29,“Is there anything else you want to share about what happened?”,smart,normal,1.0,1.0,0.0,100
-027,Disputant1,audio/DISPUTANT1_027.wav,a145f807a3b87581b94bb9484f0d7a821ba0e324bb6a683eced029fd0e5c4669,"“No, that’s basically it.”",smart,normal,1.0,1.0,0.0,100
-028,MediatorA,audio/MEDIATORA_028.wav,4d0fb5aa5838954f5c37cbe3a87e68854f751912486b3d3187fc18a51c3e060a,"“Thanks, Caleb.”",smart,normal,1.0,1.0,0.0,100
-029,MediatorA,audio/MEDIATORA_029.wav,4b7474427227d909634e334ec39a162c2929076a6c30f214395007e7259311a4,"“Aria, from your perspective, what happened between you two?”",smart,normal,1.0,1.0,0.0,100
-030,Disputant2,audio/DISPUTANT2_030.wav,bed4e9ff49417f80ae369d7b08882f2a8496b086d15abbb07304046e8918d14d,“Umm… I always sit in that seat in music.”,smart,normal,1.0,1.0,0.0,100
-031,Disputant2,audio/DISPUTANT2_031.wav,afb6ea41fe703646ff3e51caed2810dd8a0069bc020e899cc19fae109ee36996,“It’s near my friends.”,smart,normal,1.0,1.0,0.0,100
-032,Disputant2,audio/DISPUTANT2_032.wav,00636534be636a9b96de9d23006559b4ab1729bf005ac163c0751f2d7e77b0d4,"“And Caleb just took it, and I told him it’s my normal spot, but he wasn’t listening.”",smart,normal,1.0,1.0,0.0,100
-033,Disputant2,audio/DISPUTANT2_033.wav,0d579b9fabf7630b76ea927aee054bfe8f4f8243bd13222a8b491d60f178799f,"“He just stayed there, and it got like… awkward because people were watching.”",smart,normal,1.0,1.0,0.0,100
-034,MediatorA,audio/MEDIATORA_034.wav,1c9a7bee2e75119061006bf4f13f84fc570d64662adecb08be2701c5cd8730f4,"“What I heard you say is that’s your usual seat in music class, and you tried to tell Caleb, but it felt like he didn’t listen and wouldn’t move.”",smart,normal,1.0,1.0,0.0,100
-035,MediatorA,audio/MEDIATORA_035.wav,8bf5de335d363725ce5e3eedb8a5f42332280df06e65a52679bd5e6edbc93081,“Is that accurate?”,smart,normal,1.0,1.0,0.0,100
-036,Disputant2,audio/DISPUTANT2_036.wav,ba080dfa9eeb4b17115a46c9c3867029b6cfa6ab467a00a7441ecdbc63674b70,“Yeah.”,smart,normal,1.0,1.0,0.0,100
-037,MediatorA,audio/MEDIATORA_037.wav,0d0b75099b452c050fa0cad2a219a0431b2e11df0a3c9ec75077b0ab2d4f9c4e,“Is there anything else you want to add?”,smart,normal,1.0,1.0,0.0,100
-038,Disputant2,audio/DISPUTANT2_038.wav,36ec477aa25583194b5032f197264363f6241008270728ac35c202962538f105,“Not really.”,smart,normal,1.0,1.0,0.0,100
-039,MediatorA,audio/MEDIATORA_039.wav,9f3ef3c229308756847af3ba0cb4eadb421fa7b57f3fa62ce2ce4e019e782307,“Okay.”,smart,normal,1.0,1.0,0.0,100
-040,MediatorA,audio/MEDIATORA_040.wav,0825044c66eaf62a762ff6caf99c1408504161fa33045ca821f0ae085d405826,"“Caleb, what bothered you most in this situation?”",smart,normal,1.0,1.0,0.0,100
-041,Disputant1,audio/DISPUTANT1_041.wav,4c76fd5e2e7b3f6ec31f0be79102820d8695e2a5ff069edc29016ceb6d2d4ce8,“Getting called out in front of the class.”,smart,normal,1.0,1.0,0.0,100
-042,MediatorA,audio/MEDIATORA_042.wav,3125cb91eedd1a9cb8911f40b2860aa7c786c564a240bd43317601c3a98e9008,“How did you feel when Aria called you annoying while other students were watching?”,smart,normal,1.0,1.0,0.0,100
-043,Disputant1,audio/DISPUTANT1_043.wav,aac67e8a6a8284ef7219b8864f1699dcd734441137e8c6ba0dafefa4aea636f7,“I felt put on the spot. Like everyone was staring.”,smart,normal,1.0,1.0,0.0,100
-044,MediatorA,audio/MEDIATORA_044.wav,14722a19ded03d6c0af0ce35cc5681ff607cdec354994042b6f79ede49d478d7,“Thank you for sharing.”,smart,normal,1.0,1.0,0.0,100
-045,MediatorA,audio/MEDIATORA_045.wav,9149b03c7f4b1d1c27c5f36f8eabaf16010c893b2a1b37d7d3b77aa3fcd95bb1,"“Aria, what bothered you most in this situation?”",smart,normal,1.0,1.0,0.0,100
-046,Disputant2,audio/DISPUTANT2_046.wav,e00c81f69eac20f75893c31956ecab6b9867769fff3e0005aafbf3833191da94,“That he wouldn’t move and he wasn’t listening when I said it was my regular seat.”,smart,normal,1.0,1.0,0.0,100
-047,MediatorA,audio/MEDIATORA_047.wav,3a30155a4803d118bedbefed4ce9f09f7ce6f5cd274407bdd6fcc7f13b89305a,“How did you feel when Caleb stayed in the seat and ignored what you were saying?”,smart,normal,1.0,1.0,0.0,100
-048,Disputant2,audio/DISPUTANT2_048.wav,bae90f97d41dbe34b9ec0704783d4fc1ff68115b6e3cd21de1a0f9b43bddfba1,“Frustrated. Like… why won’t you just  listen to me?”,smart,normal,1.0,1.0,0.0,100
-049,MediatorA,audio/MEDIATORA_049.wav,a0ec604ffaf4830b6d3a963c19b715e6b70d5b8028ab1215110ee93d1e67ada8,“Thank you.”,smart,normal,1.0,1.0,0.0,100
-050,MediatorB,audio/MEDIATORB_050.wav,f587c4e9e260cd33dc8b1be9c8701f82b8b48dbcc4fa8b932f645a980a4b6dc8,"“Okay, I’m going to restate what I’m hearing you both want.”",smart,normal,1.0,1.0,0.0,100
-051,MediatorB,audio/MEDIATORB_051.wav,26c00176e988bc8d1f5a62e57ea11a603964a555417359ad9ddf7a9858d07baa,"“Caleb, you want Aria to not insult you in front of other people.”",smart,normal,1.0,1.0,0.0,100
-052,MediatorB,audio/MEDIATORB_052.wav,7650ce8c1ca5e28e5e5d689462460013626592d8075886dcf4629d47114623a2,"“Aria, you want Caleb to let you have your usual seat since it’s near your friends.”",smart,normal,1.0,1.0,0.0,100
-053,MediatorB,audio/MEDIATORB_053.wav,2fbc397ff46ebff47f3ece9803e61ea2278bfa6377d67e6ad767b590fa5ef499,"“Caleb, what’s something you want Aria to do, or to stop doing?”",smart,normal,1.0,1.0,0.0,100
-054,Disputant1,audio/DISPUTANT1_054.wav,6ed93dd8cb8a6e8a7bcb4d109e832f96d7a978c92cb5bee99035f0e9f942d999,“I want her to not call me annoying.”,smart,normal,1.0,1.0,0.0,100
-055,Disputant1,audio/DISPUTANT1_055.wav,d4d2242cc6ba6989604bc7b7b7fbb8bb6bcbe64f326a08ba92051b3fee65b035,"“Like, especially not in front of everyone.”",smart,normal,1.0,1.0,0.0,100
-056,MediatorB,audio/MEDIATORB_056.wav,3e83f944785c1aafe66d6778818f1f605929cea421b6bc7b4955fddcf8f461e5,"“So your want is: no insults, and talk to you respectfully even if she’s annoyed.”",smart,normal,1.0,1.0,0.0,100
-057,MediatorB,audio/MEDIATORB_057.wav,52e1f3b51c6e91a06dc97b6544ab252c5185552d28f89797353d58e7e78cdda3,“Is that right?”,smart,normal,1.0,1.0,0.0,100
-058,Disputant1,audio/DISPUTANT1_058.wav,c76cb3b1c4caf0893f341235a78075fda8305903b15cac34bb867c137a207904,“Yeah.”,smart,normal,1.0,1.0,0.0,100
-059,MediatorB,audio/MEDIATORB_059.wav,f7aac9e4ac43ec780e4e7637754b8f0aab7b1b6f2001bcda37533a17f7745447,"“Aria, what’s something you want Caleb to do, or to stop doing?”",smart,normal,1.0,1.0,0.0,100
-060,Disputant2,audio/DISPUTANT2_060.wav,a3d2ff2acd5671ec9457df9146f78fac3cdd2c8875c6c99939a06592c300bd98,“I want him to let me sit in my usual seat. Because my friends sit near there.”,smart,normal,1.0,1.0,0.0,100
-061,MediatorB,audio/MEDIATORB_061.wav,3bb0bd9f84eb78a4a2114155941974fe151069e29d6277db6e0729ef9ab7fc16,“So you want Caleb to move to a different open seat if you ask for your usual spot.”,smart,normal,1.0,1.0,0.0,100
-062,MediatorB,audio/MEDIATORB_062.wav,31db028aad7bc653f0f73c6d309b3fcb31c0477b833f248258da8e0fdb116388,“Is that what you mean?”,smart,normal,1.0,1.0,0.0,100
-063,Disputant2,audio/DISPUTANT2_063.wav,ba080dfa9eeb4b17115a46c9c3867029b6cfa6ab467a00a7441ecdbc63674b70,“Yeah.”,smart,normal,1.0,1.0,0.0,100
-064,MediatorB,audio/MEDIATORB_064.wav,da3f09b31db11722ea59b3b744f5a0448286282a273c6d87a9f54b7af7c94400,"“Now let’s think about what you can both do differently, so you each get something you want.”",smart,normal,1.0,1.0,0.0,100
-065,MediatorB,audio/MEDIATORB_065.wav,07424fd0fe1c6fd090524fcdee3c6a04b5d4f44689891f2605f8ab8d4ef2b835,"“Caleb, what’s one thing you could do differently to help this work?”",smart,normal,1.0,1.0,0.0,100
-066,Disputant1,audio/DISPUTANT1_066.wav,ac37df036756e35b57dd9dc4289caa28aef9853b555bd1e2abbead4979a8234f,“I can ask if someone usually sits there before I take the seat.”,smart,normal,1.0,1.0,0.0,100
-067,Disputant1,audio/DISPUTANT1_067.wav,771dbe6fc5862deb3cd59d770ab1a36414704f4ab66824459327623c67d23c9c,And I can let Aria have her seat.,smart,normal,1.0,1.0,0.0,100
-068,MediatorB,audio/MEDIATORB_068.wav,97b2d45750e00954fa1ce62b7dfbdf5ac02bd45d8b078520fc7cee2c5a48c076,“Thank you.”,smart,normal,1.0,1.0,0.0,100
-069,MediatorB,audio/MEDIATORB_069.wav,389a28add98615c0ba6daaae9b9530bf52d6103f897f568bfa566eded7e92ef1,"“Aria, what’s one thing you could do differently to help this work?”",smart,normal,1.0,1.0,0.0,100
-070,Disputant2,audio/DISPUTANT2_070.wav,4e7f944c60bd456a7abd8d462af1ad964e598e735b415d0c661716a2f4e1d965,“I can say it calmly.”,smart,normal,1.0,1.0,0.0,100
-071,Disputant2,audio/DISPUTANT2_071.wav,33bea4b2b92d661129ceb782e7ffde0c0e6a93ffa9927068604ac4aaa553eb86,“And I won’t call him annoying or anything.”,smart,normal,1.0,1.0,0.0,100
-072,MediatorB,audio/MEDIATORB_072.wav,4188e3d7e592656558b114066ea87f327044741ffb665564566e26bf97754edc,“Is there anything else you’d like Caleb to do differently?”,smart,normal,1.0,1.0,0.0,100
-073,Disputant2,audio/DISPUTANT2_073.wav,805faf8109f857cfbdf016fc1573500f981fd7c14273c60469621808a6c346bb,"“Just… if I tell you it’s my seat, don’t argue about it.”",smart,normal,1.0,1.0,0.0,100
-074,Disputant1,audio/DISPUTANT1_074.wav,74592409dc303c126fe0ce829903570fae30c024a47892e6ce391187af3de192,"“Okay. I can just move, if there are other open seats.”",smart,normal,1.0,1.0,0.0,100
-075,MediatorB,audio/MEDIATORB_075.wav,34e918ce535945f665cbdd770ba2e750e0c8808af242d9d2aa68b6ec01221d20,"“Caleb, is there anything else you’d like Aria to do differently?”",smart,normal,1.0,1.0,0.0,100
-076,Disputant1,audio/DISPUTANT1_076.wav,4d8c526a04f5aa7802750887e4096b1f3599ee35e2c7f8153372cce9fd74774b,“Just talk to me normal.”,smart,normal,1.0,1.0,0.0,100
-077,Disputant1,audio/DISPUTANT1_077.wav,8189e653776572cdba71f20503d8f9b46ac60d6ff15b5ad325be16513e67b069,"“Like, she can say it’s her seat, but not in a mean way.”",smart,normal,1.0,1.0,0.0,100
-078,MediatorB,audio/MEDIATORB_078.wav,a90f26b774397787ee4d592856b096dacee9ef535a128ec1f15261d0327d7874,“Is there something you could both do differently?”,smart,normal,1.0,1.0,0.0,100
-079,Disputant1,audio/DISPUTANT1_079.wav,df9bc38e09e66ca69fe7bcdbd7384dc4dd55a7781f830f586bfae01d5919aa1a,I’m not sure.,smart,normal,1.0,1.0,0.0,100
-080,Disputant2,audio/DISPUTANT2_080.wav,a58548d301623d74f56aba8434c1dc0eeb4ea9a102e84b8fc4324b377d85e053,"“If we can’t work it out, maybe  we can ask the teacher for help instead of arguing.”",smart,normal,1.0,1.0,0.0,100
-081,Disputant1,audio/DISPUTANT1_081.wav,552b6f583882026e3cef5252d295a093502026c573ad7209804ce4b0cd6e5eff,“Yeah I guess we can do that.,smart,normal,1.0,1.0,0.0,100
-082,MediatorA,audio/MEDIATORA_082.wav,bd307ec1397da869dc38c4f130fdf0f15bf7f390797596fa259422ed1e594d01,"“Now we’re going to write an agreement using what you both shared, so that this doesn’t happen again.”",smart,normal,1.0,1.0,0.0,100
-083,MediatorA,audio/MEDIATORA_083.wav,8b69a37fe428999096db34c7320e64e2466910d36ac5c04610acbe858bc0e487,“Here’s what we have.”,smart,normal,1.0,1.0,0.0,100
-084,MediatorA,audio/MEDIATORA_084.wav,a4f9ff3be4f91fa95a4608637f07fa7333212c7765fa64cb8e2c358ff89d8eaf,“Caleb agrees to move to a different open seat in music class if Aria asks to have a seat that is close to her friends.”,smart,normal,1.0,1.0,0.0,100
-085,MediatorA,audio/MEDIATORA_085.wav,588b7c12bd764a530c571b96d4682e0e01c7b3e93a2034d330a3b72d6428fee8,“Aria agrees to tell Caleb it’s her usual seat without calling him annoying or insulting him in front of others.”,smart,normal,1.0,1.0,0.0,100
-086,MediatorA,audio/MEDIATORA_086.wav,8e2d5b24dc3816141d5c1c2873d8c49c382584bcdcd08424c1feb1a3aae6b337,“Do you both agree to do these things?”,smart,normal,1.0,1.0,0.0,100
-087,Disputant1,audio/DISPUTANT1_087.wav,06108bb99b16a6a269683d7573806505f579e4501dbb3c7ea66d2205572fb3fe,"“Yeah, I agree.”",smart,normal,1.0,1.0,0.0,100
-088,Disputant2,audio/DISPUTANT2_088.wav,f75ff72f1f1652942ede97a3abc727b0fb1ec82b16dce90b842292d68a4ed71c,“I agree.”,smart,normal,1.0,1.0,0.0,100
-089,MediatorA,audio/MEDIATORA_089.wav,af19c1ace5f00d56f89e7aed33dbbc884b5c4393c17f72468346833291be7a1a,“Please read it and sign below.”,smart,normal,1.0,1.0,0.0,100
-090,MediatorA,audio/MEDIATORA_090.wav,64cb26c6daead125ce868884f877d24c8aa1c4ebc1465b54164bbd16c870c807,“Is there anything you want to say to each other before we finish?”,smart,normal,1.0,1.0,0.0,100
-091,Disputant2,audio/DISPUTANT2_091.wav,22bb5cdf715b3553f920f565d3f4af7befa6e8221f1fc268b7891a0c8e221a95,“Sorry I said it like that. I was mad.”,smart,normal,1.0,1.0,0.0,100
-092,Disputant1,audio/DISPUTANT1_092.wav,160a078f3261990fd29c22051e4385239481b902ca400bdc141c36d375d9cabc,“It’s fine. I didn’t know it was your seat.”,smart,normal,1.0,1.0,0.0,100
-093,Disputant1,audio/DISPUTANT1_093.wav,a2b1bf1877badb9e7bdb9177f7fdfd854a5d44012302c766817162132bafd89a,“I’ll just move next time.”,smart,normal,1.0,1.0,0.0,100
-094,MediatorA,audio/MEDIATORA_094.wav,701b32cac396f5b80c46613bfc31597707f2d375bfa54dc32ed1d83f0b4408a9,“Thanks for doing this mediation with us. We’ll walk you back to class now.”,smart,normal,1.0,1.0,0.0,100
+id,speaker,audio,audio_hash,transcript,duration,typecast_mode,emotion_preset,emotion_intensity,tempo,pitch,volume
+001,MediatorA,audio/MEDIATORA_001.wav,b32d43a1368bc51a289898b3d928079c923e97d69f38c0d4c2a2fb96214ef85c,“Hi! You’ve been asked to do a peer mediation. You’re not in trouble and I’ll explain more once we sit down. Please come with me.”,,smart,normal,1.0,1.0,0.0,100
+002,PAUSE,,,,0.5,,,,,,
+003,PAUSE,,,,0.5,,,,,,
+004,MediatorA,audio/MEDIATORA_004.wav,aeb4262835944295c63a31012f84328e54d4bf4dae2273c3304df7d8a8ea8022,“Hello! My name is David. This is Sara and we are your peer mediators. What are your names?”,,smart,normal,1.0,1.0,0.0,100
+005,PAUSE,,,,0.5,,,,,,
+006,Disputant1,audio/DISPUTANT1_006.wav,afb124eae545f5880f05bb32a8c61f1fd112eb77fe462e38c26d1b539d1014b4,“Christina...”,,smart,normal,1.0,1.0,0.0,100
+007,Disputant2,audio/DISPUTANT2_007.wav,47c31d7c990d88dd4f5f090bce01bf13ac4c69feee40361c462b51fc917a0c06,“Monica...”,,smart,normal,1.0,1.0,0.0,100
+008,PAUSE,,,,0.5,,,,,,
+009,MediatorA,audio/MEDIATORA_009.wav,e0fbab3376c03441881b75577d395820f6b63698f0d94c6026a6f5a85c3c2a08,"“You’re not in trouble. We heard you had a disagreement. This is peer mediation, where students can work things out together. We won’t share what you say with other students.”",,smart,normal,1.0,1.0,0.0,100
+010,MediatorA,audio/MEDIATORA_010.wav,7be0066c79c3d294279da940e6c692f48acf5f2d7ca6797037163a8b1ff0723d,“We won’t take sides. We’ll help you find a solution that gives you both something you want.”,,smart,normal,1.0,1.0,0.0,100
+011,MediatorA,audio/MEDIATORA_011.wav,a34f0a39fa77335a1cdf014fd97c4949be3f1c8f4a9449c0ba527c0913e59184,"“We can help you resolve things here, instead of in the office. Does that sound okay?”",,smart,normal,1.0,1.0,0.0,100
+012,PAUSE,,,,0.5,,,,,,
+013,Disputant1,audio/DISPUTANT1_013.wav,3b35b9ad53266e0523ad4a5e6d56a66f210679d7d7e982921ca20b1385635545,“Yeah… okay.”,,smart,normal,1.0,1.0,0.0,100
+014,Disputant2,audio/DISPUTANT2_014.wav,cc9168ff392b6795cda9545677449a71b38142b1d37b4b408daa6b8f97f977c3,“Okay...”,,smart,normal,1.0,1.0,0.0,100
+015,PAUSE,,,,0.5,,,,,,
+016,PAUSE,,,,0.5,,,,,,
+017,PAUSE,,,,0.5,,,,,,
+018,MediatorB,audio/MEDIATORB_018.wav,a1cf7b8bb6218d70d8835bce638321cb66e911a7579a92f708b72d563b289255,"“To have a good mediation, there are a few rules we all need to follow.”",,smart,normal,1.0,1.0,0.0,100
+019,MediatorB,audio/MEDIATORB_019.wav,efb3378968902fe536221b33c387baa69ebe9b188033996c58919ba97e8d2c09,“The Confidentiality Rule is for us mediators. We won’t share what you say with other students.”,,smart,normal,1.0,1.0,0.0,100
+020,MediatorB,audio/MEDIATORB_020.wav,8275545f0c2dac6acb3106093666e1a506779c76480e13162e0e1a8fe649218a,“The One Mic Rule is for both of you. It means that one person speaks at a time.”,,smart,normal,1.0,1.0,0.0,100
+021,MediatorB,audio/MEDIATORB_021.wav,c3d48cded2fc4dbea08e4003b1abf33a46cbc56df2ceb5709e751476b6ce13ae,“The Respect Rule is for all of us. We have to speak respectfully. Do you both agree to the rules?”,,smart,normal,1.0,1.0,0.0,100
+022,PAUSE,,,,0.5,,,,,,
+023,Disputant1,audio/DISPUTANT1_023.wav,e05b2dc62d839bdd6a7327b9700a0f6e93dc11cbab325610d17bf4a2d1091889,“Yeah. I agree...”,,smart,normal,1.0,1.0,0.0,100
+024,Disputant2,audio/DISPUTANT2_024.wav,c63fa917716645dcf024ad129cc93c4647fcd88f0496ba930ebe4927479887b6,“I agree...”,,smart,normal,1.0,1.0,0.0,100
+025,PAUSE,,,,0.5,,,,,,
+026,PAUSE,,,,0.5,,,,,,
+027,PAUSE,,,,0.5,,,,,,
+028,MediatorA,audio/MEDIATORA_028.wav,61027cce73c66045428dba97c73a34c7a61993525429ac42944726230148c217,"“We want to hear both of your perspectives on what we were told: Monica shared a screenshot of a private group chat message that Christina sent. Another student showed Christina the screenshot at school, and other students started talking about her. Christina yelled at Monica in the hallway the next day.”",,smart,normal,1.0,1.0,0.0,100
+029,PAUSE,,,,0.5,,,,,,
+030,MediatorA,audio/MEDIATORA_030.wav,abdc0502897e0896a12f37b5a58d5c1743c0a7d04dc8a80b287e89eeca313200,"“Christina, from your perspective, what happened between you two?”",,smart,normal,1.0,1.0,0.0,100
+031,PAUSE,,,,0.5,,,,,,
+032,Disputant1,audio/DISPUTANT1_032.wav,63c196520b8761d8791c9e0820b0407a5341656649bc84d52032c47953d61fe8,“Ummm… I sent something in our private Snapchat group chat.”,,smart,normal,1.0,1.0,0.0,100
+033,Disputant1,audio/DISPUTANT1_033.wav,ec771768af4132823370267f23d4d2ec97eeb742ac34d77b7e9019aadfa8a318,“And then Monica screenshotted it and sent it to other people without asking me.”,,smart,normal,1.0,1.0,0.0,100
+034,Disputant1,audio/DISPUTANT1_034.wav,62434f1a4408b9bd5dcc406c813564ab2e567fd2f72b9eec9b0304db797a1fa3,"“Someone showed me at school, and then people were, like, talking about me.”",,smart,normal,1.0,1.0,0.0,100
+035,PAUSE,,,,0.5,,,,,,
+036,MediatorA,audio/MEDIATORA_036.wav,015f95cc62cd8b478647ba8b1fca985d7d670ad6c66748053dc6b79043590f77,"“What I heard you say is you posted a message in a private Snapchat group chat, and then Monica screenshotted it and sent it to other people without asking. And you found out at school when someone showed you, and then other students started talking about you. Is that right?”",,smart,normal,1.0,1.0,0.0,100
+037,PAUSE,,,,0.5,,,,,,
+038,Disputant1,audio/DISPUTANT1_038.wav,f7afa48f4b9bf3f1c6fded56826da6a7ae9bb4244c487702da4e22ab18f5c9cb,“Yes. That’s what happened.”,,smart,normal,1.0,1.0,0.0,100
+039,MediatorA,audio/MEDIATORA_039.wav,11063175c188404df8b85e704c6ed6b28be570e1383585895de0d68b957abeab,“Is there anything else you want to share?”,,smart,normal,1.0,1.0,0.0,100
+040,PAUSE,,,,0.5,,,,,,
+041,Disputant1,audio/DISPUTANT1_041.wav,3f945ec5dfa1745de198395daab9541d6f84b4d22ac8a9c0bececb0ade6075a5,“No… that’s basically it.”,,smart,normal,1.0,1.0,0.0,100
+042,PAUSE,,,,0.5,,,,,,
+043,PAUSE,,,,0.5,,,,,,
+044,PAUSE,,,,0.5,,,,,,
+045,PAUSE,,,,0.5,,,,,,
+046,MediatorA,audio/MEDIATORA_046.wav,da6271b0725c35601268604959a25467f213f4bdab65b0c711808ce47ebc47f7,"“Monica, from your perspective, what happened between you two?”",,smart,normal,1.0,1.0,0.0,100
+047,PAUSE,,,,0.5,,,,,,
+048,Disputant2,audio/DISPUTANT2_048.wav,930f14e2b4cc06237d4432aaffd889721d769d252dacbefae3f7e1909a127443,"“Okay, so… I did screenshot it.”",,smart,normal,1.0,1.0,0.0,100
+049,Disputant2,audio/DISPUTANT2_049.wav,e3d9cddde3ea4adae15cfe70c1cfd86c9c2318a26093c64ece551abe43a49e00,"“But I only sent it to one friend because they were like, ‘Show me proof,’ and I didn’t really think.”",,smart,normal,1.0,1.0,0.0,100
+050,Disputant2,audio/DISPUTANT2_050.wav,4fa648a28146b249554765f6368e261672256e81c532af7bb59d5d0c3f70cea9,“I honestly didn’t think it would spread.”,,smart,normal,1.0,1.0,0.0,100
+051,Disputant2,audio/DISPUTANT2_051.wav,d89c2beb29a4de3cfe01ed0982003f062264a1f94c26fb31933b1ba26abd9c61,"“Then the next day Christina yelled at me in the hallway and called me fake, and people were there.”",,smart,normal,1.0,1.0,0.0,100
+052,PAUSE,,,,0.5,,,,,,
+053,MediatorA,audio/MEDIATORA_053.wav,536cad90c8687e65051bae318fe11ececfffa66b57dc5fcf3f0a2fb0669a39b7,"“What I heard you say is you shared the screenshot with one friend who asked for proof, and you didn’t realize it would spread. And then Christina yelled at you and called you fake in the hallway where other students could hear. Is that right?”",,smart,normal,1.0,1.0,0.0,100
+054,PAUSE,,,,0.5,,,,,,
+055,Disputant2,audio/DISPUTANT2_055.wav,461ddcf83422616b8162828e2271ba6d3047d47387726d5779d08003e5a6385d,“Yeah. That’s right.”,,smart,normal,1.0,1.0,0.0,100
+056,MediatorA,audio/MEDIATORA_056.wav,11063175c188404df8b85e704c6ed6b28be570e1383585895de0d68b957abeab,“Is there anything else you want to share?”,,smart,normal,1.0,1.0,0.0,100
+057,PAUSE,,,,0.5,,,,,,
+058,Disputant2,audio/DISPUTANT2_058.wav,3e3c27e0fad321ee79ec00835b85b21b2e5657dc40994f84af0c2d254f4ab765,“No.”,,smart,normal,1.0,1.0,0.0,100
+059,PAUSE,,,,0.5,,,,,,
+060,PAUSE,,,,0.5,,,,,,
+061,PAUSE,,,,0.5,,,,,,
+062,PAUSE,,,,0.5,,,,,,
+063,MediatorA,audio/MEDIATORA_063.wav,e3c1ab2068a3e568eabe5330ac14c56806b0e806ed51d18410df316daabfbfe8,"“Christina, what bothered you most in this situation?”",,smart,normal,1.0,1.0,0.0,100
+064,PAUSE,,,,0.5,,,,,,
+065,Disputant1,audio/DISPUTANT1_065.wav,1aa1514e7e986488256c396ee7a9fd2cb9a6f5e5574f01285c3f561af2893b6e,“That it was private.”,,smart,normal,1.0,1.0,0.0,100
+066,Disputant1,audio/DISPUTANT1_066.wav,a16c47ed4d269b72874d71f0447b027b032b780a34d566bc22f55d11544d7ea0,“Like… I didn’t give permission for my message to be screenshotted and sent around.”,,smart,normal,1.0,1.0,0.0,100
+067,PAUSE,,,,0.5,,,,,,
+068,MediatorA,audio/MEDIATORA_068.wav,f6abbfccbc927cf984ec2348e5833ae93721923ca0e4fbc5901f81d657fc3343,“How did you feel when you saw the screenshot and realized people at school were talking about you?”,,smart,normal,1.0,1.0,0.0,100
+069,PAUSE,,,,0.5,,,,,,
+070,Disputant1,audio/DISPUTANT1_070.wav,536846d3d314a606121ed43e4cf66ef5b8c3c5f38ced2e5a1f4196b8c01ce4ee,“I felt betrayed.”,,smart,normal,1.0,1.0,0.0,100
+071,Disputant1,audio/DISPUTANT1_071.wav,6c8d373500392ae756d5e0cceed59547e0b89426137278ffb729a7a70d4538d6,"“And just… stupid, because everyone knew.”",,smart,normal,1.0,1.0,0.0,100
+072,MediatorA,audio/MEDIATORA_072.wav,a4d1eba8de7d03b10d356c5abff0e1984391a40a3702975e7ca0a36d15b049a7,“Thank you for sharing.”,,smart,normal,1.0,1.0,0.0,100
+073,PAUSE,,,,0.5,,,,,,
+074,MediatorA,audio/MEDIATORA_074.wav,115f7a7a68bc621327288bffaa9834c2da0fc218cb4103e1e2b2b2c69a4a5275,"“Monica, what bothered you most in this situation?”",,smart,normal,1.0,1.0,0.0,100
+075,PAUSE,,,,0.5,,,,,,
+076,Disputant2,audio/DISPUTANT2_076.wav,f68b7620920fd9b8224ec06732be47d349dad5d4afb4a5c521b68a132e58a94a,“Getting yelled at in front of everyone.”,,smart,normal,1.0,1.0,0.0,100
+077,Disputant2,audio/DISPUTANT2_077.wav,38d06570b1f7eb080756614a6ff69e0df80b51ef23413c0d386dcbd9d2a3822a,“I didn’t like people staring.”,,smart,normal,1.0,1.0,0.0,100
+078,PAUSE,,,,0.5,,,,,,
+079,MediatorA,audio/MEDIATORA_079.wav,17cd5d925865b27e90ac0b352cd16ed07bd0714d3d34f9ee4e34fef8490b5e8c,“How did you feel when Christina yelled at you and called you fake in front of other students?”,,smart,normal,1.0,1.0,0.0,100
+080,PAUSE,,,,0.5,,,,,,
+081,Disputant2,audio/DISPUTANT2_081.wav,95adb48928569827e04b37ee8f4bb07ade8c3d555db9b964a43d37c08a0a0be4,“Embarrassed.”,,smart,normal,1.0,1.0,0.0,100
+082,Disputant2,audio/DISPUTANT2_082.wav,b26427512e5e68c4745ca9236898da82792ca5f856d008e3e84f26f1f7160cb4,“Like… I wanted to disappear.”,,smart,normal,1.0,1.0,0.0,100
+083,MediatorA,audio/MEDIATORA_083.wav,a4d1eba8de7d03b10d356c5abff0e1984391a40a3702975e7ca0a36d15b049a7,“Thank you for sharing.”,,smart,normal,1.0,1.0,0.0,100
+084,PAUSE,,,,0.5,,,,,,
+085,MediatorA,audio/MEDIATORA_085.wav,03086233fbc5b41cdfe1557c2a26a6ff4166edea1c8fa39ed8e5818ceb5d8675,"“Christina, what’s something you want Monica to do, or to stop doing?”",,smart,normal,1.0,1.0,0.0,100
+086,PAUSE,,,,0.5,,,,,,
+087,Disputant1,audio/DISPUTANT1_087.wav,a7bc73071ef14566f739ddef37db79284074e89f400b432eaf333f57a07b1041,“I want her to delete the screenshot.”,,smart,normal,1.0,1.0,0.0,100
+088,Disputant1,audio/DISPUTANT1_088.wav,d928c92e4b5b2bdd649fd4be50686404f23ce1c0fadf0fd96dbf6e3dfafef370,“And I want her to not share my messages with other people.”,,smart,normal,1.0,1.0,0.0,100
+089,PAUSE,,,,0.5,,,,,,
+090,MediatorA,audio/MEDIATORA_090.wav,c380bc293af38bfdb6a6d4eb9eb61369dad8a11cebbb1018157a76c82feb4e73,"“So you want Monica to delete the screenshot, and you want her to not share your private messages with other people. Is that right?”",,smart,normal,1.0,1.0,0.0,100
+091,PAUSE,,,,0.5,,,,,,
+092,Disputant1,audio/DISPUTANT1_092.wav,78b8e8aa7c07faa78cfade9a17d306c2c006236508a0a8931a1a0f065922d3e3,“Yes.”,,smart,normal,1.0,1.0,0.0,100
+093,PAUSE,,,,0.5,,,,,,
+094,PAUSE,,,,0.5,,,,,,
+095,PAUSE,,,,0.5,,,,,,
+096,PAUSE,,,,0.5,,,,,,
+097,MediatorA,audio/MEDIATORA_097.wav,483b913134fefd5c61bff590e568803b7a6fdf216e298a16296684dacb2e08b8,"“Monica, what’s something you want Christina to do, or to stop doing?”",,smart,normal,1.0,1.0,0.0,100
+098,PAUSE,,,,0.5,,,,,,
+099,Disputant2,audio/DISPUTANT2_099.wav,29dc8a8df3b9fd196e86fb5ab3b5014db3a6d549fa695c53708997a03ba3e720,“I want her to talk to me privately.”,,smart,normal,1.0,1.0,0.0,100
+100,Disputant2,audio/DISPUTANT2_100.wav,d0a7c9c212af7b0ac0a6449718d059a2f5c3557f0562626b2e4ec7844f69a2ee,"“Like, tell me there’s a problem, but calmly, and not call me out in the hallway.”",,smart,normal,1.0,1.0,0.0,100
+101,PAUSE,,,,0.5,,,,,,
+102,MediatorA,audio/MEDIATORA_102.wav,077d3daa4e80d00aa0d1f3d69a2bcfbddd06eded7ede3cb424b3af5cf4e71709,"“So you want Christina to address the problem with you one-on-one, and do it calmly instead of calling you out publicly. Is that right?”",,smart,normal,1.0,1.0,0.0,100
+103,PAUSE,,,,0.5,,,,,,
+104,Disputant2,audio/DISPUTANT2_104.wav,7890b373c2bbfbfb5f07aa1e762c0e2131d68e55fa03c79e9e0a0eaef1cb0f5d,“Yeah.”,,smart,normal,1.0,1.0,0.0,100
+105,PAUSE,,,,0.5,,,,,,
+106,PAUSE,,,,0.5,,,,,,
+107,PAUSE,,,,0.5,,,,,,
+108,PAUSE,,,,0.5,,,,,,
+109,PAUSE,,,,0.5,,,,,,
+110,PAUSE,,,,0.5,,,,,,
+111,PAUSE,,,,0.5,,,,,,
+112,MediatorB,audio/MEDIATORB_112.wav,1f2ac32d310be991c043ddf59c28c7c6b8140f0e0f422f411f15c4ea4448d656,"“Christina, it sounds like you want Monica to delete the screenshot and not share your private messages with other people. Is that right?”",,smart,normal,1.0,1.0,0.0,100
+113,Disputant1,audio/DISPUTANT1_113.wav,768262e9fa1fd04792cc3471826b3f3a290a789daf3d48e582faf7ddf1070bfc,“Yeah.”,,smart,normal,1.0,1.0,0.0,100
+114,MediatorB,audio/MEDIATORB_114.wav,537bc13f0a4d9788903969b860f145a5893291aab4ee5e30b1f2827ff8007b4a,"“Monica, it sounds like you want Christina to talk to you privately and address the problem calmly instead of calling you out publicly. Is that right?”",,smart,normal,1.0,1.0,0.0,100
+115,Disputant2,audio/DISPUTANT2_115.wav,420d6bcf9c03b7cc747e25e983ffc9a94fe0a53d25c22dab6577ae1df8de80bf,“Yes.”,,smart,normal,1.0,1.0,0.0,100
+116,PAUSE,,,,0.5,,,,,,
+117,MediatorB,audio/MEDIATORB_117.wav,86ae6e1f9bfb017ca3be1eb8475b87232b10c381d1863482eab5e83129231391,"“Now let’s think about what you can both do differently, so you each get something you want.”",,smart,normal,1.0,1.0,0.0,100
+118,MediatorB,audio/MEDIATORB_118.wav,17656739dac6dd59662eed2dec274ab86acdd7f3063d6de36088198f30584a13,"“Christina, what’s one thing you could do differently to help this work for both of you?”",,smart,normal,1.0,1.0,0.0,100
+119,PAUSE,,,,0.5,,,,,,
+120,Disputant1,audio/DISPUTANT1_120.wav,8da0147c07354d7ab152f30f2f55bf3828075bcc831576e14d91e25a63688aae,“I can not yell.”,,smart,normal,1.0,1.0,0.0,100
+121,Disputant1,audio/DISPUTANT1_121.wav,aaa17aa7c3c05a434dfc69a775e264f9ade5ad8c7554bede6f808dccdbc6d93b,“And I can just ask her to talk somewhere private if I’m mad.”,,smart,normal,1.0,1.0,0.0,100
+122,PAUSE,,,,0.5,,,,,,
+123,MediatorB,audio/MEDIATORB_123.wav,8f64448037b7a2459eb4a5c3dcb530743d40e7bd109315fdcf227742c7ac1381,"“Monica, what’s one thing you could do differently to help this work?”",,smart,normal,1.0,1.0,0.0,100
+124,PAUSE,,,,0.5,,,,,,
+125,Disputant2,audio/DISPUTANT2_125.wav,dcf00f7d10bb6d6aefa03c400f41c0f1ca02c0682a0f9f720db1f1f5915a01d3,“I can think before I screenshot anything.”,,smart,normal,1.0,1.0,0.0,100
+126,Disputant2,audio/DISPUTANT2_126.wav,dd1d7cf910443eb504a9a957244c44ffc5e1fadfce5c0f514c25fc0d9a6be439,"“And if someone asks for proof, I can just say no.”",,smart,normal,1.0,1.0,0.0,100
+127,PAUSE,,,,0.5,,,,,,
+128,MediatorB,audio/MEDIATORB_128.wav,e56794054012ea6828b63c5be97abafb591fc97217ab4a325c6b488b2c66672c,"“Christina, is there anything else you’d like Monica to do differently?”",,smart,normal,1.0,1.0,0.0,100
+129,PAUSE,,,,0.5,,,,,,
+130,Disputant1,audio/DISPUTANT1_130.wav,2b5291319563d40f1284ec1a00f5cdbee94a08beae71ca33b7646a75eb83f2de,“Just… don’t share private stuff. Even if it’s one person.”,,smart,normal,1.0,1.0,0.0,100
+131,PAUSE,,,,0.5,,,,,,
+132,MediatorB,audio/MEDIATORB_132.wav,066c4112d89c95e630e8c606e9a55a342c130304b4ec71227c2895d9fa89e907,"“Monica, is there anything else you’d like Christina to do differently?”",,smart,normal,1.0,1.0,0.0,100
+133,PAUSE,,,,0.5,,,,,,
+134,Disputant2,audio/DISPUTANT2_134.wav,0206f588e894481b07be19790adc6ecb7dcaed132838887be6e33ad924c81ea9,“Don’t call me names.”,,smart,normal,1.0,1.0,0.0,100
+135,Disputant2,audio/DISPUTANT2_135.wav,bfc5625ab88bde0629178f1da4f8a35ac6804721c027cb88fa411765a0cdc762,“And don’t do it in front of people.”,,smart,normal,1.0,1.0,0.0,100
+136,PAUSE,,,,0.5,,,,,,
+137,MediatorB,audio/MEDIATORB_137.wav,289f809ab2845a2f98b4bcdc07232eeb2594b219cc80f1a6e7f9946e5e3a0b98,“Is there something you could both do differently?”,,smart,normal,1.0,1.0,0.0,100
+138,PAUSE,,,,0.5,,,,,,
+139,Disputant1,audio/DISPUTANT1_139.wav,fae79f694a6a1a1d6db8b87e75bbc88c0c74ec290a0a9fe8d28e6cf490e73598,“I guess we can both respect privacy.”,,smart,normal,1.0,1.0,0.0,100
+140,Disputant2,audio/DISPUTANT2_140.wav,cd56158215d88e98fbd7be9037b1f063b91bedd59a999a1a40d4b2ac12f8b1e7,"“Yeah, like… online and at school.”",,smart,normal,1.0,1.0,0.0,100
+141,PAUSE,,,,0.5,,,,,,
+142,MediatorB,audio/MEDIATORB_142.wav,9c321c013aab888cbfe01f449404e02d89ec63da34e3c8a2750487ede1c38396,"“So how about if Christina talks to Monica one-on-one and doesn’t yell or call her names, and Monica deletes the screenshot and doesn’t share private messages again, even if someone asks for proof. Would that work?”",,smart,normal,1.0,1.0,0.0,100
+143,PAUSE,,,,0.5,,,,,,
+144,Disputant1,audio/DISPUTANT1_144.wav,824805929e707350ef8397a1a13999a2b89bd33b62582823132411743e678c24,“Yes. That would work.”,,smart,normal,1.0,1.0,0.0,100
+145,Disputant2,audio/DISPUTANT2_145.wav,ad02545189d9e724e097f092aa8c02192489975dc2f0d72f5d41031462e00443,“Yeah. I can do that.”,,smart,normal,1.0,1.0,0.0,100
+146,PAUSE,,,,0.5,,,,,,
+147,PAUSE,,,,0.5,,,,,,
+148,PAUSE,,,,0.5,,,,,,
+149,PAUSE,,,,0.5,,,,,,
+150,PAUSE,,,,0.5,,,,,,
+151,PAUSE,,,,0.5,,,,,,
+152,PAUSE,,,,0.5,,,,,,
+153,MediatorA,audio/MEDIATORA_153.wav,acad1752e9e396c0f53fd66819e72b0e79f6623ca3d1b97739e9aad793168c94,"“Now we’re going to write an agreement using what you both shared, so that this doesn’t happen again.”",,smart,normal,1.0,1.0,0.0,100
+154,PAUSE,,,,0.5,,,,,,
+155,PAUSE,,,,0.5,,,,,,
+156,PAUSE,,,,0.5,,,,,,
+157,PAUSE,,,,0.5,,,,,,
+158,PAUSE,,,,0.5,,,,,,
+159,PAUSE,,,,0.5,,,,,,
+160,MediatorA,audio/MEDIATORA_160.wav,98d588f99ef271a58339d877f80927ad6211f03b076eca852cd20e60034a9328,“Here’s what we have.”,,smart,normal,1.0,1.0,0.0,100
+161,MediatorA,audio/MEDIATORA_161.wav,8290788fe954164496308a316620603ebecdef247550bf8546766f6f2255a1e4,“Christina agrees to not yell or call Monica names and to talk to her one-on-one if something bothers her.”,,smart,normal,1.0,1.0,0.0,100
+162,MediatorA,audio/MEDIATORA_162.wav,8baa8b6f7f9945ac8b9fd466455114d7359c364bb80a54d1e14fde9fc010abea,“Monica agrees to delete the screenshot and to not share private messages again.”,,smart,normal,1.0,1.0,0.0,100
+163,MediatorA,audio/MEDIATORA_163.wav,b6fe1b19765f86b493b2593aee7d594d720e50f5f74ac48751c78964acfc08f2,“Do you both agree to do these things?”,,smart,normal,1.0,1.0,0.0,100
+164,PAUSE,,,,0.5,,,,,,
+165,Disputant1,audio/DISPUTANT1_165.wav,78b8e8aa7c07faa78cfade9a17d306c2c006236508a0a8931a1a0f065922d3e3,“Yes.”,,smart,normal,1.0,1.0,0.0,100
+166,Disputant2,audio/DISPUTANT2_166.wav,420d6bcf9c03b7cc747e25e983ffc9a94fe0a53d25c22dab6577ae1df8de80bf,“Yes.”,,smart,normal,1.0,1.0,0.0,100
+167,MediatorA,audio/MEDIATORA_167.wav,2cc8b373a2eae6fa2442c788503960e1b413a71b9dc76b9a35420af58bea7d2a,“Please read it and sign below.”,,smart,normal,1.0,1.0,0.0,100
+168,PAUSE,,,,0.5,,,,,,
+169,PAUSE,,,,0.5,,,,,,
+170,PAUSE,,,,0.5,,,,,,
+171,MediatorA,audio/MEDIATORA_171.wav,58200625e601dddb122b4f8c26a3c70de6f55791763a85f13a5bcd274da74425,“Is there anything you want to say to each other before we finish?”,,smart,normal,1.0,1.0,0.0,100
+172,PAUSE,,,,0.5,,,,,,
+173,Disputant1,audio/DISPUTANT1_173.wav,bfb2a44ae38f53c147317f63c3297decd7980dadc1bd85cab3c3032bc95185a7,“I’m sorry I yelled in the hallway.”,,smart,normal,1.0,1.0,0.0,100
+174,Disputant1,audio/DISPUTANT1_174.wav,c0135747f263652b5ff44226084f0f75e537d4731f64899d04619c5183de501f,“I should’ve just talked to you.”,,smart,normal,1.0,1.0,0.0,100
+175,PAUSE,,,,0.5,,,,,,
+176,Disputant2,audio/DISPUTANT2_176.wav,a73a9ed8939a867fd16da83f2305d0a08e7a7d3d2f7231c97b1fa2d71f5ef25d,“I’m sorry I screenshotted it.”,,smart,normal,1.0,1.0,0.0,100
+177,Disputant2,audio/DISPUTANT2_177.wav,29b4429d9305b2a2b5c39a0167b788a4cdaa81d2e3627f74408780078f9a3e73,"“I deleted it, and I won’t do that again.”",,smart,normal,1.0,1.0,0.0,100
+178,PAUSE,,,,0.5,,,,,,
+179,MediatorA,audio/MEDIATORA_179.wav,d7eb1fef9eab1a5ef437357e903087519569cb1db048c2b29eb3af886ea2c147,“Thanks for doing this mediation with us. We’ll walk you back to class now.”,,smart,normal,1.0,1.0,0.0,100

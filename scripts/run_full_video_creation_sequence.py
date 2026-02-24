@@ -6,6 +6,7 @@ import shutil
 import subprocess
 import sys
 import time
+import re
 from pathlib import Path
 import os
 
@@ -72,6 +73,22 @@ def _estimate_end_seconds_from_director(director: dict) -> float:
         # keep minimum per-line floor so super-short viseme rows still advance
         end_s = max(end_s, max(vmax, t0 + 1.0))
     return max(0.0, float(end_s))
+
+
+def _count_script_pauses(script_path: Path) -> int:
+    try:
+        text = script_path.read_text()
+    except Exception:
+        return 0
+    return len(re.findall(r"\[PAUSE\]", text, flags=re.IGNORECASE))
+
+
+def _count_director_pause_beats(director: dict) -> int:
+    total = 0
+    for b in director.get("beats", []) or []:
+        if str(b.get("type") or "").lower() == "pause":
+            total += 1
+    return total
 
 
 def parse_args() -> argparse.Namespace:
@@ -259,6 +276,27 @@ def main():
         )
     else:
         print("[skip] WhisperX: director_visemes.json present and audio unchanged.")
+
+    # Validate pause coverage so overlay timing cannot silently drift.
+    if director_json_out.exists():
+        try:
+            director_data = load_json(director_json_out)
+            script_pause_count = _count_script_pauses(script_txt)
+            director_pause_count = _count_director_pause_beats(director_data)
+            if script_pause_count > 0 and director_pause_count == 0:
+                raise SystemExit(
+                    f"Pause coverage check failed: script has {script_pause_count} [PAUSE] marker(s) "
+                    f"but director has 0 pause beats ({director_json_out})."
+                )
+            if script_pause_count >= 6 and director_pause_count < max(3, int(script_pause_count * 0.5)):
+                raise SystemExit(
+                    f"Pause coverage check failed: script has {script_pause_count} [PAUSE] marker(s) "
+                    f"but director has only {director_pause_count} pause beats ({director_json_out})."
+                )
+        except SystemExit:
+            raise
+        except Exception as ex:
+            print(f"[warn] pause coverage validation skipped due to error: {ex}")
 
     # 6) Run single-process Blender pipeline (prep/config/export/render).
     frames_dir = out_video.parent / f"{out_video.stem}_frames"

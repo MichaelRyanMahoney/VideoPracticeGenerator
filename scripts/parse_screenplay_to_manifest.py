@@ -38,6 +38,7 @@ INLINE_SPEAKER_LINE = re.compile(
 # {DEFAULTS emotion=normal intensity=1.0 tempo=1.0 pitch=1.0 volume=100}
 # pitch accepts either semitone shift (0 neutral) or ratio (1.0 neutral).
 DEFAULTS_LINE = re.compile(r'^\s*\{\s*DEFAULTS\s+([^}]*)\}\s*$')
+PAUSE_TOKEN = re.compile(r'\[PAUSE\]', re.IGNORECASE)
 VALID_EMOTION_PRESETS = {"normal", "happy", "sad", "angry", "whisper", "toneup", "tonedown"}
 EMOTION_KEYS = {"emotion", "emotion_preset"}
 
@@ -111,7 +112,7 @@ def _has_explicit_emotion_key(raw_kv: dict) -> bool:
     return any(str(k).strip().lower() in EMOTION_KEYS for k in raw_kv.keys())
 
 def parse_script(lines):
-    entries=[]
+    entries = []
     i=0; cur_speaker=None
     current_defaults = {  # applied to every entry unless overridden
         "emotion_preset": "normal",
@@ -122,13 +123,28 @@ def parse_script(lines):
     }
     while i < len(lines):
         line = lines[i].rstrip("\n")
+        stripped = line.strip()
         # Update defaults if a DEFAULTS line is encountered
-        dm = DEFAULTS_LINE.match(line.strip())
+        dm = DEFAULTS_LINE.match(stripped)
         if dm:
             kv = _coerce_types(_parse_kv_blob(dm.group(1) or ""))
             current_defaults.update(kv)
             i += 1
             continue
+        # Preserve standalone [PAUSE] directives as explicit manifest rows.
+        if stripped.startswith("[") and stripped.endswith("]"):
+            pause_count = len(PAUSE_TOKEN.findall(stripped))
+            if pause_count:
+                for _ in range(pause_count):
+                    entries.append({
+                        "kind": "pause",
+                        "speaker": "PAUSE",
+                        "transcript": "",
+                        "duration": 0.5,
+                        "attrs": {},
+                    })
+                i += 1
+                continue
 
         # Handle one-line entries where speaker label and spoken text are on the same line.
         mi = INLINE_SPEAKER_LINE.match(line)
@@ -149,7 +165,13 @@ def parse_script(lines):
                     attrs = dict(current_defaults)
                     attrs.update(inline_kv)
                     attrs["typecast_mode"] = "preset" if has_explicit_emotion else "smart"
-                    entries.append((cur_speaker, spoken_inline, attrs))
+                    entries.append({
+                        "kind": "speech",
+                        "speaker": cur_speaker,
+                        "transcript": spoken_inline,
+                        "duration": "",
+                        "attrs": attrs,
+                    })
                     i += 1
                     continue
 
@@ -192,7 +214,13 @@ def parse_script(lines):
                 attrs = dict(current_defaults)
                 attrs.update(row_kv)
                 attrs["typecast_mode"] = "preset" if has_explicit_emotion else "smart"
-                entries.append((cur_speaker, " ".join(spoken), attrs))
+                entries.append({
+                    "kind": "speech",
+                    "speaker": cur_speaker,
+                    "transcript": " ".join(spoken),
+                    "duration": "",
+                    "attrs": attrs,
+                })
             i = j
         else:
             i += 1
@@ -266,30 +294,41 @@ def main():
             "audio",        # either relative file path or s3:// uri (depending on args)
             "audio_hash",   # sha256 of stable audio identity
             "transcript",
+            "duration",     # seconds for pause rows; empty for speech rows
             "typecast_mode",
             "emotion_preset","emotion_intensity","tempo","pitch","volume"
         ])
-        for idx, (spk, txt, attrs) in enumerate(entries, start=1):
+        for idx, entry in enumerate(entries, start=1):
             rid = f"{idx:03d}"
-            ah = audio_hash_for(spk, txt, attrs)
-            if audio_s3_prefix:
-                # Store as audio/<hash>.wav (hash-only naming prevents renumber churn across edits)
-                audio = f"{audio_s3_prefix.rstrip('/')}/{ah}.wav"
+            kind = entry.get("kind", "speech")
+            spk = str(entry.get("speaker", "")).strip()
+            txt = str(entry.get("transcript", "")).strip()
+            duration = entry.get("duration", "")
+            attrs = entry.get("attrs", {}) or {}
+            if kind == "pause":
+                ah = ""
+                audio = ""
             else:
-                # Local default: keep legacy name for human readability, but include hash for caching/migration
-                audio = f"audio/{spk.upper()}_{rid}.wav"
+                ah = audio_hash_for(spk, txt, attrs)
+                if audio_s3_prefix:
+                    # Store as audio/<hash>.wav (hash-only naming prevents renumber churn across edits)
+                    audio = f"{audio_s3_prefix.rstrip('/')}/{ah}.wav"
+                else:
+                    # Local default: keep legacy name for human readability, but include hash for caching/migration
+                    audio = f"audio/{spk.upper()}_{rid}.wav"
             w.writerow([
                 rid,
                 spk,
                 audio,
                 ah,
                 txt,
-                attrs.get("typecast_mode","smart"),
-                attrs.get("emotion_preset","normal"),
-                attrs.get("emotion_intensity",1.0),
-                attrs.get("tempo",1.0),
-                attrs.get("pitch",0.0),
-                attrs.get("volume",100),
+                duration,
+                attrs.get("typecast_mode","smart") if kind != "pause" else "",
+                attrs.get("emotion_preset","normal") if kind != "pause" else "",
+                attrs.get("emotion_intensity",1.0) if kind != "pause" else "",
+                attrs.get("tempo",1.0) if kind != "pause" else "",
+                attrs.get("pitch",0.0) if kind != "pause" else "",
+                attrs.get("volume",100) if kind != "pause" else "",
             ])
     print(f"Wrote {args.out_csv} with {len(entries)} rows")
 

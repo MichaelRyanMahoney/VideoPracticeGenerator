@@ -294,6 +294,19 @@ def main():
         audio_raw = (row.get("audio") or "").strip()
         audio_hash = (row.get("audio_hash") or "").strip()
         text = row["transcript"].strip()
+        is_pause_row = speaker.upper() in {"PAUSE", "BREAK"}
+
+        if is_pause_row:
+            print(f"[skip] {rid} {speaker} (pause row)")
+            continue
+        if not audio_raw:
+            raise SystemExit(
+                f"Manifest speech row id={rid} speaker={speaker} missing audio destination."
+            )
+        if not text:
+            raise SystemExit(
+                f"Manifest speech row id={rid} speaker={speaker} missing transcript."
+            )
 
         character_defaults = (
             typecast_defaults_by_role.get(speaker)
@@ -381,7 +394,7 @@ def main():
             if not should_keep_workdir():
                 cleanup_work_dir(tmp_dir)
 
-    print(f"Done. Generated {len(rows)} wav files via Typecast.")
+    print("Done. Typecast synthesis pass complete.")
 
 
 if __name__ == "__main__":

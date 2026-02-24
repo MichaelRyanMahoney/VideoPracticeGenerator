@@ -143,6 +143,7 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--engine", default="")
     ap.add_argument("--quality", default="")
     ap.add_argument("--no_audio", action="store_true")
+    ap.add_argument("--no_clean_frames", action="store_true")
     ap.add_argument("--prepare_only", action="store_true")
     ap.add_argument("--run_generate_characters", action="store_true")
     ap.add_argument("--run_configure_roles", action="store_true")
@@ -256,6 +257,7 @@ def main() -> None:
             frame_start=(int(args.frame_start) if int(args.frame_start) > 0 else None),
             frame_end=(int(args.frame_end) if int(args.frame_end) > 0 else None),
             max_frame_end=int(args.max_frame_end),
+            no_clean_frames=bool(args.no_clean_frames),
             no_audio=bool(args.no_audio),
         )
         out_path = Path(args.out_video).expanduser().resolve()
