@@ -125,64 +125,44 @@ def main():
         gen_inputs = work / "generator_inputs.json"
         s3_download(s3, args.generator_inputs_s3, gen_inputs)
 
-        # Create a working scene
+        # Single-process Blender prep (append + configure + verify via post-check).
         work_scene = work / "work_scene.blend"
-        work_scene.write_bytes(base_scene_path.read_bytes())
-
-        # 1) Generate role blends + append into the work scene (positions included)
         default_char_blend = (project_root / (cfg.get("default_character_blend") or "assets/DefaultCharacter.blend")).resolve()
         if not default_char_blend.exists():
             raise SystemExit(f"Default character blend not found in image: {default_char_blend}")
-        gen_script = project_root / "scripts" / "blender_generate_character_files.py"
         prepared_scene = work / "prepared_scene.blend"
+        single_blender_py = project_root / "scripts" / "blender_pipeline_single_process.py"
         run([
             str(blender_bin),
             *blender_flags,
             "-b",
-            str(default_char_blend),
+            str(base_scene_path),
             "--python-exit-code",
             "1",
             "--python",
-            str(gen_script),
+            str(single_blender_py),
             "--",
-            "--config",
+            "--generator_inputs_json",
             str(gen_inputs),
-            "--source",
+            "--base_scene_blend",
+            str(base_scene_path),
+            "--default_character_blend",
             str(default_char_blend),
-            "--append-scene",
+            "--work_scene",
             str(work_scene),
-            "--scene-save-as",
+            "--run_generate_characters",
+            "--run_configure_roles",
+            "--prepare_only",
+            "--scene_out",
             str(prepared_scene),
-            "--outdir",
-            str(work / "role_blends"),
-        ], cwd=project_root, env=blender_env)
-
-        # 2) Configure roles/colors/selectors in the prepared scene
-        cfg_script = project_root / "scripts" / "blender_configure_roles_for_render.py"
-        prepared_scene_cfg = work / "prepared_scene_configured.blend"
-        run([
-            str(blender_bin),
-            *blender_flags,
-            "-b",
-            str(prepared_scene),
-            "--python-exit-code",
-            "1",
-            "--python",
-            str(cfg_script),
-            "--",
-            "--config",
-            str(gen_inputs),
             # Ensure World/HDRI is applied even when generator_inputs.json does not specify it.
             # blender_configure_roles_for_render.py supports reading HDRI settings from an external
             # config file (our repo-level run_full_video_creation_sequence.config.json).
             "--hdri_from_config",
             str(cfg_path),
-            "--save-as",
-            str(prepared_scene_cfg),
         ], cwd=project_root, env=blender_env)
-        prepared_scene = prepared_scene_cfg
 
-        # 3) Verify role collections exist (fail fast if not)
+        # Verify role collections exist (fail fast if not)
         verify_py = project_root / "scripts" / "blender_verify_roles_in_scene.py"
         run([
             str(blender_bin),

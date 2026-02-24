@@ -153,9 +153,6 @@ def main():
     ensure_parent(tmp_dir / "x")
     ts = time.strftime("%Y%m%d_%H%M%S")
     tmp_scene = tmp_dir / f"work_scene_{ts}.blend"
-    tmp_scene_with_roles = tmp_dir / f"work_scene_{ts}_with_roles.blend"
-    tmp_scene_configured = tmp_dir / f"work_scene_{ts}_configured.blend"
-    tmp_scene_pre_render = tmp_dir / f"work_scene_{ts}_pre_render.blend"
     blender_scratch = tmp_dir / f"blender_scratch_{ts}"
     blender_scratch.mkdir(parents=True, exist_ok=True)
 
@@ -178,131 +175,20 @@ def main():
     shutil.copyfile(base_scene_blend, tmp_scene)
     print(f"[info] Copied base scene to: {tmp_scene}")
 
-    # 1b) (Optional) Generate per-role character files and append them into the temp scene
+    # 1b/2/2b) Blender scene prep + optional exports are now executed in a single
+    # Blender process later in this script (after director JSON is ready), to avoid
+    # save/reopen boundaries across Blender subprocesses.
     gen_script = project_root / "scripts" / "blender_generate_character_files.py"
-    if run_generate_chars and gen_script.exists():
-        if not default_character_blend:
-            raise SystemExit("default_character_blend not set in config.")
-        if not Path(default_character_blend).exists():
-            raise SystemExit(f"default_character_blend not found: {default_character_blend}")
-        pre = ["xvfb-run", "-a", "-s", "-screen 0 1920x1080x24"] if os.environ.get("VPG_XVFB") == "1" else []
-        cmd_gen = pre + [
-            str(blender_bin),
-            "-b",
-            str(default_character_blend),
-            "--python-exit-code",
-            "1",
-            "--python",
-            str(gen_script),
-            "--",
-            "--config",
-            str(generator_inputs_json),
-            "--source",
-            str(default_character_blend),
-            "--append-scene",
-            str(tmp_scene),
-            "--scene-save-as",
-            str(tmp_scene_with_roles),
-        ]
-        run_cmd(cmd_gen, env=blender_env)
-        # Use a freshly-saved filename for downstream steps to avoid in-place overwrite
-        # save issues observed in some Blender/container environments.
-        tmp_scene = tmp_scene_with_roles
-    elif run_generate_chars:
+    if run_generate_chars and (not gen_script.exists()):
         print("[skip] Character generation: blender_generate_character_files.py not found.")
 
-    # 2) Configure roles in scene per generator_inputs.json (HDRI, visibility, colors)
-    #    Must run BEFORE character export so stills get correct HDRI and character setup.
+    # Validate Blender helper scripts early (actual execution happens in single-process runner).
     cfg_script = project_root / "scripts" / "blender_configure_roles_for_render.py"
-    if bool(cfg.get("skip_configure_roles", False)):
-        print("[skip] Configure roles step per config (skip_configure_roles=True).")
-    else:
-        if not cfg_script.exists():
-            raise SystemExit(f"Missing script: {cfg_script}")
-        pre = ["xvfb-run", "-a", "-s", "-screen 0 1920x1080x24"] if os.environ.get("VPG_XVFB") == "1" else []
-        cmd_cfg = pre + [
-            str(blender_bin),
-            "-b",
-            str(tmp_scene),
-            "--python-exit-code",
-            "1",
-            "--python",
-            str(cfg_script),
-            "--",
-            "--config",
-            str(generator_inputs_json),
-            "--trace",
-            "--save-as",
-            str(tmp_scene_configured),
-        ]
-        if hdri_path_cfg:
-            cmd_cfg += ["--hdri_path", str(hdri_path_cfg)]
-        if hdri_strength_cfg is not None:
-            cmd_cfg += ["--hdri_strength", str(hdri_strength_cfg)]
-        run_cmd(cmd_cfg, env=blender_env)
-        tmp_scene = tmp_scene_configured
+    if not bool(cfg.get("skip_configure_roles", False)) and (not cfg_script.exists()):
+        raise SystemExit(f"Missing script: {cfg_script}")
 
-    # 2b) Export character PNGs from the configured scene (after roles/HDRI are set)
     export_script = project_root / "scripts" / "blender_export_characters.py"
-    if run_export_chars and export_script.exists():
-        ensure_parent(export_chars_out_dir / "x")
-        pre = ["xvfb-run", "-a", "-s", "-screen 0 1920x1080x24"] if os.environ.get("VPG_XVFB") == "1" else []
-        cmd_export = pre + [
-            str(blender_bin),
-            "-b",
-            str(tmp_scene),
-            "--python-exit-code",
-            "1",
-            "--python",
-            str(export_script),
-            "--",
-            "--output-dir",
-            str(export_chars_out_dir),
-            "--roles",
-            "Disputant1",
-            "MediatorA",
-            "MediatorB",
-            "Disputant2",
-            "--file-prefix",
-            export_file_prefix,
-            "--image-width",
-            str(export_image_width),
-            "--generator_inputs_json",
-            str(generator_inputs_json),
-        ]
-        if hdri_path_cfg:
-            cmd_export += ["--hdri_path", str(hdri_path_cfg)]
-        if hdri_strength_cfg is not None:
-            cmd_export += ["--hdri_strength", str(hdri_strength_cfg)]
-        run_cmd(cmd_export, env=blender_env)
-
-        if export_table_object_name:
-            cmd_export_table = pre + [
-                str(blender_bin),
-                "-b",
-                str(tmp_scene),
-                "--python-exit-code",
-                "1",
-                "--python",
-                str(export_script),
-                "--",
-                "--output-dir",
-                str(export_chars_out_dir),
-                "--objects",
-                export_table_object_name,
-                "--file-prefix",
-                export_table_file_prefix,
-                "--image-width",
-                str(export_image_width),
-                "--generator_inputs_json",
-                str(generator_inputs_json),
-            ]
-            if hdri_path_cfg:
-                cmd_export_table += ["--hdri_path", str(hdri_path_cfg)]
-            if hdri_strength_cfg is not None:
-                cmd_export_table += ["--hdri_strength", str(hdri_strength_cfg)]
-            run_cmd(cmd_export_table, env=blender_env)
-    elif run_export_chars:
+    if run_export_chars and (not export_script.exists()):
         print("[skip] Character export: blender_export_characters.py not found.")
 
     # 3) Build manifest CSV from script.txt
@@ -374,51 +260,66 @@ def main():
     else:
         print("[skip] WhisperX: director_visemes.json present and audio unchanged.")
 
-    # 6) Render visemes in Blender (PNG RGBA frames by default)
+    # 6) Run single-process Blender pipeline (prep/config/export/render).
     frames_dir = out_video.parent / f"{out_video.stem}_frames"
     frames_pattern = frames_dir / f"{out_video.stem}_%04d.png"
-    if not skip_render:
-        run_director_py = project_root / "scripts" / "run_director_visemes.py"
-        if not run_director_py.exists():
-            raise SystemExit(f"Missing script: {run_director_py}")
-        ensure_parent(out_video)
-        pre = ["xvfb-run", "-a", "-s", "-screen 0 1920x1080x24"] if os.environ.get("VPG_XVFB") == "1" else []
-        # Safety: re-assert HDRI/world setup immediately before rendering.
-        # This avoids rendering with stale world state if earlier steps or scene mutations
-        # altered node bindings.
-        cmd_reassert_hdri = pre + [
-            str(blender_bin),
-            "-b",
-            str(tmp_scene),
-            "--python-exit-code",
-            "1",
-            "--python",
-            str(cfg_script),
-            "--",
-            "--config",
-            str(generator_inputs_json),
-            "--hdri_from_config",
-            str(cfg_path),
-            "--save-as",
-            str(tmp_scene_pre_render),
-        ]
-        run_cmd(cmd_reassert_hdri, env=blender_env)
-        tmp_scene = tmp_scene_pre_render
-        cmd_render = pre + [
-            str(blender_bin),
-            "-b",
-            str(tmp_scene),
-            "--python-exit-code",
-            "1",
-            "--python",
-            str(run_director_py),
-            "--",
-            "--director",
+    single_blender_py = project_root / "scripts" / "blender_pipeline_single_process.py"
+    if not single_blender_py.exists():
+        raise SystemExit(f"Missing script: {single_blender_py}")
+    if run_generate_chars:
+        if not default_character_blend:
+            raise SystemExit("default_character_blend not set in config.")
+        if not Path(default_character_blend).exists():
+            raise SystemExit(f"default_character_blend not found: {default_character_blend}")
+    ensure_parent(out_video)
+    pre = ["xvfb-run", "-a", "-s", "-screen 0 1920x1080x24"] if os.environ.get("VPG_XVFB") == "1" else []
+    cmd_blender_pipeline = pre + [
+        str(blender_bin),
+        "-b",
+        str(base_scene_blend),
+        "--python-exit-code",
+        "1",
+        "--python",
+        str(single_blender_py),
+        "--",
+        "--generator_inputs_json",
+        str(generator_inputs_json),
+        "--base_scene_blend",
+        str(base_scene_blend),
+        "--work_scene",
+        str(tmp_scene),
+        "--run_generate_characters" if run_generate_chars else "",
+        "--default_character_blend" if run_generate_chars else "",
+        str(default_character_blend) if run_generate_chars else "",
+        "--run_configure_roles" if (not bool(cfg.get("skip_configure_roles", False))) else "",
+        "--run_export_characters" if run_export_chars else "",
+        "--export_characters_output_dir",
+        str(export_chars_out_dir),
+        "--export_image_width",
+        str(export_image_width),
+        "--export_file_prefix",
+        str(export_file_prefix),
+        "--export_table_object_name",
+        str(export_table_object_name or ""),
+        "--export_table_file_prefix",
+        str(export_table_file_prefix),
+        "--max_frame_end",
+        str(max_frame_end),
+        "--hdri_from_config",
+        str(cfg_path),
+    ]
+    if hdri_path_cfg:
+        cmd_blender_pipeline += ["--hdri_path", str(hdri_path_cfg)]
+    if hdri_strength_cfg is not None:
+        cmd_blender_pipeline += ["--hdri_strength", str(hdri_strength_cfg)]
+    if skip_render:
+        cmd_blender_pipeline += ["--prepare_only"]
+    else:
+        cmd_blender_pipeline += [
+            "--director_json",
             str(director_json_out),
-            "--out",
+            "--out_video",
             str(out_video),
-            "--max_frame_end",
-            str(max_frame_end),
         ]
         if enforce_render_frame_guard and director_json_out.exists() and generator_inputs_json.exists():
             try:
@@ -427,19 +328,13 @@ def main():
                 fps_guard = int(((gi.get("run") or {}).get("fps")) or d.get("fps") or 24)
                 est_end_s = _estimate_end_seconds_from_director(d)
                 guard_frame_end = max(1, int(round((est_end_s + render_frame_guard_pad_sec) * fps_guard)))
-                cmd_render += ["--frame_end", str(guard_frame_end)]
+                cmd_blender_pipeline += ["--frame_end", str(guard_frame_end)]
                 print(f"[info] render frame guard enabled: frame_end={guard_frame_end} (fps={fps_guard}, est_end_s={est_end_s:.3f})")
             except Exception as ex:
                 print(f"[warn] failed to compute render frame guard; continuing without it: {ex}")
-        render_env = blender_env.copy()
-        # Ensure run_director_visemes uses the job-scoped generator_inputs, not repo default.
-        render_env["VPG_GENERATOR_INPUTS_JSON"] = str(generator_inputs_json)
-        # Keep these explicit in orchestrated renders to avoid scene-level black outputs.
-        render_env.setdefault("VPG_USE_SEQUENCER", "0")
-        render_env.setdefault("VPG_USE_COMPOSITING", "0")
-        run_cmd(cmd_render, env=render_env)
-    else:
-        print("[skip] Render step per config.")
+    # Remove empty placeholders added by conditional args above.
+    cmd_blender_pipeline = [x for x in cmd_blender_pipeline if x != ""]
+    run_cmd(cmd_blender_pipeline, env=blender_env)
 
     # 7) Mux to MP4
     if not skip_mux:

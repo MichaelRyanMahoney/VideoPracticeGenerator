@@ -184,6 +184,104 @@ def _for_each_part(parts_dict, fn):
             pass
 
 
+def _disable_holdout_shadow_catcher(scene):
+    """
+    Guard against alpha being wiped by holdout/shadow-catcher objects.
+    In some headless Cycles runs, a render-visible holdout can produce fully
+    transparent output even when RGB appears to contain scene data.
+    """
+    changed_holdout = 0
+    changed_shadow = 0
+    visible_holdout = 0
+    visible_shadow = 0
+    try:
+        view_layer = bpy.context.view_layer
+    except Exception:
+        view_layer = None
+    for obj in bpy.data.objects:
+        if getattr(obj, "type", "") != "MESH":
+            continue
+        try:
+            vis = bool(obj.visible_get(view_layer=view_layer)) if view_layer else bool(obj.visible_get())
+        except Exception:
+            vis = not bool(getattr(obj, "hide_render", False))
+        if not vis or bool(getattr(obj, "hide_render", False)):
+            continue
+        had_holdout = False
+        had_shadow = False
+        try:
+            if hasattr(obj, "is_holdout"):
+                had_holdout = bool(obj.is_holdout)
+                if had_holdout:
+                    obj.is_holdout = False
+                    changed_holdout += 1
+        except Exception:
+            pass
+        try:
+            if hasattr(obj, "is_shadow_catcher"):
+                had_shadow = bool(obj.is_shadow_catcher)
+                if had_shadow:
+                    obj.is_shadow_catcher = False
+                    changed_shadow += 1
+        except Exception:
+            pass
+        if had_holdout:
+            visible_holdout += 1
+        if had_shadow:
+            visible_shadow += 1
+    print(
+        f"[vpg] holdout_shadow_guard visible_holdout={visible_holdout} "
+        f"visible_shadow_catcher={visible_shadow} changed_holdout={changed_holdout} "
+        f"changed_shadow_catcher={changed_shadow}",
+        flush=True,
+    )
+
+
+def _clear_view_layer_collection_masks(scene):
+    """
+    Clear per-view-layer collection flags that can force transparent output.
+    These are distinct from object-level holdout/shadow-catcher flags.
+    """
+    changed_exclude = 0
+    changed_holdout = 0
+    changed_indirect = 0
+    try:
+        for vl in scene.view_layers:
+            stack = [vl.layer_collection]
+            while stack:
+                lc = stack.pop()
+                try:
+                    if bool(getattr(lc, "exclude", False)):
+                        lc.exclude = False
+                        changed_exclude += 1
+                except Exception:
+                    pass
+                try:
+                    if bool(getattr(lc, "holdout", False)):
+                        lc.holdout = False
+                        changed_holdout += 1
+                except Exception:
+                    pass
+                try:
+                    if bool(getattr(lc, "indirect_only", False)):
+                        lc.indirect_only = False
+                        changed_indirect += 1
+                except Exception:
+                    pass
+                try:
+                    stack.extend(list(getattr(lc, "children", []) or []))
+                except Exception:
+                    pass
+    except Exception as ex:
+        print(f"[vpg] view_layer_collection_guard failed: {ex}", flush=True)
+        return
+    print(
+        f"[vpg] view_layer_collection_guard changed_exclude={changed_exclude} "
+        f"changed_holdout={changed_holdout} changed_indirect_only={changed_indirect}",
+        flush=True,
+    )
+
+
 def _ensure_world_hdri_usable(scene):
     """
     Best-effort recovery for headless runs where env.image exists but stays has_data=False.
@@ -706,6 +804,12 @@ def main(director_path, outpath):
         scene.render.film_transparent = bool(transparent)
     except Exception:
         pass
+    # Keep Cycles-specific film transparency in sync (matches character export behavior).
+    try:
+        if hasattr(scene, "cycles") and hasattr(scene.cycles, "film_transparent"):
+            scene.cycles.film_transparent = bool(transparent)
+    except Exception:
+        pass
     # Decide output mode: video vs image sequence
     # - `--frames` forces PNG output regardless of transparency (useful for debugging).
     output_frames = bool(CLI_FRAMES or transparent)
@@ -759,7 +863,9 @@ def main(director_path, outpath):
         scene.render.engine = "BLENDER_WORKBENCH"
     elif engine_opt in ("cycles", "blender_cycles"):
         scene.render.engine = "CYCLES"
-        # Configure Cycles GPU (prefer OPTIX, fallback CUDA)
+        # Configure Cycles GPU backend order.
+        # In some headless/container stacks, OPTIX can produce fully-transparent alpha
+        # even when RGB is present, so prefer CUDA first when rendering transparent frames.
         try:
             # Pull run settings (samples) if available
             run_cfg = gen_inputs.get("run") or {}
@@ -773,8 +879,16 @@ def main(director_path, outpath):
         try:
             prefs = bpy.context.preferences
             cprefs = prefs.addons["cycles"].preferences
-            # Try OPTIX first
-            for backend in ("OPTIX", "CUDA"):
+            backend_order_env = str(os.environ.get("VPG_CYCLES_BACKENDS") or "").strip().upper()
+            if backend_order_env:
+                backend_order = [b.strip() for b in backend_order_env.split(",") if b.strip() in ("CUDA", "OPTIX")]
+            else:
+                backend_order = ["CUDA", "OPTIX"] if transparent else ["OPTIX", "CUDA"]
+            if not backend_order:
+                backend_order = ["CUDA", "OPTIX"] if transparent else ["OPTIX", "CUDA"]
+            print(f"[cycles] backend order={backend_order} transparent={bool(transparent)}", flush=True)
+
+            for backend in backend_order:
                 try:
                     cprefs.compute_device_type = backend
                     # Refresh devices
@@ -970,6 +1084,7 @@ def main(director_path, outpath):
             f"use_compositing={getattr(scene.render, 'use_compositing', None)} "
             f"use_sequencer={getattr(scene.render, 'use_sequencer', None)} "
             f"film_transparent={getattr(scene.render, 'film_transparent', None)} "
+            f"cycles.film_transparent={getattr(getattr(scene,'cycles',None),'film_transparent',None)} "
             f"cycles.samples={getattr(getattr(scene,'cycles',None),'samples',None)} "
             f"eevee.taa_render_samples={getattr(ee,'taa_render_samples',None)}",
             flush=True,
@@ -1105,6 +1220,10 @@ def main(director_path, outpath):
     except Exception as ex:
         print(f"[vpg] light diagnostics unavailable: {ex}", flush=True)
 
+    # Ensure no render-visible holdout/shadow catcher objects can zero alpha output.
+    _disable_holdout_shadow_catcher(scene)
+    _clear_view_layer_collection_masks(scene)
+
     try:
         if scene.render.engine == "CYCLES":
             c = scene.cycles
@@ -1218,6 +1337,7 @@ def main(director_path, outpath):
         return
 
     # Configure output path
+    frames_dir = None
     if output_frames:
         # Write frames to out/<stem>_frames/<stem>_####.png
         out_p = Path(outpath)
@@ -1237,6 +1357,47 @@ def main(director_path, outpath):
         scene.render.filepath = str(frames_dir / f"{out_p.stem}_####")
     else:
         scene.render.filepath = str(Path(outpath))
+
+    def _log_alpha_probe() -> None:
+        if not output_frames or not transparent or not frames_dir:
+            return
+        try:
+            sample = sorted(frames_dir.glob("*.png"))
+            if not sample:
+                print("[vpg] alpha_probe no_png_frames_found", flush=True)
+                return
+            p = sample[min(5, len(sample) - 1)]
+            img = bpy.data.images.load(str(p), check_existing=False)
+            try:
+                px = img.pixels
+                total_px = int(len(px) // 4) if px else 0
+                if total_px <= 0:
+                    print(f"[vpg] alpha_probe frame={p.name} pixels=0", flush=True)
+                    return
+                # Sample alpha channel for fast diagnostics in headless render workers.
+                step = max(1, total_px // 50000)
+                nonzero = 0
+                sampled = 0
+                alpha_sum = 0.0
+                for i in range(3, len(px), 4 * step):
+                    a = float(px[i])
+                    sampled += 1
+                    alpha_sum += a
+                    if a > 1e-6:
+                        nonzero += 1
+                mean_a = (alpha_sum / sampled) if sampled else 0.0
+                print(
+                    f"[vpg] alpha_probe frame={p.name} sampled={sampled} "
+                    f"nonzero={nonzero} mean_alpha={mean_a:.6f}",
+                    flush=True,
+                )
+            finally:
+                try:
+                    bpy.data.images.remove(img)
+                except Exception:
+                    pass
+        except Exception as ex:
+            print(f"[vpg] alpha_probe failed: {ex}", flush=True)
     # Optional: very fast Viewport Render Animation (requires running Blender with a UI, not -b)
     if CLI_VIEWPORT_RENDER:
         if getattr(bpy.app, "background", True):
@@ -1263,6 +1424,7 @@ def main(director_path, outpath):
     # Render (with a denoiser fallback for OptiX denoiser failures).
     try:
         bpy.ops.render.render(animation=True)
+        _log_alpha_probe()
     except Exception as ex:
         msg = str(ex)
         # OptiX denoiser can fail in some headless/container setups even when OptiX rendering works.
@@ -1287,6 +1449,7 @@ def main(director_path, outpath):
                 except Exception:
                     pass
                 bpy.ops.render.render(animation=True)
+                _log_alpha_probe()
                 return
             except Exception:
                 print("[cycles] OIDN retry failed; retrying with denoising OFF ...", flush=True)
@@ -1298,10 +1461,73 @@ def main(director_path, outpath):
                         except Exception:
                             pass
                     bpy.ops.render.render(animation=True)
+                    _log_alpha_probe()
                     return
                 except Exception:
                     pass
         raise
+
+
+def run_with_options(
+    director_path: str,
+    outpath: str,
+    *,
+    lead_frames=None,
+    time_offset_sec=None,
+    smooth_factor=None,
+    quality=None,
+    engine=None,
+    prepare_viewport_blend=None,
+    viewport_render=False,
+    no_render=False,
+    frames=False,
+    transparent=False,
+    opaque=False,
+    frame_start=None,
+    frame_end=None,
+    max_frame_end=None,
+    no_clean_frames=False,
+    no_audio=False,
+):
+    global CLI_LEAD_FRAMES, CLI_TIME_OFFSET_SEC, CLI_SMOOTH_FACTOR, CLI_ENGINE
+    global CLI_PREPARE_VIEWPORT_BLEND, CLI_VIEWPORT_RENDER, CLI_NO_RENDER
+    global CLI_FRAMES, CLI_TRANSPARENT, CLI_OPAQUE
+    global CLI_FRAME_START, CLI_FRAME_END, CLI_MAX_FRAME_END
+    global CLI_NO_CLEAN_FRAMES, CLI_NO_AUDIO
+    CLI_LEAD_FRAMES = lead_frames
+    CLI_TIME_OFFSET_SEC = time_offset_sec
+    CLI_SMOOTH_FACTOR = smooth_factor
+    CLI_ENGINE = engine
+    CLI_PREPARE_VIEWPORT_BLEND = prepare_viewport_blend
+    CLI_VIEWPORT_RENDER = bool(viewport_render)
+    CLI_NO_RENDER = bool(no_render)
+    CLI_FRAMES = bool(frames)
+    CLI_TRANSPARENT = bool(transparent)
+    CLI_OPAQUE = bool(opaque)
+    CLI_FRAME_START = frame_start
+    CLI_FRAME_END = frame_end
+    CLI_MAX_FRAME_END = max_frame_end
+    CLI_NO_CLEAN_FRAMES = bool(no_clean_frames)
+    CLI_NO_AUDIO = bool(no_audio)
+
+    if quality:
+        try:
+            data = json.loads(Path(director_path).read_text())
+            data.setdefault("render", {})["quality"] = quality
+            tmp = Path(director_path).with_suffix(".tmp.json")
+            tmp.write_text(json.dumps(data))
+            try:
+                main(str(tmp), outpath)
+            finally:
+                try:
+                    tmp.unlink()
+                except Exception:
+                    pass
+            return
+        except Exception:
+            pass
+    main(director_path, outpath)
+
 
 if __name__ == "__main__":
     import sys as _sys, argparse as _argparse
@@ -1343,37 +1569,25 @@ if __name__ == "__main__":
                 print(f"[run_director_visemes] Using output: {args.out}")
                 break
             i += 1
-    CLI_LEAD_FRAMES = args.lead_frames
-    CLI_TIME_OFFSET_SEC = args.time_offset_sec
-    CLI_SMOOTH_FACTOR = args.smooth_factor
-    CLI_ENGINE = args.engine
-    CLI_PREPARE_VIEWPORT_BLEND = args.prepare_viewport_blend
-    CLI_VIEWPORT_RENDER = bool(args.viewport_render)
-    CLI_NO_RENDER = bool(args.no_render)
-    CLI_FRAMES = bool(args.frames)
-    CLI_TRANSPARENT = bool(args.transparent)
-    CLI_OPAQUE = bool(args.opaque)
-    CLI_FRAME_START = args.frame_start
-    CLI_FRAME_END = args.frame_end
-    CLI_MAX_FRAME_END = args.max_frame_end
-    CLI_NO_CLEAN_FRAMES = bool(args.no_clean_frames)
-    CLI_NO_AUDIO = bool(args.no_audio)
-
-    # If CLI quality provided, inject into director JSON at runtime
-    if args.quality:
-        try:
-            data = json.loads(Path(args.director).read_text())
-            data.setdefault("render", {})["quality"] = args.quality
-            tmp = Path(args.director).with_suffix(".tmp.json")
-            tmp.write_text(json.dumps(data))
-            main(str(tmp), args.out)
-            try:
-                tmp.unlink()
-            except Exception:
-                pass
-        except Exception:
-            main(args.director, args.out)
-    else:
-        main(args.director, args.out)
+    run_with_options(
+        args.director,
+        args.out,
+        lead_frames=args.lead_frames,
+        time_offset_sec=args.time_offset_sec,
+        smooth_factor=args.smooth_factor,
+        quality=args.quality,
+        engine=args.engine,
+        prepare_viewport_blend=args.prepare_viewport_blend,
+        viewport_render=bool(args.viewport_render),
+        no_render=bool(args.no_render),
+        frames=bool(args.frames),
+        transparent=bool(args.transparent),
+        opaque=bool(args.opaque),
+        frame_start=args.frame_start,
+        frame_end=args.frame_end,
+        max_frame_end=args.max_frame_end,
+        no_clean_frames=bool(args.no_clean_frames),
+        no_audio=bool(args.no_audio),
+    )
 
 

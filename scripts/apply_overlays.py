@@ -626,6 +626,43 @@ def main():
     logo_w = 261
     logo_mx = 20
     logo_my = 20
+    # Global copyright text (applied within existing encode passes).
+    copyright_enabled = bool(cfg.get("copyright_enabled", True)) if (cfg and can_drawtext) else False
+    copyright_fontsize = int(cfg.get("copyright_fontsize", 12)) if cfg else 12
+    copyright_color = str(cfg.get("copyright_color", "white")) if cfg else "white"
+    copyright_margin_x = int(cfg.get("copyright_margin_x", 20)) if cfg else 20
+    # Move the note 20px lower than previous default placement.
+    copyright_margin_y = int(cfg.get("copyright_margin_y", 10)) if cfg else 10
+    copyright_text = (
+        str(cfg.get("copyright_text", "© 2026 MediatorSPARK. All rights reserved."))
+        if cfg
+        else "© 2026 MediatorSPARK. All rights reserved."
+    )
+    _copyright_font = None
+    if getattr(args, "labels_fontfile", None):
+        _copyright_font = str(Path(args.labels_fontfile))
+    elif getattr(args, "intro_fontfile", None):
+        _copyright_font = str(Path(args.intro_fontfile))
+    else:
+        _default_font = Path("/Library/Fonts/Inter.ttf")
+        if _default_font.exists():
+            _copyright_font = str(_default_font)
+    _line_parts = [
+        f"text='{copyright_text}'",
+        f"fontcolor={copyright_color}",
+        f"fontsize={copyright_fontsize}",
+        f"x={copyright_margin_x}",
+        f"y=h-th-{copyright_margin_y}",
+    ]
+    if _copyright_font:
+        _line_parts.insert(0, f"fontfile='{_copyright_font}'")
+    _copyright_drawtext_chain = f"drawtext={':'.join(_line_parts)}"
+
+    def _apply_copyright_to_filter_parts(parts: list[str], in_tag: str, out_tag: str) -> str:
+        if not copyright_enabled:
+            return in_tag
+        parts.append(f"[{in_tag}]{_copyright_drawtext_chain}[{out_tag}]")
+        return out_tag
     # Determine pre-roll in seconds
     if float(args.pre_roll_sec) > 0.0:
         pre_roll_sec = float(args.pre_roll_sec)
@@ -860,6 +897,7 @@ def main():
 
         base_labels = str(Path(out_path).with_suffix(".pre_slates.mp4"))
         print("[apply_overlays] Compositing labels/icon (pre-slate) →", base_labels)
+        final_stream = _apply_copyright_to_filter_parts(filter_parts, final_stream, "v_phase1_copyright")
         _dur_cap = base_video_s or base_format_s
         _phase1_limit = ["-t", f"{_dur_cap + 2.0:.3f}"] if _dur_cap else ["-shortest"]
         cmd = input_args + [
@@ -880,20 +918,40 @@ def main():
         _logo_limit = ["-t", f"{_dur_cap + 2.0:.3f}"] if _dur_cap else ["-shortest"]
         if have_logo:
             print("[apply_overlays] No [OVERLAY] markers; applying permanent logo overlay → out")
+            no_overlay_filter = (
+                f"[1:v]scale={logo_w}:-1,format=rgba[lg];"
+                f"[0:v][lg]overlay=x=(main_w-overlay_w-{logo_mx}):y=(main_h-overlay_h-{logo_my}):format=auto[v]"
+            )
+            no_overlay_map = "[v]"
+            if copyright_enabled:
+                no_overlay_filter += f";[v]{_copyright_drawtext_chain}[vwm]"
+                no_overlay_map = "[vwm]"
             run([
                 "ffmpeg", "-y",
                 "-i", base_for_pause,
                 "-loop", "1", "-i", logo_path,
-                "-filter_complex", f"[1:v]scale={logo_w}:-1,format=rgba[lg];[0:v][lg]overlay=x=(main_w-overlay_w-{logo_mx}):y=(main_h-overlay_h-{logo_my}):format=auto[v]",
-                "-map", "[v]", "-map", "0:a?",
+                "-filter_complex", no_overlay_filter,
+                "-map", no_overlay_map, "-map", "0:a?",
                 "-c:v", "libx264", "-crf", str(int(args.crf)), "-pix_fmt", "yuv420p", "-r", str(int(fps)),
                 "-c:a", "copy",
             ] + _logo_limit + [
                 out_path
             ])
         else:
-            print("[apply_overlays] No [OVERLAY] markers found or could not align; copying base → out")
-            run(["ffmpeg", "-y", "-i", base_for_pause, "-c", "copy", out_path])
+            if copyright_enabled:
+                print("[apply_overlays] No [OVERLAY] markers; writing base with copyright text → out")
+                run([
+                    "ffmpeg", "-y",
+                    "-i", base_for_pause,
+                    "-vf", _copyright_drawtext_chain,
+                    "-map", "0:v:0", "-map", "0:a?",
+                    "-c:v", "libx264", "-crf", str(int(args.crf)), "-pix_fmt", "yuv420p", "-r", str(int(fps)),
+                    "-c:a", "copy",
+                    out_path,
+                ])
+            else:
+                print("[apply_overlays] No [OVERLAY] markers found or could not align; copying base → out")
+                run(["ffmpeg", "-y", "-i", base_for_pause, "-c", "copy", out_path])
     else:
         # Build segments
         workdir = Path(tempfile.mkdtemp(prefix="overlays_"))
@@ -1273,6 +1331,7 @@ def main():
             "ffmpeg", "-y",
             "-f", "concat", "-safe", "0",
             "-i", str(concat_list),
+            *(["-vf", _copyright_drawtext_chain] if copyright_enabled else []),
             # Re-encode final output to eliminate AAC priming/timestamp discontinuities
         ] + v_enc + a_enc + [out_path])
         print("[apply_overlays] Done.")
@@ -1734,6 +1793,7 @@ def main():
                 f"[{cur}][lg]overlay=x=(main_w-overlay_w-{logo_mx}):y=(main_h-overlay_h-{logo_my}):format=auto:enable='between(t,0,{intro_total:.3f})'[vlogo]"
             )
             cur = "vlogo"
+        cur = _apply_copyright_to_filter_parts(filter_parts, cur, "v_intro2_copyright")
 
         intro_mp4 = tmp_dir / "intro2.mp4"
         cmd = input_args + [
@@ -1806,12 +1866,16 @@ def main():
             f"fade=t=out:st={max(0.0,intro_d-intro_fade)}:d={intro_fade}[v0];"
             f"[v0]drawtext={drawtext_opts}[v1]"
         )
+        intro_video_tag = "[v1]"
+        if copyright_enabled:
+            filter_intro = f"{filter_intro};[v1]{_copyright_drawtext_chain}[v1wm]"
+            intro_video_tag = "[v1wm]"
         run([
             "ffmpeg", "-y",
             "-loop", "1", "-framerate", str(int(fps)), "-t", f"{intro_d:.3f}", "-i", intro_bg,
             "-f", "lavfi", "-t", f"{intro_d:.3f}", "-i", "anullsrc=channel_layout=stereo:sample_rate=48000",
             "-filter_complex", filter_intro,
-            "-map", "[v1]", "-map", "1:a",
+            "-map", intro_video_tag, "-map", "1:a",
             "-c:v", "libx264", "-crf", str(int(args.crf)), "-pix_fmt", "yuv420p", "-r", str(int(fps)),
             "-c:a", "aac", "-b:a", args.audio_bitrate,
             "-shortest",
@@ -1853,13 +1917,18 @@ def main():
             final_card = tmp_dir / "final_card.mp4"
             final_merged = tmp_dir / "final_merged.mp4"
             # Build the end-card clip as full-screen video with silent audio.
+            final_card_filter = f"[0:v]scale=w={tgt_w}:h={tgt_h}:force_original_aspect_ratio=increase,crop={tgt_w}:{tgt_h},format=rgba[v]"
+            final_card_map = "[v]"
+            if copyright_enabled:
+                final_card_filter = f"{final_card_filter};[v]{_copyright_drawtext_chain}[vwm]"
+                final_card_map = "[vwm]"
             run([
                 "ffmpeg", "-y",
                 "-loop", "1", "-framerate", str(int(fps)), "-t", f"{final_overlay_duration:.3f}", "-i", str(final_overlay_path),
                 "-f", "lavfi", "-t", f"{final_overlay_duration:.3f}", "-i", "anullsrc=channel_layout=stereo:sample_rate=48000",
                 "-filter_complex",
-                f"[0:v]scale=w={tgt_w}:h={tgt_h}:force_original_aspect_ratio=increase,crop={tgt_w}:{tgt_h},format=rgba[v]",
-                "-map", "[v]", "-map", "1:a",
+                final_card_filter,
+                "-map", final_card_map, "-map", "1:a",
                 "-c:v", "libx264", "-crf", str(int(args.crf)), "-pix_fmt", "yuv420p", "-r", str(int(fps)),
                 "-c:a", "aac", "-b:a", args.audio_bitrate,
                 "-shortest",
@@ -1896,7 +1965,6 @@ def main():
             print(f"[apply_overlays] Appended final overlay card: {final_overlay_path} ({final_overlay_duration:.2f}s, fade={xf_d:.2f}s)")
         else:
             print("[apply_overlays] Warning: could not determine output duration; skipping final overlay fade append.")
-
 
 if __name__ == "__main__":
     main()

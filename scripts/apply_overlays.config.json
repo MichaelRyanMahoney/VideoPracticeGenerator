@@ -55,10 +55,10 @@
     "table_width": 1400,
     "y_offset": 235,
     "chars": [
-      { "role": "d1", "image": "../out/exports/characters/Char_01_Disputant1.png", "appear": 0.5 },
-      { "role": "d2", "image": "../out/exports/characters/Char_04_Disputant2.png", "appear": 0.5 },
       { "role": "ma", "image": "../out/exports/characters/Char_02_MediatorA.png", "appear": 3.5 },
-      { "role": "mb", "image": "../out/exports/characters/Char_03_MediatorB.png", "appear": 3.5 }
+      { "role": "mb", "image": "../out/exports/characters/Char_03_MediatorB.png", "appear": 3.5 },
+      { "role": "d1", "image": "../out/exports/characters/Char_01_Disputant1.png", "appear": 0.5 },
+      { "role": "d2", "image": "../out/exports/characters/Char_04_Disputant2.png", "appear": 0.5 }
     ]
   },
 

@@ -125,39 +125,16 @@ def main():
         if args.scene_s3:
             # Use prepared scene (already has role collections + configured materials/selectors)
             s3_download(s3, args.scene_s3, ts_scene)
+            input_scene = ts_scene
+            base_scene_path = None
         else:
             base_scene = cfg.get("base_scene_blend") or "scenes/base_scene.blend"
             base_scene_path = (project_root / base_scene).resolve()
             if not base_scene_path.exists():
                 raise SystemExit(f"Base scene not found: {base_scene_path}")
-            ts_scene.write_bytes(base_scene_path.read_bytes())
-            ts_scene_cfg = work / "work_scene_configured.blend"
-            cfg_script = project_root / "scripts" / "blender_configure_roles_for_render.py"
-            run_cmd(pre + [
-                str(blender_bin), "-b", str(ts_scene),
-                "--python-exit-code", "1",
-                "--python", str(cfg_script),
-                "--", "--config", str(local_gen_inputs), "--save-as", str(ts_scene_cfg)
-            ])
-            ts_scene = ts_scene_cfg
+            input_scene = None
 
-        # Safety: force HDRI/world configuration immediately before render.
-        # This guards against stale/missing world data in prepared scenes and keeps
-        # render-worker behavior deterministic across environments.
-        cfg_script = project_root / "scripts" / "blender_configure_roles_for_render.py"
-        ts_scene_reassert = work / "work_scene_pre_render.blend"
-        run_cmd(pre + [
-            str(blender_bin), "-b", str(ts_scene),
-            "--python-exit-code", "1",
-            "--python", str(cfg_script),
-            "--",
-            "--config", str(local_gen_inputs),
-            "--hdri_from_config", str(cfg_path),
-            "--save-as", str(ts_scene_reassert),
-        ])
-        ts_scene = ts_scene_reassert
-
-        # Render the requested range with transparent frames
+        # Render the requested range with transparent frames using single-process Blender pipeline.
         # Use a unique output per run to avoid cross-job contamination.
         run_id = uuid.uuid4().hex[:8]
         try:
@@ -176,25 +153,29 @@ def main():
         if frames_dir.exists():
             shutil.rmtree(frames_dir, ignore_errors=True)
         start_ts = time.time()
-        run_director_py = project_root / "scripts" / "run_director_visemes.py"
+        single_blender_py = project_root / "scripts" / "blender_pipeline_single_process.py"
         render_cmd = pre + [
-            str(blender_bin), "-b", str(ts_scene),
+            str(blender_bin), "-b", str((input_scene or base_scene_path or ts_scene)),
             "--python-exit-code", "1",
-            "--python", str(run_director_py),
+            "--python", str(single_blender_py),
             "--",
-            "--director", str(local_director),
-            "--out", str(out_video),
+            "--generator_inputs_json", str(local_gen_inputs),
+            "--run_configure_roles",
+            "--hdri_from_config", str(cfg_path),
+            "--director_json", str(local_director),
+            "--out_video", str(out_video),
             "--frame_start", str(int(args.frame_start)),
             "--frame_end", str(int(args.frame_end)),
             "--no_audio",
-            "--no_clean_frames",
         ]
+        if input_scene:
+            render_cmd += ["--input_scene", str(input_scene)]
+        else:
+            render_cmd += ["--base_scene_blend", str(base_scene_path), "--work_scene", str(ts_scene)]
         if engine_cli:
             render_cmd += ["--engine", engine_cli]
         if quality_cli:
             render_cmd += ["--quality", quality_cli]
-        if args.transparent:
-            render_cmd.append("--transparent")
         run_cmd(render_cmd)
 
         # Upload frames back to S3

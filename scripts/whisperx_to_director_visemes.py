@@ -251,7 +251,7 @@ def _ensure_local_audio(audio_ref: str, cache_dir: Path, s3) -> str:
         _s3_download(s3, audio_ref, local)
     return str(local.resolve())
 
-def batch_mode(manifest_csv, generator_inputs_json, fps, out_path, gap_sec=0.35, strategy="onset_plus_vowel", max_events_per_word=2, min_event_gap_sec=0.08, collapse_adjacent=True, audio_cache_dir: str = ""):
+def batch_mode(manifest_csv, generator_inputs_json, fps, out_path, gap_sec=0.75, strategy="onset_plus_vowel", max_events_per_word=2, min_event_gap_sec=0.08, collapse_adjacent=True, audio_cache_dir: str = ""):
     align_model, metadata, device_align = load_aligner()
     g2p = make_g2p()
 
@@ -390,7 +390,7 @@ def _parse_stage_from_script(script_path: str) -> tuple[dict, str, int]:
             i += 1
     return pauses_after, start_mediator, pauses_before_first
 
-def batch_mode_with_stage(manifest_csv, generator_inputs_json, fps, out_path, script_txt=None, gap_sec=0.5, strategy="onset_plus_vowel", max_events_per_word=2, min_event_gap_sec=0.08, collapse_adjacent=True, pause_seconds=0.5, audio_cache_dir: str = ""):
+def batch_mode_with_stage(manifest_csv, generator_inputs_json, fps, out_path, script_txt=None, gap_sec=0.75, strategy="onset_plus_vowel", max_events_per_word=2, min_event_gap_sec=0.08, collapse_adjacent=True, pause_seconds=0.5, audio_cache_dir: str = ""):
     align_model, metadata, device_align = load_aligner()
     g2p = make_g2p()
 
@@ -537,7 +537,7 @@ def main():
     ap.add_argument("--generator_inputs_json", help="Path to manifests/generator_inputs.json; used to validate roles", default=str(Path(__file__).resolve().parents[1] / "manifests" / "generator_inputs.json"))
     ap.add_argument("--fps", type=int, default=24)
     ap.add_argument("--out", default="director_visemes.json")
-    ap.add_argument("--gap_sec", type=float, default=0.5, help="Pause inserted between lines (seconds)")
+    ap.add_argument("--gap_sec", type=float, default=0.75, help="Pause inserted between lines (seconds)")
     ap.add_argument("--strategy", choices=["vowel_only","onset_plus_vowel","all"], default="onset_plus_vowel", help="Event selection per word")
     ap.add_argument("--max_events_per_word", type=int, default=2, help="Cap number of viseme events per word")
     ap.add_argument("--min_event_gap_sec", type=float, default=0.08, help="Minimum time between consecutive viseme events")

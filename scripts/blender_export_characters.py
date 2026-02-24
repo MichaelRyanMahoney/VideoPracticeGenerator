@@ -442,6 +442,39 @@ def main(argv: list[str]) -> int:
     return 0
 
 
+def run_with_options(
+    *,
+    output_dir: str,
+    roles: list[str] | None = None,
+    objects: list[str] | None = None,
+    file_prefix: str = "Char",
+    image_width: int = 1200,
+    image_height: int = 0,
+    camera: str = "",
+    hdri_path: str = "",
+    hdri_strength: float = 0.7,
+    generator_inputs_json: str = "",
+) -> int:
+    argv: list[str] = ["--output-dir", output_dir]
+    if roles:
+        argv += ["--roles", *roles]
+    if objects:
+        argv += ["--objects", *objects]
+    argv += ["--file-prefix", str(file_prefix)]
+    argv += ["--image-width", str(int(image_width))]
+    if int(image_height) > 0:
+        argv += ["--image-height", str(int(image_height))]
+    if camera:
+        argv += ["--camera", str(camera)]
+    if hdri_path:
+        argv += ["--hdri_path", str(hdri_path)]
+    if hdri_strength is not None:
+        argv += ["--hdri_strength", str(float(hdri_strength))]
+    if generator_inputs_json:
+        argv += ["--generator_inputs_json", str(generator_inputs_json)]
+    return main(argv)
+
+
 if __name__ == "__main__":
     # Blender passes args after '--' to this script
     # Find the separator and pass the rest to argparse

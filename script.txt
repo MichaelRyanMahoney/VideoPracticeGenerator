@@ -1,6 +1,6 @@
 TITLE: Caleb & Aria
 PROJECT: Mock Scenario
-VERSION: 02/20/2026
+VERSION: 02/24/2026
 
 DISPUTANT 1 NAME: Caleb
 DISPUTANT 1 PROFILE: 6th Grade Boy
@@ -53,18 +53,32 @@ Caleb agrees to move to a different open seat in music class if Aria asks to hav
 AGREEMENT – D2:
 Aria agrees to tell Caleb it’s her usual seat without calling him annoying or insulting him in front of others.
 
+
+
+
+
+
 ### STEP 1: PRESENT YOURSELF AND PEER MEDIATION
 MEDIATOR A (EMILY)
 “Hi! You’ve been asked to do a peer mediation. You’re not in trouble and I’ll explain more once we sit down. Please come with me.”
 
+[PAUSE]
+
 MEDIATOR A (EMILY)
 “Hello! My name is Emily. This is Michael and we are your peer mediators. What are your names?”
 
+[PAUSE]
+
 DISPUTANT 1 (CALEB)
-“Caleb.”
+“I’m Caleb.”
+
+[PAUSE]
 
 DISPUTANT 2 (ARIA)
-“Aria.”
+“I’m Aria.”
+
+[PAUSE]
+[PAUSE]
 
 MEDIATOR A (EMILY)
 “You’re not in trouble. We heard you had a disagreement. This is peer mediation, where students can work things out together. We won’t share what you say with other students.”
@@ -75,18 +89,22 @@ MEDIATOR A (EMILY)
 MEDIATOR A (EMILY)
 “We can help you resolve things here, instead of in the office. Does that sound okay?”
 
+[PAUSE]
+
 DISPUTANT 1 (CALEB)
 “Yeah… okay.”
 
-DISPUTANT 2 (ARIA)
-“Okay.”
+[PAUSE]
 
+DISPUTANT 2 (ARIA)
+“Yeah.”
+
+### STEP 2: EXPLAIN THE RULES
 [PAUSE]
 [ProcessFormSwap]
 [PAUSE]
 [PAUSE]
 
-### STEP 2: EXPLAIN THE RULES
 MEDIATOR B (MICHAEL)
 “To have a good mediation, there are a few rules we all need to follow.”
 
@@ -98,50 +116,51 @@ MEDIATOR B (MICHAEL)
 
 MEDIATOR B (MICHAEL)
 “The Respect Rule is for all of us. We have to speak respectfully. Do you both agree to the rules?”
+[PAUSE]
 
 DISPUTANT 1 (CALEB)
 “Yeah, I agree.”
 
+[PAUSE]
+
 DISPUTANT 2 (ARIA)
 “I agree.”
 
+### STEP 3: ASK BOTH SIDES TO SHARE
 [PAUSE]
 [ProcessFormSwap]
 [PAUSE]
 [PAUSE]
 
-### STEP 3: ASK BOTH SIDES TO SHARE
 MEDIATOR A (EMILY)
-“We want to hear both of your perspectives on what we were told: When music class was starting, Caleb and Aria started arguing about who should sit in a seat by the instruments cart while other students were watching. The music teacher had stepped into the storage room to grab drumsticks, and neither of them would move.”
+“We want to hear both of your perspectives on what we were told”
+
+[PAUSE]
+[PAUSE]
+
+MEDIATOR A (EMILY)
+“When music class was starting, Caleb and Aria started arguing about who should sit in a seat by the instruments cart while other students were watching. The music teacher had stepped into the storage room to grab drumsticks, and neither of them would move.”
+
+[PAUSE]
+[PAUSE]
 
 MEDIATOR A (EMILY)
 “Caleb, from your perspective, what happened between you two?”
 
 [PAUSE]
+[PAUSE]
 
 DISPUTANT 1 (CALEB)
-“Umm… I sat down by the instruments cart because it was open.”
+“Okay, so… I sat down by the instruments cart.”
 
 DISPUTANT 1 (CALEB)
-“And Aria told me I was in her spot, and she called me ‘annoying’ and said I always sit in the wrong spot.”
+“Then Aria was like, ‘That’s my seat,’ and she called me annoying.”
 
 DISPUTANT 1 (CALEB)
-“I didn’t know she usually sits there. I thought you could sit anywhere if you got there first.”
-
-MEDIATOR A (EMILY)
-“What I heard you say is: you sat in an open seat near the instruments cart, and you didn’t know Aria usually sits there.”
-
-MEDIATOR A (EMILY)
-“And you felt called out when she said you were ‘annoying’ and said you always sit in the wrong spot, especially because other students were watching. Is that right?”
+“She said I always sit in the wrong spot, and everyone was looking.”
 
 DISPUTANT 1 (CALEB)
-“Yeah. That’s right.”
-
-MEDIATOR A (EMILY)
-“Is there anything else you want to share about what happened?”
-
-DISPUTANT 1 (CALEB)
-“No. That’s basically it.”
+“I didn’t even know she usually sits there. I thought you could sit anywhere if you got there first.”
 
 [PAUSE]
 [PAUSE]
@@ -150,33 +169,40 @@ DISPUTANT 1 (CALEB)
 [PAUSE]
 
 MEDIATOR A (EMILY)
+“What I heard you say is you sat there because you thought it was open, and you didn’t know Aria usually sits there.”
+
+MEDIATOR A (EMILY)
+“And when she called you ‘annoying’ and said you sit in the wrong spot, it felt like you got called out in front of everyone. Is that right?”
+
+DISPUTANT 1 (CALEB)
+“Yeah. That’s it.”
+
+MEDIATOR A (EMILY)
+“Is there anything else you want to share about what happened?”
+
+DISPUTANT 1 (CALEB)
+“No, that’s basically it.”
+
+MEDIATOR A (EMILY)
+“Thanks, Caleb.”
+
+MEDIATOR A (EMILY)
 “Aria, from your perspective, what happened between you two?”
 
 [PAUSE]
+[PAUSE]
 
 DISPUTANT 2 (ARIA)
-“I walked in and Caleb was sitting in the seat I usually sit in.”
+“Umm… I always sit in that seat in music.”
 
 DISPUTANT 2 (ARIA)
-“It’s like my normal spot in music, and it’s near my friends.”
+“It’s near my friends.”
 
 DISPUTANT 2 (ARIA)
-“I told him that, but he wasn’t listening. He just stayed there, and I got really frustrated.”
-
-MEDIATOR A (EMILY)
-“What I heard you say is: Caleb took the seat you usually sit in during music class, and when you tried to tell him it’s your normal spot, you felt like he ignored you and wouldn’t move.”
-
-MEDIATOR A (EMILY)
-“Is that accurate?”
+“And Caleb just took it, and I told him it’s my normal spot, but he wasn’t listening.”
 
 DISPUTANT 2 (ARIA)
-“Yeah. That’s accurate.”
-
-MEDIATOR A (EMILY)
-“Is there anything else you want to add?”
-
-DISPUTANT 2 (ARIA)
-“No.”
+“He just stayed there, and it got like… awkward because people were watching.”
 
 [PAUSE]
 [PAUSE]
@@ -185,34 +211,57 @@ DISPUTANT 2 (ARIA)
 [PAUSE]
 
 MEDIATOR A (EMILY)
-“Okay. Now a couple questions about what bothered you most, and how you felt.”
+“What I heard you say is that’s your usual seat in music class, and you tried to tell Caleb, but it felt like he didn’t listen and wouldn’t move.”
+
+MEDIATOR A (EMILY)
+“Is that accurate?”
+
+DISPUTANT 2 (ARIA)
+“Yeah.”
+
+MEDIATOR A (EMILY)
+“Is there anything else you want to add?”
+
+DISPUTANT 2 (ARIA)
+ “Not really.”
+
+MEDIATOR A (EMILY)
+“Okay.”
+
+[PAUSE]
+[PAUSE]
 
 MEDIATOR A (EMILY)
 “Caleb, what bothered you most in this situation?”
 
 DISPUTANT 1 (CALEB)
-“Being called out in front of everybody.”
+“Getting called out in front of the class.”
+
+[PAUSE]
 
 MEDIATOR A (EMILY)
 “How did you feel when Aria called you annoying while other students were watching?”
 
 DISPUTANT 1 (CALEB)
-“I felt put on the spot. Like… embarrassed.”
+“I felt put on the spot. Like everyone was staring.”
 
 MEDIATOR A (EMILY)
-“Thank you for sharing that.”
+“Thank you for sharing.”
+
+[PAUSE]
+[PAUSE]
 
 MEDIATOR A (EMILY)
 “Aria, what bothered you most in this situation?”
 
 DISPUTANT 2 (ARIA)
-“That he wouldn’t move and he didn’t listen when I told him it was my regular seat.”
+“That he wouldn’t move and he wasn’t listening when I said it was my regular seat.”
 
 MEDIATOR A (EMILY)
 “How did you feel when Caleb stayed in the seat and ignored what you were saying?”
 
 DISPUTANT 2 (ARIA)
-“Frustrated. Like he just didn’t care.”
+“Frustrated. Like… why won’t you just  listen to me?”
 
 MEDIATOR A (EMILY)
 “Thank you.”
@@ -222,24 +271,37 @@ MEDIATOR A (EMILY)
 [PAUSE]
 [PAUSE]
 
-### STEP 4: CREATE A WIN-WIN SOLUTION
 MEDIATOR B (MICHAEL)
-“Alright. I’m going to restate what you both want, just to be clear.”
+“Okay, I’m going to restate what I’m hearing you both want.”
 
 MEDIATOR B (MICHAEL)
 “Caleb, you want Aria to not insult you in front of other people.”
 
 MEDIATOR B (MICHAEL)
-“And Aria, you want Caleb to let you have your usual seat, since it’s near your friends.”
+“Aria, you want Caleb to let you have your usual seat since it’s near your friends.”
+
+[PAUSE]
+[PAUSE]
 
 MEDIATOR B (MICHAEL)
 “Caleb, what’s something you want Aria to do, or to stop doing?”
 
+[PAUSE]
+
 DISPUTANT 1 (CALEB)
-“I want her to not call me names. Like, not in front of everyone.”
+“I want her to not call me annoying.”
+
+DISPUTANT 1 (CALEB)
+“Like, especially not in front of everyone.”
+
+[PAUSE]
+[PAUSE]
 
 MEDIATOR B (MICHAEL)
-“So you want her to tell you the problem without insulting you, especially in front of other people?”
+“So your want is: no insults, and talk to you respectfully even if she’s annoyed.”
+
+MEDIATOR B (MICHAEL)
+“Is that right?”
 
 DISPUTANT 1 (CALEB)
 “Yeah.”
@@ -253,23 +315,28 @@ DISPUTANT 1 (CALEB)
 MEDIATOR B (MICHAEL)
 “Aria, what’s something you want Caleb to do, or to stop doing?”
 
-DISPUTANT 2 (ARIA)
-“I want him to just move if it’s my usual seat.”
+[PAUSE]
+[PAUSE]
 
 DISPUTANT 2 (ARIA)
-“Or at least listen when I tell him it’s my spot.”
+“I want him to let me sit in my usual seat. Because my friends sit near there.”
 
 MEDIATOR B (MICHAEL)
-“So you want him to let you have your regular seat near your friends, and you want him to listen when you explain it?”
+“So you want Caleb to move to a different open seat if you ask for your usual spot.”
+
+MEDIATOR B (MICHAEL)
+“Is that what you mean?”
 
 DISPUTANT 2 (ARIA)
-“Yes.”
+“Yeah.”
 
 [PAUSE]
 [PAUSE]
 [OVERLAY4]
 [PAUSE]
 [PAUSE]
+
+### STEP 4: CREATE A WIN-WIN SOLUTION
 
 MEDIATOR B (MICHAEL)
 “Now let’s think about what you can both do differently, so you each get something you want.”
@@ -278,40 +345,69 @@ MEDIATOR B (MICHAEL)
 “Caleb, what’s one thing you could do differently to help this work?”
 
 DISPUTANT 1 (CALEB)
-“I can ask if someone usually sits there before I sit down.”
+“I can ask if someone usually sits there before I take the seat.”
 
 DISPUTANT 1 (CALEB)
-“And if they say they do, I can actually listen, and not just be like ‘whatever.’”
+And I can let Aria have her seat. 
+
+MEDIATOR B (MICHAEL)
+“Thank you.”
+
+[PAUSE]
+[PAUSE]
 
 MEDIATOR B (MICHAEL)
 “Aria, what’s one thing you could do differently to help this work?”
 
 DISPUTANT 2 (ARIA)
-“I can explain it calmly.”
+“I can say it calmly.”
+
+[PAUSE]
 
 DISPUTANT 2 (ARIA)
-“And I won’t call him annoying or say stuff like that.”
+“And I won’t call him annoying or anything.”
+
+[PAUSE]
+[PAUSE]
 
 MEDIATOR B (MICHAEL)
-“Is there anything else you’d like each other to do differently?”
-
-DISPUTANT 1 (CALEB)
-“Just… say it in a normal voice.”
+“Is there anything else you’d like Caleb to do differently?”
 
 DISPUTANT 2 (ARIA)
-“And I want you to not argue back in front of everyone.”
+“Just… if I tell you it’s my seat, don’t argue about it.”
+
+DISPUTANT 1 (CALEB)
+“Okay. I can just move, if there are other open seats.”
+
+[PAUSE]
+[PAUSE]
+
+MEDIATOR B (MICHAEL)
+“Caleb, is there anything else you’d like Aria to do differently?”
+
+[PAUSE]
+
+DISPUTANT 1 (CALEB)
+“Just talk to me normal.”
+
+DISPUTANT 1 (CALEB)
+“Like, she can say it’s her seat, but not in a mean way.”
+
+[PAUSE]
+[PAUSE]
 
 MEDIATOR B (MICHAEL)
 “Is there something you could both do differently?”
 
 DISPUTANT 1 (CALEB)
-“We could use calm voices.”
+ I’m not sure.
 
 DISPUTANT 2 (ARIA)
-“And if it’s still not working, we can ask the teacher for help instead of arguing.”
+“If we can’t work it out, maybe  we can ask the teacher for help instead of arguing.”
 
-MEDIATOR B (MICHAEL)
-“Okay. That sounds like a win-win direction.”
+
+DISPUTANT 1 (CALEB)
+“Yeah I guess we can do that.
 
 [PAUSE]
 [PAUSE]
@@ -319,14 +415,19 @@ MEDIATOR B (MICHAEL)
 [PAUSE]
 [PAUSE]
 
+### STEP 5: ESTABLISH AN AGREEMENT
 [PAUSE]
 [ProcessFormSwap]
 [PAUSE]
 [PAUSE]
 
-### STEP 5: ESTABLISH AN AGREEMENT
 MEDIATOR A (EMILY)
 “Now we’re going to write an agreement using what you both shared, so that this doesn’t happen again.”
+
+[PAUSE]
+[PAUSE]
+[PAUSE]
+[PAUSE]
 
 [PAUSE]
 [PAUSE]
@@ -343,30 +444,46 @@ MEDIATOR A (EMILY)
 MEDIATOR A (EMILY)
 “Aria agrees to tell Caleb it’s her usual seat without calling him annoying or insulting him in front of others.”
 
+[PAUSE]
+[PAUSE]
+
 MEDIATOR A (EMILY)
 “Do you both agree to do these things?”
 
+[PAUSE]
+
 DISPUTANT 1 (CALEB)
-“Yeah. I agree.”
+“Yeah, I agree.”
+
+[PAUSE]
 
 DISPUTANT 2 (ARIA)
 “I agree.”
 
-MEDIATOR A (EMILY) 
+MEDIATOR A (EMILY)
 “Please read it and sign below.”
 
-[PAUSE]
 [PAUSE]
 [PAUSE]
 
 MEDIATOR A (EMILY)
 “Is there anything you want to say to each other before we finish?”
 
-DISPUTANT 1 (CALEB)
-“Sorry I didn’t listen at first.”
+[PAUSE]
 
 DISPUTANT 2 (ARIA)
-“I’m sorry I called you annoying. I’ll just say it normally.”
+“Sorry I said it like that. I was mad.”
+
+[PAUSE]
+
+DISPUTANT 1 (CALEB)
+“It’s fine. I didn’t know it was your seat.”
+
+DISPUTANT 1 (CALEB)
+“I’ll just move next time.”
+
+[PAUSE]
+[PAUSE]
 
 MEDIATOR A (EMILY)
 “Thanks for doing this mediation with us. We’ll walk you back to class now.”

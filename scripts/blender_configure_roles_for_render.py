@@ -841,12 +841,13 @@ def configure_role(role: str, cfg: dict, dry: bool) -> None:
         )
 
 
-def main():
-    base_dir = Path(__file__).resolve().parents[1]
-    opts = parse_args(base_dir)
+def run_with_options(opts: dict) -> None:
     global TRACE
     TRACE = bool(opts.get("trace"))
     cfg = load_config(opts["config"])
+    # Required when this module is imported and run_with_options() is called
+    # directly (single-process pipeline), where main() is not executed.
+    base_dir = Path(__file__).resolve().parents[1]
 
     ensure_scene(opts["scene"])
     # World/HDRI setup from config (preferred), else attempt to resolve missing files
@@ -941,6 +942,12 @@ def main():
                     raise
         else:
             print("[WARN] No scene path; use --save-as to specify a destination.")
+
+
+def main():
+    base_dir = Path(__file__).resolve().parents[1]
+    opts = parse_args(base_dir)
+    run_with_options(opts)
 
 
 if __name__ == "__main__":

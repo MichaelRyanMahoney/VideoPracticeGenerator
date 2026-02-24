@@ -388,9 +388,7 @@ def _file_signature(path: Path):
         return None
 
 
-def main():
-    base_dir = Path(__file__).resolve().parents[1]
-    opts = parse_args(base_dir)
+def run_with_options(opts: dict) -> None:
     cfg = load_config(opts["config"])
     pairs = roles_and_prefixes(cfg)
     source = opts["source"]
@@ -648,6 +646,12 @@ def main():
                         raise RuntimeError(f"Failed to save scene in place: {scene_in_place}")
                 else:
                     print("[WARN] No scene path; use --scene-save-as.")
+
+
+def main():
+    base_dir = Path(__file__).resolve().parents[1]
+    opts = parse_args(base_dir)
+    run_with_options(opts)
 
 
 if __name__ == "__main__":
