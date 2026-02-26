@@ -15,8 +15,7 @@ data/
 /assets/DefaultCharacter.blend
 /assets/DefaultCharacter.blend1
 /audio/*
-/out/_tmp/*
-/out/blender_render_frames/*
+/out/*
 /scenes/base_scene.blend
 /scenes/base_scene.blend1
 VideoPracticeGenerator.pem

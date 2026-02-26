@@ -1,0 +1,8 @@
+{
+  "smart_prompt": {
+    "hesitant": {
+      "previous_text": "The speaker is about to respond, but they hesitate. Their energy is noticeably low, and their tone is skeptical\u2014as if they are not fully convinced by what was just said. They choose their words carefully, speaking softly with small pauses, sounding uncertain rather than assertive.",
+      "next_text": "The other person hears that tentative, skeptical remark and replies carefully. They keep their own energy low and measured, responding as if the conversation is delicate and the speaker is unsure. The exchange stays cautious, with an undercurrent of doubt and restrained emotion."
+    }
+  }
+}

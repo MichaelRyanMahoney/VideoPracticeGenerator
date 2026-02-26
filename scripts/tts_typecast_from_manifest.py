@@ -20,6 +20,56 @@ DEFAULT_MODEL = "ssfm-v30"
 VALID_EMOTION_PRESETS = {"normal", "happy", "sad", "angry", "whisper", "toneup", "tonedown"}
 
 
+HESITANT_PREVIOUS_CONTEXT = (
+    "The speaker is about to respond, but they hesitate. Their energy is noticeably low, and their tone is skeptical—"
+    " as if they are not fully convinced by what was just said. They choose their words carefully, speaking softly"
+    " with small pauses, sounding uncertain rather than assertive."
+)
+
+HESITANT_NEXT_CONTEXT = (
+    "The other person hears that tentative, skeptical remark and replies carefully. They keep their own energy low"
+    " and measured, responding as if the conversation is delicate and the speaker is unsure. The exchange stays cautious,"
+    " with an undercurrent of doubt and restrained emotion."
+)
+
+
+def _boolish(value: object) -> bool:
+    if value is None:
+        return False
+    if isinstance(value, bool):
+        return value
+    s = str(value).strip().lower()
+    return s in {"1", "true", "yes", "y", "t", "on"}
+
+
+def _try_load_json(path: str) -> dict:
+    try:
+        p = Path(path)
+        if not p.exists():
+            return {}
+        data = json.loads(p.read_text())
+        return data if isinstance(data, dict) else {}
+    except Exception:
+        return {}
+
+
+def _load_hesitant_contexts(delivery_contexts_json: str) -> tuple[str, str]:
+    """
+    Load smart-prompt delivery contexts (NOT spoken text) from JSON.
+    Falls back to the built-in defaults if missing/invalid.
+    """
+    data = _try_load_json(delivery_contexts_json)
+    sp = (data.get("smart_prompt") or {}) if isinstance(data, dict) else {}
+    hes = (sp.get("hesitant") or {}) if isinstance(sp, dict) else {}
+    prev = (hes.get("previous_text") or "").strip()
+    nxt = (hes.get("next_text") or "").strip()
+    if not prev:
+        prev = HESITANT_PREVIOUS_CONTEXT
+    if not nxt:
+        nxt = HESITANT_NEXT_CONTEXT
+    return prev, nxt
+
+
 def require_api_key() -> str:
     api_key = os.environ.get("TYPECAST_API_KEY")
     if not api_key:
@@ -219,6 +269,87 @@ def tts_typecast(api_key: str, voice_id: str, text: str, out_wav: Path,
         pass
 
 
+def tts_typecast_smart_prompt(
+    api_key: str,
+    voice_id: str,
+    text: str,
+    out_wav: Path,
+    previous_text: str,
+    next_text: str,
+    tempo: float = DEFAULT_TEMPO,
+    pitch: float = DEFAULT_PITCH,
+    volume: int = DEFAULT_VOLUME,
+):
+    """Call Typecast smart-prompt TTS and save as 48kHz stereo WAV at out_wav.
+    previous_text/next_text are delivery context only and are NOT spoken.
+    """
+    headers = {"X-API-KEY": api_key, "Content-Type": "application/json"}
+    try:
+        vol = int(max(0, min(200, int(volume))))
+    except Exception:
+        vol = 100
+    pitch_semitones = parse_pitch_to_semitones(pitch)
+    tempo_out = max(0.5, min(2.0, float(tempo)))
+
+    payload = {
+        "voice_id": voice_id,
+        "text": text,
+        "model": DEFAULT_MODEL,
+        "language": "eng",
+        "seed": DEFAULT_SEED,
+        "prompt": {
+            "emotion_type": "smart",
+            "previous_text": previous_text or "",
+            "next_text": next_text or "",
+        },
+        "output": {
+            "volume": vol,
+            "audio_pitch": pitch_semitones,
+            "audio_tempo": tempo_out,
+            "audio_format": "wav",
+        },
+    }
+
+    r = requests.post(TYPECAST_API_URL, headers=headers, json=payload, timeout=120, stream=True)
+    if r.status_code >= 400:
+        try:
+            detail = r.json()
+        except Exception:
+            detail = r.text
+        raise SystemExit(f"Typecast smart-prompt TTS error {r.status_code}: {detail}")
+
+    content_type = r.headers.get("Content-Type", "")
+    tmp_in = out_wav.with_suffix(".tc_in")  # raw response
+
+    if "audio" in content_type:
+        ensure_parent(tmp_in)
+        with open(tmp_in, "wb") as f:
+            for chunk in r.iter_content(chunk_size=8192):
+                if chunk:
+                    f.write(chunk)
+    else:
+        try:
+            data = r.json()
+        except Exception:
+            data = None
+        audio_url = None
+        if isinstance(data, dict):
+            audio_url = data.get("audio_url") or data.get("url")
+        if not audio_url:
+            ensure_parent(tmp_in)
+            with open(tmp_in, "wb") as f:
+                f.write(r.content)
+        else:
+            tmp_in = out_wav.with_suffix(".tc_dl")
+            download_to(tmp_in, audio_url)
+
+    ffmpeg_normalize(tmp_in, out_wav)
+    try:
+        tmp_in.unlink()
+    except Exception:
+        pass
+
+
 def _is_s3_uri(s: str) -> bool:
     return isinstance(s, str) and s.startswith("s3://")
 
@@ -249,11 +380,20 @@ def main():
     ap.add_argument("--manifest_csv", default=str(Path(__file__).resolve().parents[1] / "manifests/scene1.csv"))
     # New: prefer generator_inputs.json for per-role Typecast voice_id
     ap.add_argument("--generator_inputs_json", default=str(Path(__file__).resolve().parents[1] / "manifests/generator_inputs.json"))
+    ap.add_argument(
+        "--delivery_contexts_json",
+        default=(
+            os.environ.get("VPG_TYPECAST_DELIVERY_CONTEXTS_JSON")
+            or str(Path(__file__).resolve().parents[1] / "manifests/typecast_delivery_contexts.json")
+        ),
+        help="Optional JSON defining Typecast smart-prompt delivery contexts (not spoken).",
+    )
     # Back-compat: optional legacy voice map JSON { "MediatorA": "tc_xxx", ... }
     ap.add_argument("--voice_map", default="")
     args = ap.parse_args()
 
     api_key = require_api_key()
+    hesitant_prev_ctx, hesitant_next_ctx = _load_hesitant_contexts(args.delivery_contexts_json)
     # Build voice map from generator_inputs.json characters.<Role>.typecast.voice_id
     voice_map: dict[str, str] = {}
     typecast_defaults_by_role: dict[str, dict[str, object]] = {}
@@ -294,6 +434,7 @@ def main():
         audio_raw = (row.get("audio") or "").strip()
         audio_hash = (row.get("audio_hash") or "").strip()
         text = row["transcript"].strip()
+        hesitant = _boolish(row.get("hesitant"))
         is_pause_row = speaker.upper() in {"PAUSE", "BREAK"}
 
         if is_pause_row:
@@ -381,10 +522,39 @@ def main():
             )
 
         pitch_st = parse_pitch_to_semitones(r_pitch)
-        print(f"[Typecast] {rid} {speaker} -> {audio_out.name}  voice_id={vid}  model={DEFAULT_MODEL}  emo={r_emotion} inten={r_intensity} tempo={r_tempo} pitch={r_pitch} ({pitch_st:.2f}st) vol={r_volume}")
-        tts_typecast(api_key, vid, text, audio_out,
-                     emotion=r_emotion, emotion_intensity=r_intensity,
-                     tempo=r_tempo, pitch=r_pitch, volume=r_volume)
+        if hesitant:
+            print(
+                f"[Typecast SmartPrompt] {rid} {speaker} -> {audio_out.name}  voice_id={vid}  "
+                f"model={DEFAULT_MODEL} prev_chars={len(hesitant_prev_ctx)} next_chars={len(hesitant_next_ctx)} "
+                f"tempo={r_tempo} pitch={r_pitch} ({pitch_st:.2f}st) vol={r_volume}"
+            )
+            tts_typecast_smart_prompt(
+                api_key=api_key,
+                voice_id=vid,
+                text=text,
+                out_wav=audio_out,
+                previous_text=hesitant_prev_ctx,
+                next_text=hesitant_next_ctx,
+                tempo=r_tempo,
+                pitch=r_pitch,
+                volume=r_volume,
+            )
+        else:
+            print(
+                f"[Typecast] {rid} {speaker} -> {audio_out.name}  voice_id={vid}  model={DEFAULT_MODEL}  "
+                f"emo={r_emotion} inten={r_intensity} tempo={r_tempo} pitch={r_pitch} ({pitch_st:.2f}st) vol={r_volume}"
+            )
+            tts_typecast(
+                api_key,
+                vid,
+                text,
+                audio_out,
+                emotion=r_emotion,
+                emotion_intensity=r_intensity,
+                tempo=r_tempo,
+                pitch=r_pitch,
+                volume=r_volume,
+            )
 
         # Upload if destination is S3
         if audio_is_s3:

@@ -1358,7 +1358,13 @@ def main(director_path, outpath):
     else:
         scene.render.filepath = str(Path(outpath))
 
+    # Debug-only alpha probe. Disabled by default to avoid post-render pauses.
+    # Set VPG_ALPHA_PROBE=1 to re-enable when diagnosing transparency issues.
+    alpha_probe_enabled = str(os.environ.get("VPG_ALPHA_PROBE", "0")).strip().lower() in {"1", "true", "yes", "y"}
+
     def _log_alpha_probe() -> None:
+        if not alpha_probe_enabled:
+            return
         if not output_frames or not transparent or not frames_dir:
             return
         try:

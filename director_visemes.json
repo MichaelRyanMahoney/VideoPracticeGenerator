@@ -20,994 +20,969 @@
       "audio": "audio/MEDIATORA_001.wav",
       "visemes": [
         {
-          "p": "viseme_E",
-          "t": 0.211
-        },
-        {
           "p": "viseme_O",
-          "t": 0.705
-        },
-        {
-          "p": "viseme_I",
-          "t": 1.056
-        },
-        {
-          "p": "viseme_aa",
-          "t": 1.248
-        },
-        {
-          "p": "viseme_O",
-          "t": 1.399
-        },
-        {
-          "p": "viseme_aa",
-          "t": 1.62
+          "t": 0.262
         },
         {
           "p": "viseme_PP",
-          "t": 1.735
-        },
-        {
-          "p": "viseme_I",
-          "t": 1.826
-        },
-        {
-          "p": "viseme_PP",
-          "t": 2.078
+          "t": 0.724
         },
         {
           "p": "viseme_E",
-          "t": 2.369
-        },
-        {
-          "p": "viseme_O",
-          "t": 2.938
-        },
-        {
-          "p": "viseme_aa",
-          "t": 3.119
+          "t": 0.965
         },
         {
           "p": "viseme_I",
-          "t": 3.26
-        },
-        {
-          "p": "viseme_aa",
-          "t": 3.481
-        },
-        {
-          "p": "viseme_I",
-          "t": 3.863
-        },
-        {
-          "p": "viseme_PP",
-          "t": 4.054
+          "t": 1.357
         },
         {
           "p": "viseme_E",
-          "t": 4.236
+          "t": 1.639
+        },
+        {
+          "p": "viseme_I",
+          "t": 2.177
         },
         {
           "p": "viseme_PP",
-          "t": 4.426
-        },
-        {
-          "p": "viseme_O",
-          "t": 4.507
-        },
-        {
-          "p": "viseme_aa",
-          "t": 4.718
-        },
-        {
-          "p": "viseme_I",
-          "t": 4.889
-        },
-        {
-          "p": "viseme_SS",
-          "t": 5.03
-        },
-        {
-          "p": "viseme_I",
-          "t": 5.111
+          "t": 2.498
         },
         {
           "p": "viseme_E",
-          "t": 5.322
-        },
-        {
-          "p": "viseme_PP",
-          "t": 5.709
-        },
-        {
-          "p": "viseme_I",
-          "t": 5.82
+          "t": 2.669
         },
         {
           "p": "viseme_aa",
-          "t": 6.005
+          "t": 2.936
         },
         {
           "p": "viseme_I",
-          "t": 6.167
+          "t": 3.056
+        },
+        {
+          "p": "viseme_aa",
+          "t": 3.207
+        },
+        {
+          "p": "viseme_O",
+          "t": 3.357
         },
         {
           "p": "viseme_PP",
-          "t": 6.404
+          "t": 3.529
         },
         {
           "p": "viseme_I",
-          "t": 6.614
+          "t": 3.67
+        },
+        {
+          "p": "viseme_PP",
+          "t": 3.946
+        },
+        {
+          "p": "viseme_I",
+          "t": 4.237
+        },
+        {
+          "p": "viseme_aa",
+          "t": 4.755
+        },
+        {
+          "p": "viseme_O",
+          "t": 5.037
+        },
+        {
+          "p": "viseme_E",
+          "t": 5.448
         }
       ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:07.450",
+      "tc_in": "00:00:06.500",
       "duration": 0.5
     },
     {
-      "tc_in": "00:00:07.950",
-      "char": "MediatorA",
-      "audio": "audio/MEDIATORA_003.wav",
-      "visemes": [
-        {
-          "p": "viseme_O",
-          "t": 8.222
-        },
-        {
-          "p": "viseme_PP",
-          "t": 8.685
-        },
-        {
-          "p": "viseme_E",
-          "t": 8.947
-        },
-        {
-          "p": "viseme_I",
-          "t": 9.36
-        },
-        {
-          "p": "viseme_E",
-          "t": 9.642
-        },
-        {
-          "p": "viseme_I",
-          "t": 10.251
-        },
-        {
-          "p": "viseme_PP",
-          "t": 10.543
-        },
-        {
-          "p": "viseme_E",
-          "t": 10.734
-        },
-        {
-          "p": "viseme_aa",
-          "t": 10.971
-        },
-        {
-          "p": "viseme_I",
-          "t": 11.101
-        },
-        {
-          "p": "viseme_aa",
-          "t": 11.232
-        },
-        {
-          "p": "viseme_O",
-          "t": 11.373
-        },
-        {
-          "p": "viseme_PP",
-          "t": 11.55
-        },
-        {
-          "p": "viseme_I",
-          "t": 11.661
-        },
-        {
-          "p": "viseme_PP",
-          "t": 11.937
-        },
-        {
-          "p": "viseme_I",
-          "t": 12.26
-        },
-        {
-          "p": "viseme_aa",
-          "t": 12.733
-        },
-        {
-          "p": "viseme_O",
-          "t": 13.014
-        },
-        {
-          "p": "viseme_E",
-          "t": 13.448
-        }
-      ]
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:14.500",
-      "duration": 0.5
-    },
-    {
-      "tc_in": "00:00:15.000",
+      "tc_in": "00:00:07.000",
       "char": "Disputant1",
-      "audio": "audio/DISPUTANT1_005.wav",
+      "audio": "audio/DISPUTANT1_003.wav",
       "visemes": [
         {
+          "p": "viseme_aa",
+          "t": 7.306
+        },
+        {
           "p": "viseme_I",
-          "t": 15.176
+          "t": 8.224
         },
         {
           "p": "viseme_E",
-          "t": 15.818
+          "t": 8.694
         }
       ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:16.950",
+      "tc_in": "00:00:09.750",
       "duration": 0.5
     },
     {
-      "tc_in": "00:00:17.450",
+      "tc_in": "00:00:10.250",
       "char": "Disputant2",
-      "audio": "audio/DISPUTANT2_007.wav",
+      "audio": "audio/DISPUTANT2_005.wav",
       "visemes": [
         {
           "p": "viseme_I",
-          "t": 17.636
+          "t": 10.437
         },
         {
           "p": "viseme_aa",
-          "t": 18.232
+          "t": 11.101
         }
       ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:19.250",
+      "tc_in": "00:00:12.100",
       "duration": 0.5
     },
     {
-      "type": "pause",
-      "tc_in": "00:00:19.750",
-      "duration": 0.5
-    },
-    {
-      "tc_in": "00:00:20.250",
+      "tc_in": "00:00:12.600",
       "char": "MediatorA",
-      "audio": "audio/MEDIATORA_010.wav",
+      "audio": "audio/MEDIATORA_007.wav",
       "visemes": [
         {
           "p": "viseme_O",
-          "t": 20.43
+          "t": 12.78
         },
         {
           "p": "viseme_aa",
-          "t": 20.732
+          "t": 13.061
         },
         {
           "p": "viseme_I",
-          "t": 20.892
+          "t": 13.232
         },
         {
           "p": "viseme_aa",
-          "t": 21.142
+          "t": 13.503
         },
         {
           "p": "viseme_I",
-          "t": 21.735
+          "t": 13.814
         },
         {
           "p": "viseme_E",
-          "t": 21.905
+          "t": 14.025
         },
         {
           "p": "viseme_O",
-          "t": 22.066
+          "t": 14.226
         },
         {
           "p": "viseme_aa",
-          "t": 22.216
+          "t": 14.386
         },
         {
           "p": "viseme_SS",
-          "t": 22.567
+          "t": 14.723
         },
         {
           "p": "viseme_I",
-          "t": 22.869
+          "t": 15.034
         },
         {
           "p": "viseme_I",
-          "t": 23.606
+          "t": 15.455
         },
         {
           "p": "viseme_PP",
-          "t": 23.867
+          "t": 15.771
         },
         {
           "p": "viseme_I",
-          "t": 23.997
+          "t": 15.892
         },
         {
           "p": "viseme_PP",
-          "t": 24.273
+          "t": 16.173
         },
         {
           "p": "viseme_E",
-          "t": 24.575
+          "t": 16.494
         },
         {
           "p": "viseme_SS",
-          "t": 25.231
+          "t": 17.056
         },
         {
           "p": "viseme_O",
-          "t": 25.402
+          "t": 17.217
         },
         {
           "p": "viseme_aa",
-          "t": 25.608
+          "t": 17.427
         },
         {
           "p": "viseme_E",
-          "t": 25.808
+          "t": 17.628
         },
         {
           "p": "viseme_TH",
-          "t": 26.024
+          "t": 17.799
         },
         {
           "p": "viseme_I",
-          "t": 26.134
+          "t": 17.879
         },
         {
           "p": "viseme_E",
-          "t": 26.32
+          "t": 18.04
         },
         {
           "p": "viseme_I",
-          "t": 27.133
+          "t": 18.752
         },
         {
           "p": "viseme_O",
-          "t": 27.333
+          "t": 18.932
         },
         {
           "p": "viseme_CH",
-          "t": 27.564
+          "t": 19.153
         },
         {
           "p": "viseme_E",
-          "t": 27.664
+          "t": 19.254
         },
         {
           "p": "viseme_aa",
-          "t": 27.814
+          "t": 19.374
         },
         {
           "p": "viseme_O",
-          "t": 27.965
-        },
-        {
-          "p": "viseme_SS",
-          "t": 28.115
+          "t": 19.515
         },
         {
           "p": "viseme_E",
-          "t": 28.196
+          "t": 19.731
         },
         {
           "p": "viseme_I",
-          "t": 28.336
+          "t": 19.866
         },
         {
           "p": "viseme_aa",
-          "t": 28.587
+          "t": 20.117
         },
         {
           "p": "viseme_SS",
-          "t": 28.933
+          "t": 20.444
         },
         {
           "p": "viseme_O",
-          "t": 29.325
+          "t": 20.794
         }
       ]
     },
     {
-      "tc_in": "00:00:30.250",
+      "type": "pause",
+      "tc_in": "00:00:21.700",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:22.200",
+      "char": "MediatorA",
+      "audio": "audio/MEDIATORA_009.wav",
+      "visemes": [
+        {
+          "p": "viseme_I",
+          "t": 22.351
+        },
+        {
+          "p": "viseme_O",
+          "t": 22.633
+        },
+        {
+          "p": "viseme_E",
+          "t": 22.854
+        },
+        {
+          "p": "viseme_SS",
+          "t": 23.095
+        },
+        {
+          "p": "viseme_E",
+          "t": 23.276
+        },
+        {
+          "p": "viseme_O",
+          "t": 23.991
+        },
+        {
+          "p": "viseme_FF",
+          "t": 24.162
+        },
+        {
+          "p": "viseme_E",
+          "t": 24.263
+        },
+        {
+          "p": "viseme_aa",
+          "t": 24.404
+        },
+        {
+          "p": "viseme_SS",
+          "t": 24.6
+        },
+        {
+          "p": "viseme_O",
+          "t": 24.851
+        },
+        {
+          "p": "viseme_TH",
+          "t": 25.087
+        },
+        {
+          "p": "viseme_aa",
+          "t": 25.229
+        },
+        {
+          "p": "viseme_I",
+          "t": 25.45
+        },
+        {
+          "p": "viseme_O",
+          "t": 25.631
+        },
+        {
+          "p": "viseme_PP",
+          "t": 25.812
+        },
+        {
+          "p": "viseme_O",
+          "t": 25.913
+        },
+        {
+          "p": "viseme_SS",
+          "t": 26.139
+        },
+        {
+          "p": "viseme_aa",
+          "t": 26.291
+        },
+        {
+          "p": "viseme_O",
+          "t": 26.466
+        },
+        {
+          "p": "viseme_aa",
+          "t": 26.819
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:27.800",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:28.300",
       "char": "MediatorA",
       "audio": "audio/MEDIATORA_011.wav",
       "visemes": [
         {
           "p": "viseme_I",
-          "t": 30.401
+          "t": 28.431
         },
         {
-          "p": "viseme_O",
-          "t": 30.683
+          "p": "viseme_aa",
+          "t": 28.642
         },
         {
           "p": "viseme_E",
-          "t": 30.926
+          "t": 28.803
+        },
+        {
+          "p": "viseme_O",
+          "t": 28.964
         },
         {
           "p": "viseme_SS",
-          "t": 31.233
-        },
-        {
-          "p": "viseme_E",
-          "t": 31.465
-        },
-        {
-          "p": "viseme_O",
-          "t": 32.258
-        },
-        {
-          "p": "viseme_FF",
-          "t": 32.393
-        },
-        {
-          "p": "viseme_E",
-          "t": 32.484
+          "t": 29.161
         },
         {
           "p": "viseme_aa",
-          "t": 32.62
-        },
-        {
-          "p": "viseme_SS",
-          "t": 32.782
-        },
-        {
-          "p": "viseme_O",
-          "t": 33.003
-        },
-        {
-          "p": "viseme_aa",
-          "t": 33.231
-        },
-        {
-          "p": "viseme_I",
-          "t": 33.377
-        },
-        {
-          "p": "viseme_O",
-          "t": 33.548
-        },
-        {
-          "p": "viseme_PP",
-          "t": 33.715
-        },
-        {
-          "p": "viseme_O",
-          "t": 33.825
-        },
-        {
-          "p": "viseme_SS",
-          "t": 34.042
-        },
-        {
-          "p": "viseme_aa",
-          "t": 34.203
-        },
-        {
-          "p": "viseme_O",
-          "t": 34.386
-        },
-        {
-          "p": "viseme_aa",
-          "t": 34.728
-        }
-      ]
-    },
-    {
-      "tc_in": "00:00:35.700",
-      "char": "MediatorA",
-      "audio": "audio/MEDIATORA_012.wav",
-      "visemes": [
-        {
-          "p": "viseme_I",
-          "t": 35.831
-        },
-        {
-          "p": "viseme_aa",
-          "t": 36.064
-        },
-        {
-          "p": "viseme_E",
-          "t": 36.245
-        },
-        {
-          "p": "viseme_O",
-          "t": 36.427
-        },
-        {
-          "p": "viseme_SS",
-          "t": 36.598
-        },
-        {
-          "p": "viseme_aa",
-          "t": 36.78
+          "t": 29.352
         },
         {
           "p": "viseme_TH",
-          "t": 36.947
+          "t": 29.538
         },
         {
           "p": "viseme_I",
-          "t": 37.058
+          "t": 29.639
         },
         {
           "p": "viseme_SS",
-          "t": 37.522
+          "t": 30.223
         },
         {
           "p": "viseme_E",
-          "t": 37.733
+          "t": 30.364
         },
         {
           "p": "viseme_aa",
-          "t": 37.9
+          "t": 30.495
         },
         {
           "p": "viseme_I",
-          "t": 38.001
+          "t": 30.606
         },
         {
           "p": "viseme_aa",
-          "t": 38.122
+          "t": 30.722
         },
         {
           "p": "viseme_O",
-          "t": 38.435
+          "t": 31.029
         },
         {
           "p": "viseme_aa",
-          "t": 38.95
+          "t": 31.522
         },
         {
           "p": "viseme_aa",
-          "t": 39.157
+          "t": 31.699
         },
         {
           "p": "viseme_SS",
-          "t": 39.258
+          "t": 31.804
         },
         {
           "p": "viseme_E",
-          "t": 39.349
+          "t": 31.885
         }
       ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:40.850",
+      "tc_in": "00:00:33.300",
       "duration": 0.5
     },
     {
-      "tc_in": "00:00:41.350",
+      "tc_in": "00:00:33.800",
       "char": "Disputant1",
-      "audio": "audio/DISPUTANT1_014.wav",
+      "audio": "audio/DISPUTANT1_013.wav",
       "visemes": [
         {
           "p": "viseme_aa",
-          "t": 41.668
+          "t": 34.044
         },
         {
           "p": "viseme_E",
-          "t": 42.733
+          "t": 34.646
         }
       ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:43.800",
+      "tc_in": "00:00:36.100",
       "duration": 0.5
     },
     {
-      "tc_in": "00:00:44.300",
+      "tc_in": "00:00:36.600",
       "char": "Disputant2",
-      "audio": "audio/DISPUTANT2_016.wav",
+      "audio": "audio/DISPUTANT2_015.wav",
       "visemes": [
         {
-          "p": "viseme_aa",
-          "t": 44.636
+          "p": "viseme_E",
+          "t": 37.06
         }
       ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:45.700",
+      "tc_in": "00:00:38.250",
       "duration": 0.5
     },
     {
       "type": "pause",
-      "tc_in": "00:00:46.200",
+      "tc_in": "00:00:38.750",
       "duration": 0.5
     },
     {
       "type": "pause",
-      "tc_in": "00:00:46.700",
+      "tc_in": "00:00:39.250",
       "duration": 0.5
     },
     {
-      "tc_in": "00:00:47.200",
+      "tc_in": "00:00:39.750",
+      "char": "MediatorB",
+      "audio": "audio/MEDIATORB_019.wav",
+      "visemes": [
+        {
+          "p": "viseme_O",
+          "t": 39.901
+        },
+        {
+          "p": "viseme_aa",
+          "t": 40.163
+        },
+        {
+          "p": "viseme_O",
+          "t": 40.415
+        },
+        {
+          "p": "viseme_PP",
+          "t": 40.712
+        },
+        {
+          "p": "viseme_E",
+          "t": 41.025
+        },
+        {
+          "p": "viseme_TH",
+          "t": 41.276
+        },
+        {
+          "p": "viseme_E",
+          "t": 41.387
+        },
+        {
+          "p": "viseme_aa",
+          "t": 41.534
+        },
+        {
+          "p": "viseme_FF",
+          "t": 41.765
+        },
+        {
+          "p": "viseme_O",
+          "t": 41.846
+        },
+        {
+          "p": "viseme_I",
+          "t": 42.36
+        },
+        {
+          "p": "viseme_O",
+          "t": 42.511
+        },
+        {
+          "p": "viseme_I",
+          "t": 42.703
+        },
+        {
+          "p": "viseme_O",
+          "t": 42.844
+        },
+        {
+          "p": "viseme_FF",
+          "t": 43.121
+        },
+        {
+          "p": "viseme_aa",
+          "t": 43.454
+        }
+      ]
+    },
+    {
+      "tc_in": "00:00:44.350",
       "char": "MediatorB",
       "audio": "audio/MEDIATORB_020.wav",
       "visemes": [
         {
-          "p": "viseme_O",
-          "t": 47.351
+          "p": "viseme_TH",
+          "t": 44.405
         },
         {
           "p": "viseme_aa",
-          "t": 47.623
+          "t": 44.516
+        },
+        {
+          "p": "viseme_CH",
+          "t": 44.867
+        },
+        {
+          "p": "viseme_aa",
+          "t": 45.34
         },
         {
           "p": "viseme_O",
-          "t": 47.936
+          "t": 45.747
+        },
+        {
+          "p": "viseme_I",
+          "t": 46.139
+        },
+        {
+          "p": "viseme_O",
+          "t": 46.31
+        },
+        {
+          "p": "viseme_aa",
+          "t": 46.541
         },
         {
           "p": "viseme_PP",
-          "t": 48.258
-        },
-        {
-          "p": "viseme_E",
-          "t": 48.56
-        },
-        {
-          "p": "viseme_TH",
-          "t": 48.847
-        },
-        {
-          "p": "viseme_E",
-          "t": 49.038
-        },
-        {
-          "p": "viseme_aa",
-          "t": 49.245
-        },
-        {
-          "p": "viseme_FF",
-          "t": 49.462
-        },
-        {
-          "p": "viseme_O",
-          "t": 49.553
+          "t": 46.898
         },
         {
           "p": "viseme_I",
-          "t": 50.072
+          "t": 47.21
         },
         {
           "p": "viseme_O",
-          "t": 50.233
+          "t": 48.019
         },
         {
-          "p": "viseme_I",
-          "t": 50.413
+          "p": "viseme_CH",
+          "t": 48.265
         },
         {
-          "p": "viseme_O",
-          "t": 50.555
-        },
-        {
-          "p": "viseme_FF",
-          "t": 50.802
+          "p": "viseme_E",
+          "t": 48.376
         },
         {
           "p": "viseme_aa",
-          "t": 51.114
+          "t": 48.542
+        },
+        {
+          "p": "viseme_O",
+          "t": 48.692
+        },
+        {
+          "p": "viseme_E",
+          "t": 48.919
+        },
+        {
+          "p": "viseme_I",
+          "t": 49.074
+        },
+        {
+          "p": "viseme_aa",
+          "t": 49.285
+        },
+        {
+          "p": "viseme_SS",
+          "t": 49.592
+        },
+        {
+          "p": "viseme_O",
+          "t": 49.944
         }
       ]
     },
     {
-      "tc_in": "00:00:52.000",
+      "tc_in": "00:00:50.850",
       "char": "MediatorB",
       "audio": "audio/MEDIATORB_021.wav",
       "visemes": [
         {
           "p": "viseme_TH",
-          "t": 52.055
+          "t": 50.926
         },
         {
           "p": "viseme_aa",
-          "t": 52.166
-        },
-        {
-          "p": "viseme_CH",
-          "t": 52.512
-        },
-        {
-          "p": "viseme_aa",
-          "t": 52.975
-        },
-        {
-          "p": "viseme_O",
-          "t": 53.387
-        },
-        {
-          "p": "viseme_I",
-          "t": 53.659
-        },
-        {
-          "p": "viseme_O",
-          "t": 53.819
-        },
-        {
-          "p": "viseme_aa",
-          "t": 54.041
+          "t": 51.077
         },
         {
           "p": "viseme_PP",
-          "t": 54.362
+          "t": 51.465
         },
         {
           "p": "viseme_I",
-          "t": 54.663
+          "t": 51.566
         },
         {
           "p": "viseme_O",
-          "t": 55.508
-        },
-        {
-          "p": "viseme_CH",
-          "t": 55.754
-        },
-        {
-          "p": "viseme_E",
-          "t": 55.865
-        },
-        {
-          "p": "viseme_aa",
-          "t": 56.031
-        },
-        {
-          "p": "viseme_O",
-          "t": 56.191
-        },
-        {
-          "p": "viseme_SS",
-          "t": 56.367
-        },
-        {
-          "p": "viseme_E",
-          "t": 56.458
+          "t": 51.758
         },
         {
           "p": "viseme_I",
-          "t": 56.644
-        },
-        {
-          "p": "viseme_aa",
-          "t": 56.875
-        },
-        {
-          "p": "viseme_SS",
-          "t": 57.237
+          "t": 51.949
         },
         {
           "p": "viseme_O",
-          "t": 57.659
+          "t": 52.116
+        },
+        {
+          "p": "viseme_PP",
+          "t": 52.257
+        },
+        {
+          "p": "viseme_O",
+          "t": 52.368
+        },
+        {
+          "p": "viseme_aa",
+          "t": 52.504
+        },
+        {
+          "p": "viseme_O",
+          "t": 52.665
+        },
+        {
+          "p": "viseme_I",
+          "t": 53.19
+        },
+        {
+          "p": "viseme_PP",
+          "t": 53.321
+        },
+        {
+          "p": "viseme_I",
+          "t": 53.422
+        },
+        {
+          "p": "viseme_aa",
+          "t": 53.624
+        },
+        {
+          "p": "viseme_PP",
+          "t": 54.093
+        },
+        {
+          "p": "viseme_E",
+          "t": 54.284
+        },
+        {
+          "p": "viseme_PP",
+          "t": 54.511
+        },
+        {
+          "p": "viseme_I",
+          "t": 54.652
+        },
+        {
+          "p": "viseme_aa",
+          "t": 54.834
+        },
+        {
+          "p": "viseme_E",
+          "t": 55.287
         }
       ]
     },
     {
-      "tc_in": "00:00:58.600",
+      "tc_in": "00:00:56.300",
       "char": "MediatorB",
       "audio": "audio/MEDIATORB_022.wav",
       "visemes": [
         {
           "p": "viseme_TH",
-          "t": 58.675
+          "t": 56.365
         },
         {
           "p": "viseme_aa",
-          "t": 58.827
+          "t": 56.496
         },
         {
           "p": "viseme_PP",
-          "t": 59.213
-        },
-        {
-          "p": "viseme_I",
-          "t": 59.314
-        },
-        {
-          "p": "viseme_O",
-          "t": 59.505
-        },
-        {
-          "p": "viseme_I",
-          "t": 59.656
-        },
-        {
-          "p": "viseme_O",
-          "t": 59.817
-        },
-        {
-          "p": "viseme_PP",
-          "t": 60.028
-        },
-        {
-          "p": "viseme_O",
-          "t": 60.149
-        },
-        {
-          "p": "viseme_aa",
-          "t": 60.29
-        },
-        {
-          "p": "viseme_O",
-          "t": 60.45
-        },
-        {
-          "p": "viseme_I",
-          "t": 61.054
-        },
-        {
-          "p": "viseme_PP",
-          "t": 61.185
-        },
-        {
-          "p": "viseme_I",
-          "t": 61.286
-        },
-        {
-          "p": "viseme_aa",
-          "t": 61.502
-        },
-        {
-          "p": "viseme_PP",
-          "t": 62.126
+          "t": 56.703
         },
         {
           "p": "viseme_E",
-          "t": 62.337
+          "t": 56.904
         },
         {
-          "p": "viseme_PP",
-          "t": 62.648
+          "p": "viseme_O",
+          "t": 57.166
         },
         {
           "p": "viseme_I",
-          "t": 62.82
+          "t": 57.357
+        },
+        {
+          "p": "viseme_O",
+          "t": 57.503
         },
         {
           "p": "viseme_aa",
-          "t": 63.036
+          "t": 57.81
+        },
+        {
+          "p": "viseme_I",
+          "t": 58.424
+        },
+        {
+          "p": "viseme_aa",
+          "t": 58.616
+        },
+        {
+          "p": "viseme_O",
+          "t": 58.757
+        },
+        {
+          "p": "viseme_PP",
+          "t": 58.897
+        },
+        {
+          "p": "viseme_I",
+          "t": 59.018
+        },
+        {
+          "p": "viseme_PP",
+          "t": 59.296
         },
         {
           "p": "viseme_E",
-          "t": 63.489
-        }
-      ]
-    },
-    {
-      "tc_in": "00:00:64.500",
-      "char": "MediatorB",
-      "audio": "audio/MEDIATORB_023.wav",
-      "visemes": [
-        {
-          "p": "viseme_TH",
-          "t": 64.565
+          "t": 59.608
         },
         {
-          "p": "viseme_aa",
-          "t": 64.696
+          "p": "viseme_O",
+          "t": 60.116
         },
         {
           "p": "viseme_PP",
-          "t": 64.892
-        },
-        {
-          "p": "viseme_E",
-          "t": 65.073
+          "t": 60.373
         },
         {
           "p": "viseme_O",
-          "t": 65.325
+          "t": 60.464
         },
         {
           "p": "viseme_I",
-          "t": 65.516
+          "t": 60.67
         },
         {
           "p": "viseme_O",
-          "t": 65.677
+          "t": 60.841
+        },
+        {
+          "p": "viseme_FF",
+          "t": 61.002
         },
         {
           "p": "viseme_aa",
-          "t": 66.008
-        },
-        {
-          "p": "viseme_I",
-          "t": 66.671
+          "t": 61.143
         },
         {
           "p": "viseme_aa",
-          "t": 66.892
+          "t": 61.3
         },
         {
           "p": "viseme_O",
-          "t": 67.064
-        },
-        {
-          "p": "viseme_PP",
-          "t": 67.215
-        },
-        {
-          "p": "viseme_I",
-          "t": 67.335
-        },
-        {
-          "p": "viseme_PP",
-          "t": 67.622
-        },
-        {
-          "p": "viseme_E",
-          "t": 67.954
-        },
-        {
-          "p": "viseme_O",
-          "t": 68.542
-        },
-        {
-          "p": "viseme_PP",
-          "t": 68.788
-        },
-        {
-          "p": "viseme_O",
-          "t": 68.879
-        },
-        {
-          "p": "viseme_I",
-          "t": 69.094
-        },
-        {
-          "p": "viseme_O",
-          "t": 69.276
-        },
-        {
-          "p": "viseme_aa",
-          "t": 69.392
-        },
-        {
-          "p": "viseme_O",
-          "t": 69.749
+          "t": 61.747
         }
       ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:70.800",
+      "tc_in": "00:00:62.850",
       "duration": 0.5
     },
     {
-      "tc_in": "00:00:71.300",
+      "tc_in": "00:00:63.350",
       "char": "Disputant1",
-      "audio": "audio/DISPUTANT1_025.wav",
+      "audio": "audio/DISPUTANT1_024.wav",
       "visemes": [
         {
-          "p": "viseme_aa",
-          "t": 71.566
+          "p": "viseme_FF",
+          "t": 63.58
         },
         {
           "p": "viseme_E",
-          "t": 72.275
+          "t": 64.041
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:65.000",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:65.500",
+      "char": "Disputant2",
+      "audio": "audio/DISPUTANT2_026.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 65.787
+        },
+        {
+          "p": "viseme_E",
+          "t": 67.003
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:68.050",
+      "duration": 0.5
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:68.550",
+      "duration": 0.5
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:69.050",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:69.550",
+      "char": "MediatorA",
+      "audio": "audio/MEDIATORA_030.wav",
+      "visemes": [
+        {
+          "p": "viseme_I",
+          "t": 69.651
+        },
+        {
+          "p": "viseme_aa",
+          "t": 69.883
+        },
+        {
+          "p": "viseme_O",
+          "t": 70.034
         },
         {
           "p": "viseme_I",
-          "t": 72.613
+          "t": 70.165
+        },
+        {
+          "p": "viseme_PP",
+          "t": 70.418
+        },
+        {
+          "p": "viseme_O",
+          "t": 70.538
+        },
+        {
+          "p": "viseme_aa",
+          "t": 70.66
+        },
+        {
+          "p": "viseme_O",
+          "t": 70.811
+        },
+        {
+          "p": "viseme_PP",
+          "t": 71.114
+        },
+        {
+          "p": "viseme_E",
+          "t": 71.457
+        },
+        {
+          "p": "viseme_aa",
+          "t": 71.739
+        },
+        {
+          "p": "viseme_I",
+          "t": 72.012
+        },
+        {
+          "p": "viseme_E",
+          "t": 72.163
+        },
+        {
+          "p": "viseme_O",
+          "t": 72.597
         }
       ]
     },
@@ -1018,3469 +993,3687 @@
     },
     {
       "tc_in": "00:00:74.150",
-      "char": "Disputant2",
-      "audio": "audio/DISPUTANT2_027.wav",
-      "visemes": [
-        {
-          "p": "viseme_E",
-          "t": 74.244
-        },
-        {
-          "p": "viseme_I",
-          "t": 74.671
-        }
-      ]
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:75.650",
-      "duration": 0.5
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:76.150",
-      "duration": 0.5
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:76.650",
-      "duration": 0.5
-    },
-    {
-      "tc_in": "00:00:77.150",
       "char": "MediatorA",
-      "audio": "audio/MEDIATORA_031.wav",
+      "audio": "audio/MEDIATORA_032.wav",
       "visemes": [
         {
-          "p": "viseme_I",
-          "t": 77.291
-        },
-        {
-          "p": "viseme_aa",
-          "t": 77.553
-        },
-        {
-          "p": "viseme_O",
-          "t": 77.675
-        },
-        {
-          "p": "viseme_I",
-          "t": 77.796
+          "p": "viseme_E",
+          "t": 74.27
         },
         {
           "p": "viseme_PP",
-          "t": 77.983
+          "t": 74.521
         },
         {
           "p": "viseme_O",
-          "t": 78.074
+          "t": 74.662
         },
         {
           "p": "viseme_aa",
-          "t": 78.19
+          "t": 74.882
         },
         {
-          "p": "viseme_O",
-          "t": 78.311
+          "p": "viseme_SS",
+          "t": 75.353
+        },
+        {
+          "p": "viseme_aa",
+          "t": 75.554
+        },
+        {
+          "p": "viseme_E",
+          "t": 76.136
+        },
+        {
+          "p": "viseme_aa",
+          "t": 76.387
+        },
+        {
+          "p": "viseme_SS",
+          "t": 76.918
+        },
+        {
+          "p": "viseme_aa",
+          "t": 77.079
         },
         {
           "p": "viseme_PP",
-          "t": 78.573
+          "t": 77.781
         },
         {
           "p": "viseme_E",
-          "t": 78.876
-        },
-        {
-          "p": "viseme_aa",
-          "t": 79.26
-        },
-        {
-          "p": "viseme_I",
-          "t": 79.532
-        },
-        {
-          "p": "viseme_E",
-          "t": 79.674
+          "t": 77.862
         },
         {
           "p": "viseme_O",
-          "t": 80.057
+          "t": 78.062
+        },
+        {
+          "p": "viseme_CH",
+          "t": 78.207
+        },
+        {
+          "p": "viseme_O",
+          "t": 78.298
+        },
+        {
+          "p": "viseme_SS",
+          "t": 78.483
+        },
+        {
+          "p": "viseme_I",
+          "t": 78.564
+        },
+        {
+          "p": "viseme_aa",
+          "t": 78.794
+        },
+        {
+          "p": "viseme_SS",
+          "t": 78.935
+        },
+        {
+          "p": "viseme_I",
+          "t": 79.035
+        },
+        {
+          "p": "viseme_E",
+          "t": 79.236
+        },
+        {
+          "p": "viseme_aa",
+          "t": 79.366
+        },
+        {
+          "p": "viseme_I",
+          "t": 79.707
+        },
+        {
+          "p": "viseme_aa",
+          "t": 80.158
+        },
+        {
+          "p": "viseme_E",
+          "t": 80.389
+        },
+        {
+          "p": "viseme_aa",
+          "t": 80.64
+        },
+        {
+          "p": "viseme_SS",
+          "t": 80.871
+        },
+        {
+          "p": "viseme_O",
+          "t": 81.032
+        },
+        {
+          "p": "viseme_E",
+          "t": 81.222
+        },
+        {
+          "p": "viseme_aa",
+          "t": 81.553
+        },
+        {
+          "p": "viseme_aa",
+          "t": 82.27
+        },
+        {
+          "p": "viseme_PP",
+          "t": 82.405
+        },
+        {
+          "p": "viseme_O",
+          "t": 82.546
+        },
+        {
+          "p": "viseme_I",
+          "t": 82.776
+        },
+        {
+          "p": "viseme_aa",
+          "t": 82.977
+        },
+        {
+          "p": "viseme_SS",
+          "t": 83.173
+        },
+        {
+          "p": "viseme_E",
+          "t": 83.324
+        },
+        {
+          "p": "viseme_O",
+          "t": 83.539
+        },
+        {
+          "p": "viseme_aa",
+          "t": 83.74
+        },
+        {
+          "p": "viseme_SS",
+          "t": 83.89
+        },
+        {
+          "p": "viseme_O",
+          "t": 84.071
+        },
+        {
+          "p": "viseme_aa",
+          "t": 84.652
+        },
+        {
+          "p": "viseme_I",
+          "t": 85.836
+        },
+        {
+          "p": "viseme_aa",
+          "t": 86.047
+        },
+        {
+          "p": "viseme_TH",
+          "t": 86.147
+        },
+        {
+          "p": "viseme_E",
+          "t": 86.228
+        },
+        {
+          "p": "viseme_O",
+          "t": 86.398
+        },
+        {
+          "p": "viseme_PP",
+          "t": 86.663
+        },
+        {
+          "p": "viseme_O",
+          "t": 86.934
         }
       ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:81.050",
+      "tc_in": "00:00:87.800",
       "duration": 0.5
     },
     {
-      "type": "pause",
-      "tc_in": "00:00:81.550",
-      "duration": 0.5
-    },
-    {
-      "tc_in": "00:00:82.050",
+      "tc_in": "00:00:88.300",
       "char": "MediatorA",
       "audio": "audio/MEDIATORA_034.wav",
       "visemes": [
         {
           "p": "viseme_E",
-          "t": 82.2
+          "t": 88.612
+        },
+        {
+          "p": "viseme_aa",
+          "t": 89.293
         },
         {
           "p": "viseme_O",
-          "t": 82.447
-        },
-        {
-          "p": "viseme_aa",
-          "t": 82.562
-        },
-        {
-          "p": "viseme_SS",
-          "t": 83.009
-        },
-        {
-          "p": "viseme_aa",
-          "t": 83.32
-        },
-        {
-          "p": "viseme_E",
-          "t": 83.677
-        },
-        {
-          "p": "viseme_aa",
-          "t": 83.887
-        },
-        {
-          "p": "viseme_SS",
-          "t": 84.183
-        },
-        {
-          "p": "viseme_aa",
-          "t": 84.394
+          "t": 89.45
         },
         {
           "p": "viseme_PP",
-          "t": 84.801
+          "t": 89.761
         },
         {
           "p": "viseme_E",
-          "t": 84.921
+          "t": 90.105
         },
         {
-          "p": "viseme_O",
-          "t": 85.132
+          "p": "viseme_aa",
+          "t": 90.528
         },
         {
-          "p": "viseme_O",
-          "t": 85.273
+          "p": "viseme_PP",
+          "t": 91.138
         },
         {
           "p": "viseme_I",
-          "t": 85.368
-        },
-        {
-          "p": "viseme_aa",
-          "t": 85.473
-        },
-        {
-          "p": "viseme_E",
-          "t": 85.634
-        },
-        {
-          "p": "viseme_aa",
-          "t": 85.729
-        },
-        {
-          "p": "viseme_I",
-          "t": 85.906
-        },
-        {
-          "p": "viseme_aa",
-          "t": 86.106
-        },
-        {
-          "p": "viseme_E",
-          "t": 86.246
-        },
-        {
-          "p": "viseme_aa",
-          "t": 86.689
-        },
-        {
-          "p": "viseme_SS",
-          "t": 86.874
+          "t": 91.289
         },
         {
           "p": "viseme_O",
-          "t": 86.964
-        },
-        {
-          "p": "viseme_E",
-          "t": 87.13
-        },
-        {
-          "p": "viseme_aa",
-          "t": 87.31
-        },
-        {
-          "p": "viseme_aa",
-          "t": 87.491
-        },
-        {
-          "p": "viseme_O",
-          "t": 87.647
-        },
-        {
-          "p": "viseme_I",
-          "t": 87.763
-        },
-        {
-          "p": "viseme_aa",
-          "t": 87.883
-        },
-        {
-          "p": "viseme_SS",
-          "t": 87.983
-        },
-        {
-          "p": "viseme_E",
-          "t": 88.084
-        },
-        {
-          "p": "viseme_O",
-          "t": 88.214
-        },
-        {
-          "p": "viseme_aa",
-          "t": 88.32
-        },
-        {
-          "p": "viseme_O",
-          "t": 88.46
-        },
-        {
-          "p": "viseme_aa",
-          "t": 88.716
-        },
-        {
-          "p": "viseme_I",
-          "t": 89.168
-        },
-        {
-          "p": "viseme_aa",
-          "t": 89.278
-        },
-        {
-          "p": "viseme_E",
-          "t": 89.394
-        },
-        {
-          "p": "viseme_O",
-          "t": 89.529
-        },
-        {
-          "p": "viseme_O",
-          "t": 89.69
+          "t": 91.465
         }
       ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:90.450",
+      "tc_in": "00:00:92.800",
       "duration": 0.5
     },
     {
-      "type": "pause",
-      "tc_in": "00:00:90.950",
-      "duration": 0.5
-    },
-    {
-      "tc_in": "00:00:91.450",
-      "char": "MediatorA",
-      "audio": "audio/MEDIATORA_037.wav",
+      "tc_in": "00:00:93.300",
+      "char": "Disputant1",
+      "audio": "audio/DISPUTANT1_036.wav",
       "visemes": [
         {
           "p": "viseme_E",
-          "t": 91.642
+          "t": 93.602
         },
         {
-          "p": "viseme_aa",
-          "t": 92.14
+          "p": "viseme_SS",
+          "t": 94.312
         },
         {
           "p": "viseme_O",
-          "t": 92.221
-        },
-        {
-          "p": "viseme_PP",
-          "t": 92.428
+          "t": 94.444
         },
         {
           "p": "viseme_E",
-          "t": 92.601
+          "t": 94.942
+        },
+        {
+          "p": "viseme_SS",
+          "t": 95.516
         },
         {
           "p": "viseme_aa",
-          "t": 92.809
+          "t": 95.637
+        },
+        {
+          "p": "viseme_E",
+          "t": 95.879
+        },
+        {
+          "p": "viseme_E",
+          "t": 96.151
+        },
+        {
+          "p": "viseme_aa",
+          "t": 96.302
         },
         {
           "p": "viseme_I",
-          "t": 93.382
+          "t": 96.665
         },
         {
-          "p": "viseme_O",
-          "t": 93.469
+          "p": "viseme_aa",
+          "t": 97.218
         }
       ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:94.350",
+      "tc_in": "00:00:98.200",
       "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:98.700",
+      "char": "Disputant1",
+      "audio": "audio/DISPUTANT1_038.wav",
+      "visemes": [
+        {
+          "p": "viseme_TH",
+          "t": 98.791
+        },
+        {
+          "p": "viseme_E",
+          "t": 98.972
+        },
+        {
+          "p": "viseme_aa",
+          "t": 99.275
+        },
+        {
+          "p": "viseme_E",
+          "t": 99.688
+        },
+        {
+          "p": "viseme_I",
+          "t": 100.192
+        },
+        {
+          "p": "viseme_E",
+          "t": 100.424
+        },
+        {
+          "p": "viseme_SS",
+          "t": 100.6
+        },
+        {
+          "p": "viseme_I",
+          "t": 100.731
+        },
+        {
+          "p": "viseme_aa",
+          "t": 101.18
+        },
+        {
+          "p": "viseme_I",
+          "t": 101.386
+        },
+        {
+          "p": "viseme_O",
+          "t": 101.613
+        },
+        {
+          "p": "viseme_I",
+          "t": 101.86
+        },
+        {
+          "p": "viseme_E",
+          "t": 102.248
+        }
+      ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:94.850",
+      "tc_in": "00:00:103.300",
       "duration": 0.5
     },
     {
-      "tc_in": "00:00:95.350",
+      "tc_in": "00:00:103.800",
       "char": "Disputant1",
       "audio": "audio/DISPUTANT1_040.wav",
       "visemes": [
         {
-          "p": "viseme_E",
-          "t": 95.663
-        },
-        {
-          "p": "viseme_SS",
-          "t": 96.466
-        },
-        {
-          "p": "viseme_O",
-          "t": 96.597
-        },
-        {
-          "p": "viseme_E",
-          "t": 97.632
-        },
-        {
-          "p": "viseme_SS",
-          "t": 97.804
-        },
-        {
           "p": "viseme_aa",
-          "t": 97.905
-        },
-        {
-          "p": "viseme_E",
-          "t": 98.077
-        },
-        {
-          "p": "viseme_E",
-          "t": 98.294
-        },
-        {
-          "p": "viseme_aa",
-          "t": 98.415
+          "t": 103.952
         },
         {
           "p": "viseme_I",
-          "t": 98.743
+          "t": 104.257
+        },
+        {
+          "p": "viseme_SS",
+          "t": 104.424
+        },
+        {
+          "p": "viseme_E",
+          "t": 104.535
+        },
+        {
+          "p": "viseme_O",
+          "t": 105.321
+        },
+        {
+          "p": "viseme_SS",
+          "t": 105.529
+        },
+        {
+          "p": "viseme_I",
+          "t": 105.62
         },
         {
           "p": "viseme_aa",
-          "t": 99.248
+          "t": 105.854
+        },
+        {
+          "p": "viseme_O",
+          "t": 106.051
+        },
+        {
+          "p": "viseme_PP",
+          "t": 106.355
+        },
+        {
+          "p": "viseme_aa",
+          "t": 106.599
         }
       ]
     },
     {
-      "tc_in": "00:00:100.200",
-      "char": "Disputant1",
-      "audio": "audio/DISPUTANT1_041.wav",
-      "visemes": [
-        {
-          "p": "viseme_TH",
-          "t": 100.306
-        },
-        {
-          "p": "viseme_E",
-          "t": 100.519
-        },
-        {
-          "p": "viseme_aa",
-          "t": 100.686
-        },
-        {
-          "p": "viseme_E",
-          "t": 101.151
-        },
-        {
-          "p": "viseme_TH",
-          "t": 101.394
-        },
-        {
-          "p": "viseme_aa",
-          "t": 101.475
-        },
-        {
-          "p": "viseme_E",
-          "t": 101.566
-        },
-        {
-          "p": "viseme_I",
-          "t": 101.758
-        },
-        {
-          "p": "viseme_aa",
-          "t": 101.87
-        },
-        {
-          "p": "viseme_I",
-          "t": 101.966
-        },
-        {
-          "p": "viseme_O",
-          "t": 102.204
-        },
-        {
-          "p": "viseme_I",
-          "t": 102.416
-        },
-        {
-          "p": "viseme_E",
-          "t": 102.669
-        }
-      ]
+      "type": "pause",
+      "tc_in": "00:00:107.450",
+      "duration": 0.5
     },
     {
-      "tc_in": "00:00:103.500",
+      "tc_in": "00:00:107.950",
       "char": "Disputant1",
       "audio": "audio/DISPUTANT1_042.wav",
       "visemes": [
         {
-          "p": "viseme_CH",
-          "t": 103.571
+          "p": "viseme_E",
+          "t": 108.071
         },
         {
           "p": "viseme_I",
-          "t": 103.712
+          "t": 108.312
+        },
+        {
+          "p": "viseme_O",
+          "t": 108.615
+        },
+        {
+          "p": "viseme_I",
+          "t": 108.771
+        },
+        {
+          "p": "viseme_O",
+          "t": 108.968
         },
         {
           "p": "viseme_SS",
-          "t": 103.889
+          "t": 109.194
+        },
+        {
+          "p": "viseme_I",
+          "t": 109.305
+        },
+        {
+          "p": "viseme_TH",
+          "t": 109.466
         },
         {
           "p": "viseme_E",
-          "t": 103.98
+          "t": 109.557
+        },
+        {
+          "p": "viseme_TH",
+          "t": 109.985
         },
         {
           "p": "viseme_O",
-          "t": 104.399
-        },
-        {
-          "p": "viseme_SS",
-          "t": 104.713
+          "t": 110.066
         },
         {
           "p": "viseme_I",
-          "t": 104.793
+          "t": 110.479
         },
         {
-          "p": "viseme_aa",
-          "t": 105.001
+          "p": "viseme_E",
+          "t": 110.721
+        },
+        {
+          "p": "viseme_I",
+          "t": 110.902
         },
         {
           "p": "viseme_O",
-          "t": 105.188
+          "t": 111.002
+        },
+        {
+          "p": "viseme_aa",
+          "t": 111.144
+        },
+        {
+          "p": "viseme_E",
+          "t": 111.32
+        },
+        {
+          "p": "viseme_FF",
+          "t": 111.567
+        },
+        {
+          "p": "viseme_E",
+          "t": 111.869
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:112.750",
+      "duration": 0.5
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:113.250",
+      "duration": 0.5
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:113.750",
+      "duration": 0.5
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:114.250",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:114.750",
+      "char": "MediatorA",
+      "audio": "audio/MEDIATORA_047.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 114.9
+        },
+        {
+          "p": "viseme_E",
+          "t": 115.141
+        },
+        {
+          "p": "viseme_O",
+          "t": 115.513
+        },
+        {
+          "p": "viseme_SS",
+          "t": 115.713
+        },
+        {
+          "p": "viseme_E",
+          "t": 115.834
+        },
+        {
+          "p": "viseme_I",
+          "t": 115.934
+        },
+        {
+          "p": "viseme_aa",
+          "t": 116.516
+        },
+        {
+          "p": "viseme_O",
+          "t": 116.838
+        },
+        {
+          "p": "viseme_E",
+          "t": 117.359
+        },
+        {
+          "p": "viseme_aa",
+          "t": 117.982
+        },
+        {
+          "p": "viseme_E",
+          "t": 118.188
+        },
+        {
+          "p": "viseme_O",
+          "t": 118.323
+        },
+        {
+          "p": "viseme_I",
+          "t": 118.85
+        },
+        {
+          "p": "viseme_aa",
+          "t": 119.066
+        },
+        {
+          "p": "viseme_O",
+          "t": 119.237
         },
         {
           "p": "viseme_PP",
-          "t": 105.47
+          "t": 119.492
         },
         {
           "p": "viseme_aa",
-          "t": 105.652
-        },
-        {
-          "p": "viseme_E",
-          "t": 106.481
-        },
-        {
-          "p": "viseme_aa",
-          "t": 106.763
+          "t": 119.663
         },
         {
           "p": "viseme_O",
-          "t": 107.147
+          "t": 120.18
+        },
+        {
+          "p": "viseme_I",
+          "t": 120.37
+        },
+        {
+          "p": "viseme_O",
+          "t": 120.602
+        },
+        {
+          "p": "viseme_aa",
+          "t": 120.822
+        },
+        {
+          "p": "viseme_E",
+          "t": 121.093
+        },
+        {
+          "p": "viseme_O",
+          "t": 121.394
+        },
+        {
+          "p": "viseme_SS",
+          "t": 121.655
+        },
+        {
+          "p": "viseme_I",
+          "t": 121.776
+        },
+        {
+          "p": "viseme_O",
+          "t": 122.157
+        },
+        {
+          "p": "viseme_TH",
+          "t": 122.282
+        },
+        {
+          "p": "viseme_O",
+          "t": 122.373
+        },
+        {
+          "p": "viseme_I",
+          "t": 122.865
+        },
+        {
+          "p": "viseme_E",
+          "t": 123.16
+        },
+        {
+          "p": "viseme_I",
+          "t": 123.412
+        },
+        {
+          "p": "viseme_O",
+          "t": 123.542
+        },
+        {
+          "p": "viseme_aa",
+          "t": 123.693
+        },
+        {
+          "p": "viseme_TH",
+          "t": 123.843
+        },
+        {
+          "p": "viseme_E",
+          "t": 123.924
+        },
+        {
+          "p": "viseme_FF",
+          "t": 124.139
+        },
+        {
+          "p": "viseme_E",
+          "t": 124.331
+        },
+        {
+          "p": "viseme_I",
+          "t": 124.867
+        },
+        {
+          "p": "viseme_aa",
+          "t": 125.053
+        },
+        {
+          "p": "viseme_E",
+          "t": 125.409
         }
       ]
     },
     {
-      "tc_in": "00:00:108.150",
+      "type": "pause",
+      "tc_in": "00:00:126.400",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:126.900",
       "char": "Disputant1",
-      "audio": "audio/DISPUTANT1_043.wav",
+      "audio": "audio/DISPUTANT1_049.wav",
       "visemes": [
         {
-          "p": "viseme_E",
-          "t": 108.291
-        },
-        {
-          "p": "viseme_I",
-          "t": 108.626
-        },
-        {
-          "p": "viseme_O",
-          "t": 108.93
-        },
-        {
-          "p": "viseme_I",
-          "t": 109.081
-        },
-        {
-          "p": "viseme_O",
-          "t": 109.293
-        },
-        {
-          "p": "viseme_I",
-          "t": 110.012
-        },
-        {
-          "p": "viseme_E",
-          "t": 110.144
-        },
-        {
-          "p": "viseme_O",
-          "t": 110.463
-        },
-        {
-          "p": "viseme_I",
-          "t": 110.822
-        },
-        {
-          "p": "viseme_E",
-          "t": 110.983
-        },
-        {
-          "p": "viseme_O",
-          "t": 111.175
-        },
-        {
           "p": "viseme_aa",
-          "t": 111.257
-        },
-        {
-          "p": "viseme_E",
-          "t": 111.383
-        },
-        {
-          "p": "viseme_E",
-          "t": 111.535
+          "t": 127.336
         }
       ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:112.300",
+      "tc_in": "00:00:128.500",
       "duration": 0.5
     },
     {
-      "type": "pause",
-      "tc_in": "00:00:112.800",
-      "duration": 0.5
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:113.300",
-      "duration": 0.5
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:113.800",
-      "duration": 0.5
-    },
-    {
-      "tc_in": "00:00:114.300",
-      "char": "MediatorA",
-      "audio": "audio/MEDIATORA_048.wav",
-      "visemes": [
-        {
-          "p": "viseme_aa",
-          "t": 114.451
-        },
-        {
-          "p": "viseme_E",
-          "t": 114.692
-        },
-        {
-          "p": "viseme_O",
-          "t": 115.044
-        },
-        {
-          "p": "viseme_SS",
-          "t": 115.219
-        },
-        {
-          "p": "viseme_E",
-          "t": 115.33
-        },
-        {
-          "p": "viseme_I",
-          "t": 115.426
-        },
-        {
-          "p": "viseme_O",
-          "t": 115.868
-        },
-        {
-          "p": "viseme_SS",
-          "t": 116.039
-        },
-        {
-          "p": "viseme_aa",
-          "t": 116.14
-        },
-        {
-          "p": "viseme_TH",
-          "t": 116.255
-        },
-        {
-          "p": "viseme_E",
-          "t": 116.346
-        },
-        {
-          "p": "viseme_PP",
-          "t": 116.491
-        },
-        {
-          "p": "viseme_O",
-          "t": 116.652
-        },
-        {
-          "p": "viseme_TH",
-          "t": 116.958
-        },
-        {
-          "p": "viseme_O",
-          "t": 117.049
-        },
-        {
-          "p": "viseme_I",
-          "t": 117.154
-        },
-        {
-          "p": "viseme_aa",
-          "t": 117.275
-        },
-        {
-          "p": "viseme_O",
-          "t": 117.577
-        },
-        {
-          "p": "viseme_aa",
-          "t": 118.039
-        },
-        {
-          "p": "viseme_O",
-          "t": 118.19
-        },
-        {
-          "p": "viseme_I",
-          "t": 118.381
-        },
-        {
-          "p": "viseme_O",
-          "t": 118.592
-        },
-        {
-          "p": "viseme_aa",
-          "t": 118.893
-        },
-        {
-          "p": "viseme_O",
-          "t": 119.326
-        },
-        {
-          "p": "viseme_SS",
-          "t": 119.602
-        },
-        {
-          "p": "viseme_I",
-          "t": 119.713
-        },
-        {
-          "p": "viseme_TH",
-          "t": 119.924
-        },
-        {
-          "p": "viseme_E",
-          "t": 120.155
-        }
-      ]
-    },
-    {
-      "tc_in": "00:00:121.000",
-      "char": "MediatorA",
-      "audio": "audio/MEDIATORA_049.wav",
-      "visemes": []
-    },
-    {
-      "tc_in": "00:00:122.650",
-      "char": "Disputant1",
-      "audio": "audio/DISPUTANT1_050.wav",
-      "visemes": [
-        {
-          "p": "viseme_aa",
-          "t": 122.917
-        },
-        {
-          "p": "viseme_TH",
-          "t": 123.635
-        },
-        {
-          "p": "viseme_aa",
-          "t": 123.758
-        },
-        {
-          "p": "viseme_I",
-          "t": 124.107
-        }
-      ]
-    },
-    {
-      "tc_in": "00:00:125.000",
+      "tc_in": "00:00:129.000",
       "char": "MediatorA",
       "audio": "audio/MEDIATORA_051.wav",
       "visemes": [
         {
           "p": "viseme_I",
-          "t": 125.122
+          "t": 129.121
+        },
+        {
+          "p": "viseme_TH",
+          "t": 129.325
         },
         {
           "p": "viseme_E",
-          "t": 125.389
+          "t": 129.405
         },
         {
           "p": "viseme_O",
-          "t": 126.193
+          "t": 130.317
         },
         {
           "p": "viseme_aa",
-          "t": 126.345
+          "t": 130.519
         },
         {
           "p": "viseme_O",
-          "t": 126.456
+          "t": 130.672
         },
         {
           "p": "viseme_CH",
-          "t": 126.587
+          "t": 130.93
         },
         {
           "p": "viseme_E",
-          "t": 126.688
-        },
-        {
-          "p": "viseme_PP",
-          "t": 126.825
-        },
-        {
-          "p": "viseme_E",
-          "t": 126.916
-        },
-        {
-          "p": "viseme_aa",
-          "t": 127.062
+          "t": 131.223
         }
       ]
     },
     {
-      "tc_in": "00:00:128.600",
+      "type": "pause",
+      "tc_in": "00:00:132.100",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:132.600",
       "char": "Disputant1",
-      "audio": "audio/DISPUTANT1_052.wav",
+      "audio": "audio/DISPUTANT1_053.wav",
       "visemes": [
         {
           "p": "viseme_O",
-          "t": 128.875
+          "t": 132.876
         },
         {
           "p": "viseme_TH",
-          "t": 129.323
+          "t": 133.351
         },
         {
           "p": "viseme_aa",
-          "t": 129.628
-        },
-        {
-          "p": "viseme_PP",
-          "t": 129.99
-        },
-        {
-          "p": "viseme_E",
-          "t": 130.245
+          "t": 133.708
         },
         {
           "p": "viseme_I",
-          "t": 130.647
-        }
-      ]
-    },
-    {
-      "tc_in": "00:00:131.550",
-      "char": "MediatorA",
-      "audio": "audio/MEDIATORA_053.wav",
-      "visemes": [
-        {
-          "p": "viseme_TH",
-          "t": 131.659
-        },
-        {
-          "p": "viseme_aa",
-          "t": 131.877
-        },
-        {
-          "p": "viseme_E",
-          "t": 132.339
-        }
-      ]
-    },
-    {
-      "tc_in": "00:00:133.400",
-      "char": "MediatorA",
-      "audio": "audio/MEDIATORA_054.wav",
-      "visemes": [
-        {
-          "p": "viseme_aa",
-          "t": 133.694
-        },
-        {
-          "p": "viseme_aa",
-          "t": 134.376
-        },
-        {
-          "p": "viseme_O",
-          "t": 134.532
-        },
-        {
-          "p": "viseme_PP",
-          "t": 134.846
-        },
-        {
-          "p": "viseme_E",
-          "t": 135.149
-        },
-        {
-          "p": "viseme_aa",
-          "t": 135.574
-        },
-        {
-          "p": "viseme_PP",
-          "t": 136.1
-        },
-        {
-          "p": "viseme_I",
-          "t": 136.241
-        },
-        {
-          "p": "viseme_O",
-          "t": 136.404
+          "t": 134.296
         }
       ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:137.750",
+      "tc_in": "00:00:135.250",
       "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:135.750",
+      "char": "MediatorA",
+      "audio": "audio/MEDIATORA_055.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 136.062
+        },
+        {
+          "p": "viseme_aa",
+          "t": 136.607
+        },
+        {
+          "p": "viseme_O",
+          "t": 136.758
+        },
+        {
+          "p": "viseme_PP",
+          "t": 137.025
+        },
+        {
+          "p": "viseme_E",
+          "t": 137.358
+        },
+        {
+          "p": "viseme_aa",
+          "t": 137.917
+        },
+        {
+          "p": "viseme_PP",
+          "t": 138.472
+        },
+        {
+          "p": "viseme_I",
+          "t": 138.633
+        },
+        {
+          "p": "viseme_O",
+          "t": 138.805
+        }
+      ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:138.250",
+      "tc_in": "00:00:140.150",
       "duration": 0.5
     },
     {
-      "tc_in": "00:00:138.750",
+      "tc_in": "00:00:140.650",
       "char": "Disputant2",
       "audio": "audio/DISPUTANT2_057.wav",
       "visemes": [
         {
-          "p": "viseme_aa",
-          "t": 138.982
-        },
-        {
-          "p": "viseme_E",
-          "t": 139.639
+          "p": "viseme_SS",
+          "t": 140.756
         },
         {
           "p": "viseme_O",
-          "t": 139.811
+          "t": 140.967
         },
         {
-          "p": "viseme_I",
-          "t": 140.054
+          "p": "viseme_E",
+          "t": 141.536
         },
         {
-          "p": "viseme_aa",
-          "t": 140.296
+          "p": "viseme_O",
+          "t": 141.798
         },
         {
           "p": "viseme_SS",
-          "t": 140.493
+          "t": 142.039
         },
         {
           "p": "viseme_I",
-          "t": 140.624
+          "t": 142.12
+        },
+        {
+          "p": "viseme_aa",
+          "t": 142.427
+        },
+        {
+          "p": "viseme_SS",
+          "t": 142.588
+        },
+        {
+          "p": "viseme_I",
+          "t": 142.679
         },
         {
           "p": "viseme_PP",
-          "t": 141.296
+          "t": 142.976
         },
         {
           "p": "viseme_O",
-          "t": 141.578
+          "t": 143.157
+        },
+        {
+          "p": "viseme_E",
+          "t": 143.45
+        },
+        {
+          "p": "viseme_PP",
+          "t": 143.857
+        },
+        {
+          "p": "viseme_E",
+          "t": 144.068
         }
       ]
     },
     {
-      "tc_in": "00:00:142.450",
-      "char": "Disputant2",
-      "audio": "audio/DISPUTANT2_058.wav",
-      "visemes": [
-        {
-          "p": "viseme_I",
-          "t": 142.624
-        },
-        {
-          "p": "viseme_E",
-          "t": 143.159
-        },
-        {
-          "p": "viseme_FF",
-          "t": 143.447
-        },
-        {
-          "p": "viseme_E",
-          "t": 143.796
-        }
-      ]
+      "type": "pause",
+      "tc_in": "00:00:145.750",
+      "duration": 0.5
     },
     {
-      "tc_in": "00:00:144.700",
+      "tc_in": "00:00:146.250",
       "char": "Disputant2",
       "audio": "audio/DISPUTANT2_059.wav",
       "visemes": [
         {
-          "p": "viseme_aa",
-          "t": 144.831
-        },
-        {
           "p": "viseme_E",
-          "t": 145.173
+          "t": 146.483
         },
         {
-          "p": "viseme_aa",
-          "t": 145.47
-        },
-        {
-          "p": "viseme_O",
-          "t": 145.626
-        },
-        {
-          "p": "viseme_I",
-          "t": 145.797
+          "p": "viseme_SS",
+          "t": 146.832
         },
         {
           "p": "viseme_aa",
-          "t": 146.129
+          "t": 146.943
+        },
+        {
+          "p": "viseme_TH",
+          "t": 147.106
         },
         {
           "p": "viseme_E",
-          "t": 146.22
-        },
-        {
-          "p": "viseme_O",
-          "t": 146.391
-        },
-        {
-          "p": "viseme_I",
-          "t": 146.552
-        },
-        {
-          "p": "viseme_E",
-          "t": 146.99
-        },
-        {
-          "p": "viseme_O",
           "t": 147.196
         },
         {
-          "p": "viseme_PP",
-          "t": 147.448
-        },
-        {
           "p": "viseme_aa",
-          "t": 147.589
+          "t": 147.889
         },
         {
-          "p": "viseme_aa",
-          "t": 148.213
-        },
-        {
-          "p": "viseme_I",
-          "t": 148.314
+          "p": "viseme_E",
+          "t": 147.981
         },
         {
           "p": "viseme_O",
-          "t": 148.495
+          "t": 148.163
         },
         {
           "p": "viseme_I",
-          "t": 148.958
+          "t": 148.356
+        },
+        {
+          "p": "viseme_E",
+          "t": 148.659
+        },
+        {
+          "p": "viseme_O",
+          "t": 148.892
+        },
+        {
+          "p": "viseme_PP",
+          "t": 149.206
+        },
+        {
+          "p": "viseme_aa",
+          "t": 149.448
         }
       ]
     },
     {
-      "tc_in": "00:00:150.000",
+      "type": "pause",
+      "tc_in": "00:00:150.300",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:150.800",
       "char": "Disputant2",
-      "audio": "audio/DISPUTANT2_060.wav",
+      "audio": "audio/DISPUTANT2_061.wav",
       "visemes": [
         {
-          "p": "viseme_I",
-          "t": 150.121
-        },
-        {
-          "p": "viseme_aa",
-          "t": 150.423
-        },
-        {
-          "p": "viseme_E",
-          "t": 150.554
-        },
-        {
-          "p": "viseme_TH",
-          "t": 150.654
-        },
-        {
-          "p": "viseme_E",
-          "t": 150.755
-        },
-        {
-          "p": "viseme_aa",
-          "t": 150.856
-        },
-        {
-          "p": "viseme_I",
-          "t": 151.047
-        },
-        {
-          "p": "viseme_aa",
-          "t": 151.137
-        },
-        {
-          "p": "viseme_E",
-          "t": 151.45
-        },
-        {
-          "p": "viseme_aa",
-          "t": 151.893
-        },
-        {
           "p": "viseme_PP",
-          "t": 152.713
+          "t": 150.861
+        },
+        {
+          "p": "viseme_aa",
+          "t": 150.982
+        },
+        {
+          "p": "viseme_I",
+          "t": 151.104
         },
         {
           "p": "viseme_O",
-          "t": 152.823
-        },
-        {
-          "p": "viseme_PP",
-          "t": 153.07
+          "t": 151.316
         },
         {
           "p": "viseme_I",
-          "t": 153.251
+          "t": 151.639
         },
         {
-          "p": "viseme_E",
-          "t": 153.663
+          "p": "viseme_O",
+          "t": 151.862
+        },
+        {
+          "p": "viseme_I",
+          "t": 152.044
         },
         {
           "p": "viseme_aa",
-          "t": 154.278
+          "t": 152.641
+        },
+        {
+          "p": "viseme_I",
+          "t": 152.722
+        },
+        {
+          "p": "viseme_O",
+          "t": 152.904
+        },
+        {
+          "p": "viseme_PP",
+          "t": 153.167
+        },
+        {
+          "p": "viseme_O",
+          "t": 153.369
         }
       ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:155.400",
+      "tc_in": "00:00:154.200",
       "duration": 0.5
     },
     {
       "type": "pause",
-      "tc_in": "00:00:155.900",
+      "tc_in": "00:00:154.700",
       "duration": 0.5
     },
     {
       "type": "pause",
-      "tc_in": "00:00:156.400",
+      "tc_in": "00:00:155.200",
       "duration": 0.5
     },
     {
       "type": "pause",
-      "tc_in": "00:00:156.900",
+      "tc_in": "00:00:155.700",
       "duration": 0.5
     },
     {
-      "tc_in": "00:00:157.400",
-      "char": "MediatorA",
-      "audio": "audio/MEDIATORA_065.wav",
-      "visemes": [
-        {
-          "p": "viseme_aa",
-          "t": 157.55
-        },
-        {
-          "p": "viseme_E",
-          "t": 157.751
-        },
-        {
-          "p": "viseme_O",
-          "t": 158.073
-        },
-        {
-          "p": "viseme_SS",
-          "t": 158.258
-        },
-        {
-          "p": "viseme_E",
-          "t": 158.369
-        },
-        {
-          "p": "viseme_I",
-          "t": 158.464
-        },
-        {
-          "p": "viseme_TH",
-          "t": 158.896
-        },
-        {
-          "p": "viseme_aa",
-          "t": 159.037
-        },
-        {
-          "p": "viseme_O",
-          "t": 159.207
-        },
-        {
-          "p": "viseme_SS",
-          "t": 159.759
-        },
-        {
-          "p": "viseme_I",
-          "t": 159.86
-        },
-        {
-          "p": "viseme_PP",
-          "t": 160.105
-        },
-        {
-          "p": "viseme_O",
-          "t": 160.256
-        },
-        {
-          "p": "viseme_aa",
-          "t": 160.513
-        },
-        {
-          "p": "viseme_O",
-          "t": 161.075
-        },
-        {
-          "p": "viseme_E",
-          "t": 161.275
-        },
-        {
-          "p": "viseme_O",
-          "t": 161.436
-        },
-        {
-          "p": "viseme_E",
-          "t": 161.596
-        },
-        {
-          "p": "viseme_aa",
-          "t": 162.249
-        },
-        {
-          "p": "viseme_I",
-          "t": 162.339
-        },
-        {
-          "p": "viseme_E",
-          "t": 162.525
-        },
-        {
-          "p": "viseme_I",
-          "t": 162.821
-        },
-        {
-          "p": "viseme_aa",
-          "t": 163.534
-        },
-        {
-          "p": "viseme_O",
-          "t": 164.298
-        },
-        {
-          "p": "viseme_PP",
-          "t": 164.633
-        },
-        {
-          "p": "viseme_O",
-          "t": 164.924
-        }
-      ]
-    },
-    {
-      "tc_in": "00:00:165.800",
+      "tc_in": "00:00:156.200",
       "char": "MediatorA",
       "audio": "audio/MEDIATORA_066.wav",
       "visemes": [
         {
-          "p": "viseme_I",
-          "t": 165.914
-        },
-        {
           "p": "viseme_aa",
-          "t": 166.162
-        }
-      ]
-    },
-    {
-      "tc_in": "00:00:167.750",
-      "char": "Disputant2",
-      "audio": "audio/DISPUTANT2_067.wav",
-      "visemes": [
-        {
-          "p": "viseme_aa",
-          "t": 168.111
-        }
-      ]
-    },
-    {
-      "tc_in": "00:00:169.200",
-      "char": "MediatorA",
-      "audio": "audio/MEDIATORA_068.wav",
-      "visemes": [
-        {
-          "p": "viseme_I",
-          "t": 169.301
-        },
-        {
-          "p": "viseme_TH",
-          "t": 169.484
+          "t": 156.341
         },
         {
           "p": "viseme_E",
-          "t": 169.565
+          "t": 156.552
         },
         {
           "p": "viseme_O",
-          "t": 170.376
+          "t": 156.923
         },
         {
-          "p": "viseme_aa",
-          "t": 170.559
+          "p": "viseme_SS",
+          "t": 157.119
         },
         {
-          "p": "viseme_O",
-          "t": 170.721
-        },
-        {
-          "p": "viseme_aa",
-          "t": 171.147
-        }
-      ]
-    },
-    {
-      "tc_in": "00:00:172.100",
-      "char": "Disputant2",
-      "audio": "audio/DISPUTANT2_069.wav",
-      "visemes": [
-        {
-          "p": "viseme_aa",
-          "t": 172.297
+          "p": "viseme_E",
+          "t": 157.23
         },
         {
           "p": "viseme_I",
-          "t": 172.889
+          "t": 157.476
+        },
+        {
+          "p": "viseme_E",
+          "t": 157.978
+        },
+        {
+          "p": "viseme_O",
+          "t": 158.32
+        },
+        {
+          "p": "viseme_aa",
+          "t": 158.576
+        },
+        {
+          "p": "viseme_SS",
+          "t": 158.696
+        },
+        {
+          "p": "viseme_I",
+          "t": 158.787
+        },
+        {
+          "p": "viseme_O",
+          "t": 158.952
+        },
+        {
+          "p": "viseme_SS",
+          "t": 159.595
+        },
+        {
+          "p": "viseme_I",
+          "t": 159.676
+        },
+        {
+          "p": "viseme_O",
+          "t": 160.027
+        },
+        {
+          "p": "viseme_PP",
+          "t": 160.288
+        },
+        {
+          "p": "viseme_O",
+          "t": 160.429
+        },
+        {
+          "p": "viseme_aa",
+          "t": 160.68
+        },
+        {
+          "p": "viseme_I",
+          "t": 161.243
+        },
+        {
+          "p": "viseme_O",
+          "t": 161.444
+        },
+        {
+          "p": "viseme_I",
+          "t": 161.775
+        },
+        {
+          "p": "viseme_E",
+          "t": 162.036
+        },
+        {
+          "p": "viseme_O",
+          "t": 162.167
+        },
+        {
+          "p": "viseme_E",
+          "t": 162.368
+        },
+        {
+          "p": "viseme_O",
+          "t": 162.548
+        },
+        {
+          "p": "viseme_E",
+          "t": 162.689
+        },
+        {
+          "p": "viseme_I",
+          "t": 162.88
+        },
+        {
+          "p": "viseme_aa",
+          "t": 163.141
+        },
+        {
+          "p": "viseme_O",
+          "t": 163.292
+        },
+        {
+          "p": "viseme_PP",
+          "t": 163.814
+        },
+        {
+          "p": "viseme_aa",
+          "t": 163.975
+        },
+        {
+          "p": "viseme_I",
+          "t": 164.437
+        },
+        {
+          "p": "viseme_TH",
+          "t": 164.557
+        },
+        {
+          "p": "viseme_aa",
+          "t": 164.638
+        },
+        {
+          "p": "viseme_E",
+          "t": 164.979
         }
       ]
     },
     {
-      "tc_in": "00:00:173.950",
+      "type": "pause",
+      "tc_in": "00:00:165.950",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:166.450",
+      "char": "Disputant2",
+      "audio": "audio/DISPUTANT2_068.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 166.811
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:167.900",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:168.400",
       "char": "MediatorA",
       "audio": "audio/MEDIATORA_070.wav",
       "visemes": [
         {
-          "p": "viseme_E",
-          "t": 174.335
-        }
-      ]
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:175.450",
-      "duration": 0.5
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:175.950",
-      "duration": 0.5
-    },
-    {
-      "tc_in": "00:00:176.450",
-      "char": "MediatorA",
-      "audio": "audio/MEDIATORA_073.wav",
-      "visemes": [
+          "p": "viseme_I",
+          "t": 168.501
+        },
         {
           "p": "viseme_E",
-          "t": 176.754
-        },
-        {
-          "p": "viseme_aa",
-          "t": 177.543
-        },
-        {
-          "p": "viseme_PP",
-          "t": 177.776
-        },
-        {
-          "p": "viseme_aa",
-          "t": 177.958
+          "t": 168.751
         },
         {
           "p": "viseme_O",
-          "t": 178.15
+          "t": 169.446
         },
         {
-          "p": "viseme_PP",
-          "t": 178.332
+          "p": "viseme_aa",
+          "t": 169.618
         },
         {
           "p": "viseme_O",
-          "t": 178.453
-        },
-        {
-          "p": "viseme_I",
-          "t": 178.615
-        },
-        {
-          "p": "viseme_I",
-          "t": 178.772
+          "t": 169.781
         },
         {
           "p": "viseme_CH",
-          "t": 179.096
+          "t": 170.029
         },
         {
           "p": "viseme_E",
-          "t": 179.612
-        }
-      ]
-    },
-    {
-      "tc_in": "00:00:180.600",
-      "char": "Disputant1",
-      "audio": "audio/DISPUTANT1_074.wav",
-      "visemes": [
-        {
-          "p": "viseme_E",
-          "t": 181.055
-        },
-        {
-          "p": "viseme_O",
-          "t": 181.703
-        },
-        {
-          "p": "viseme_E",
-          "t": 182.088
-        },
-        {
-          "p": "viseme_I",
-          "t": 182.543
-        },
-        {
-          "p": "viseme_FF",
-          "t": 182.715
-        },
-        {
-          "p": "viseme_aa",
-          "t": 182.816
-        },
-        {
-          "p": "viseme_aa",
-          "t": 183.045
+          "t": 170.323
         }
       ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:184.650",
+      "tc_in": "00:00:171.200",
       "duration": 0.5
     },
     {
-      "tc_in": "00:00:185.150",
-      "char": "MediatorA",
-      "audio": "audio/MEDIATORA_076.wav",
+      "tc_in": "00:00:171.700",
+      "char": "Disputant2",
+      "audio": "audio/DISPUTANT2_072.wav",
       "visemes": [
         {
-          "p": "viseme_E",
-          "t": 185.281
-        },
-        {
-          "p": "viseme_I",
-          "t": 185.513
-        },
-        {
           "p": "viseme_O",
-          "t": 185.665
-        },
-        {
-          "p": "viseme_FF",
-          "t": 185.827
-        },
-        {
-          "p": "viseme_I",
-          "t": 185.968
-        },
-        {
-          "p": "viseme_E",
-          "t": 186.159
-        },
-        {
-          "p": "viseme_aa",
-          "t": 186.513
-        },
-        {
-          "p": "viseme_O",
-          "t": 186.846
-        },
-        {
-          "p": "viseme_E",
-          "t": 187.37
-        },
-        {
-          "p": "viseme_aa",
-          "t": 187.996
-        },
-        {
-          "p": "viseme_SS",
-          "t": 188.243
-        },
-        {
-          "p": "viseme_O",
-          "t": 188.414
-        },
-        {
-          "p": "viseme_E",
-          "t": 188.612
-        },
-        {
-          "p": "viseme_aa",
-          "t": 189.156
+          "t": 172.036
         }
       ]
     },
     {
-      "tc_in": "00:00:190.300",
-      "char": "Disputant1",
-      "audio": "audio/DISPUTANT1_077.wav",
+      "type": "pause",
+      "tc_in": "00:00:173.100",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:173.600",
+      "char": "MediatorA",
+      "audio": "audio/MEDIATORA_074.wav",
       "visemes": [
         {
           "p": "viseme_E",
-          "t": 190.482
-        },
-        {
-          "p": "viseme_FF",
-          "t": 191.198
-        },
-        {
-          "p": "viseme_E",
-          "t": 191.299
-        },
-        {
-          "p": "viseme_O",
-          "t": 191.495
+          "t": 173.884
         },
         {
           "p": "viseme_aa",
-          "t": 191.631
-        },
-        {
-          "p": "viseme_aa",
-          "t": 191.778
+          "t": 174.442
         },
         {
           "p": "viseme_PP",
-          "t": 191.944
+          "t": 174.639
         },
         {
           "p": "viseme_aa",
-          "t": 192.085
+          "t": 174.812
+        },
+        {
+          "p": "viseme_O",
+          "t": 174.979
+        },
+        {
+          "p": "viseme_PP",
+          "t": 175.136
+        },
+        {
+          "p": "viseme_O",
+          "t": 175.247
+        },
+        {
+          "p": "viseme_I",
+          "t": 175.375
+        },
+        {
+          "p": "viseme_I",
+          "t": 175.522
+        },
+        {
+          "p": "viseme_CH",
+          "t": 175.805
         },
         {
           "p": "viseme_E",
-          "t": 192.66
-        },
-        {
-          "p": "viseme_aa",
-          "t": 192.932
-        },
-        {
-          "p": "viseme_SS",
-          "t": 193.25
-        },
-        {
-          "p": "viseme_E",
-          "t": 193.663
+          "t": 176.282
         }
       ]
     },
     {
-      "tc_in": "00:00:194.600",
+      "type": "pause",
+      "tc_in": "00:00:177.250",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:177.750",
+      "char": "Disputant1",
+      "audio": "audio/DISPUTANT1_076.wav",
+      "visemes": [
+        {
+          "p": "viseme_PP",
+          "t": 177.862
+        },
+        {
+          "p": "viseme_I",
+          "t": 178.085
+        },
+        {
+          "p": "viseme_O",
+          "t": 178.439
+        },
+        {
+          "p": "viseme_E",
+          "t": 178.804
+        },
+        {
+          "p": "viseme_I",
+          "t": 179.078
+        },
+        {
+          "p": "viseme_FF",
+          "t": 179.372
+        },
+        {
+          "p": "viseme_aa",
+          "t": 179.453
+        },
+        {
+          "p": "viseme_aa",
+          "t": 179.656
+        },
+        {
+          "p": "viseme_O",
+          "t": 179.828
+        },
+        {
+          "p": "viseme_aa",
+          "t": 180.385
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:181.500",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:182.000",
       "char": "MediatorA",
       "audio": "audio/MEDIATORA_078.wav",
       "visemes": [
         {
-          "p": "viseme_TH",
-          "t": 194.662
-        },
-        {
-          "p": "viseme_aa",
-          "t": 194.786
-        },
-        {
-          "p": "viseme_O",
-          "t": 194.951
-        },
-        {
-          "p": "viseme_O",
-          "t": 195.147
-        },
-        {
-          "p": "viseme_CH",
-          "t": 195.425
-        },
-        {
           "p": "viseme_E",
-          "t": 195.756
-        }
-      ]
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:196.650",
-      "duration": 0.5
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:197.150",
-      "duration": 0.5
-    },
-    {
-      "tc_in": "00:00:197.650",
-      "char": "MediatorA",
-      "audio": "audio/MEDIATORA_081.wav",
-      "visemes": [
-        {
-          "p": "viseme_aa",
-          "t": 197.923
-        },
-        {
-          "p": "viseme_PP",
-          "t": 198.575
-        },
-        {
-          "p": "viseme_aa",
-          "t": 198.726
-        },
-        {
-          "p": "viseme_O",
-          "t": 198.894
-        },
-        {
-          "p": "viseme_PP",
-          "t": 199.065
-        },
-        {
-          "p": "viseme_O",
-          "t": 199.186
+          "t": 182.112
         },
         {
           "p": "viseme_I",
-          "t": 199.338
-        },
-        {
-          "p": "viseme_I",
-          "t": 199.505
-        },
-        {
-          "p": "viseme_CH",
-          "t": 199.793
-        },
-        {
-          "p": "viseme_E",
-          "t": 200.278
-        }
-      ]
-    },
-    {
-      "tc_in": "00:00:201.250",
-      "char": "Disputant2",
-      "audio": "audio/DISPUTANT2_082.wav",
-      "visemes": [
-        {
-          "p": "viseme_TH",
-          "t": 201.326
-        },
-        {
-          "p": "viseme_aa",
-          "t": 201.477
-        },
-        {
-          "p": "viseme_I",
-          "t": 201.603
+          "t": 182.325
         },
         {
           "p": "viseme_O",
-          "t": 201.795
-        },
-        {
-          "p": "viseme_PP",
-          "t": 201.987
-        },
-        {
-          "p": "viseme_O",
-          "t": 202.088
-        },
-        {
-          "p": "viseme_I",
-          "t": 202.299
-        },
-        {
-          "p": "viseme_O",
-          "t": 202.481
-        },
-        {
-          "p": "viseme_I",
-          "t": 202.784
-        },
-        {
-          "p": "viseme_E",
-          "t": 203.066
-        },
-        {
-          "p": "viseme_E",
-          "t": 203.374
-        },
-        {
-          "p": "viseme_I",
-          "t": 203.469
-        },
-        {
-          "p": "viseme_aa",
-          "t": 203.55
-        },
-        {
-          "p": "viseme_E",
-          "t": 203.707
-        },
-        {
-          "p": "viseme_SS",
-          "t": 204.311
-        },
-        {
-          "p": "viseme_I",
-          "t": 204.584
-        }
-      ]
-    },
-    {
-      "tc_in": "00:00:205.450",
-      "char": "MediatorA",
-      "audio": "audio/MEDIATORA_083.wav",
-      "visemes": []
-    },
-    {
-      "tc_in": "00:00:207.550",
-      "char": "Disputant2",
-      "audio": "audio/DISPUTANT2_084.wav",
-      "visemes": [
-        {
-          "p": "viseme_FF",
-          "t": 207.722
-        },
-        {
-          "p": "viseme_aa",
-          "t": 208.065
-        },
-        {
-          "p": "viseme_E",
-          "t": 208.853
-        },
-        {
-          "p": "viseme_O",
-          "t": 209.53
-        },
-        {
-          "p": "viseme_aa",
-          "t": 209.843
-        },
-        {
-          "p": "viseme_I",
-          "t": 210.024
-        },
-        {
-          "p": "viseme_O",
-          "t": 210.206
-        },
-        {
-          "p": "viseme_PP",
-          "t": 210.363
-        },
-        {
-          "p": "viseme_I",
-          "t": 210.534
-        }
-      ]
-    },
-    {
-      "tc_in": "00:00:211.350",
-      "char": "MediatorA",
-      "audio": "audio/MEDIATORA_085.wav",
-      "visemes": [
-        {
-          "p": "viseme_TH",
-          "t": 211.567
-        },
-        {
-          "p": "viseme_aa",
-          "t": 212.0
-        },
-        {
-          "p": "viseme_O",
-          "t": 214.833
-        }
-      ]
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:218.100",
-      "duration": 0.5
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:218.600",
-      "duration": 0.5
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:219.100",
-      "duration": 0.5
-    },
-    {
-      "tc_in": "00:00:219.600",
-      "char": "MediatorB",
-      "audio": "audio/MEDIATORB_089.wav",
-      "visemes": [
-        {
-          "p": "viseme_E",
-          "t": 219.873
-        },
-        {
-          "p": "viseme_I",
-          "t": 220.519
-        },
-        {
-          "p": "viseme_O",
-          "t": 220.66
-        },
-        {
-          "p": "viseme_SS",
-          "t": 220.962
-        },
-        {
-          "p": "viseme_E",
-          "t": 221.184
-        },
-        {
-          "p": "viseme_aa",
-          "t": 221.397
-        },
-        {
-          "p": "viseme_I",
-          "t": 221.528
-        },
-        {
-          "p": "viseme_O",
-          "t": 221.941
-        },
-        {
-          "p": "viseme_PP",
-          "t": 222.118
-        },
-        {
-          "p": "viseme_O",
-          "t": 222.229
-        },
-        {
-          "p": "viseme_aa",
-          "t": 222.647
-        }
-      ]
-    },
-    {
-      "tc_in": "00:00:223.700",
-      "char": "MediatorB",
-      "audio": "audio/MEDIATORB_090.wav",
-      "visemes": [
-        {
-          "p": "viseme_E",
-          "t": 224.002
-        },
-        {
-          "p": "viseme_O",
-          "t": 224.747
-        },
-        {
-          "p": "viseme_aa",
-          "t": 224.949
-        },
-        {
-          "p": "viseme_O",
-          "t": 225.633
-        },
-        {
-          "p": "viseme_aa",
-          "t": 225.854
-        },
-        {
-          "p": "viseme_I",
-          "t": 226.207
-        },
-        {
-          "p": "viseme_O",
-          "t": 226.529
-        },
-        {
-          "p": "viseme_I",
-          "t": 226.78
+          "t": 182.468
         },
         {
           "p": "viseme_FF",
-          "t": 227.092
-        },
-        {
-          "p": "viseme_aa",
-          "t": 227.193
-        },
-        {
-          "p": "viseme_PP",
-          "t": 227.902
+          "t": 182.6
         },
         {
           "p": "viseme_I",
-          "t": 228.214
-        }
-      ]
-    },
-    {
-      "tc_in": "00:00:229.100",
-      "char": "MediatorB",
-      "audio": "audio/MEDIATORB_091.wav",
-      "visemes": [
-        {
-          "p": "viseme_aa",
-          "t": 229.433
-        },
-        {
-          "p": "viseme_O",
-          "t": 229.958
-        },
-        {
-          "p": "viseme_aa",
-          "t": 230.119
+          "t": 182.701
         },
         {
           "p": "viseme_E",
-          "t": 230.382
-        },
-        {
-          "p": "viseme_O",
-          "t": 230.604
-        },
-        {
-          "p": "viseme_E",
-          "t": 230.755
-        },
-        {
-          "p": "viseme_O",
-          "t": 230.907
+          "t": 182.874
         },
         {
           "p": "viseme_aa",
-          "t": 231.088
+          "t": 183.179
         },
         {
           "p": "viseme_O",
-          "t": 231.239
-        },
-        {
-          "p": "viseme_SS",
-          "t": 231.88
-        },
-        {
-          "p": "viseme_I",
-          "t": 231.991
-        },
-        {
-          "p": "viseme_SS",
-          "t": 232.132
-        },
-        {
-          "p": "viseme_I",
-          "t": 232.223
-        },
-        {
-          "p": "viseme_O",
-          "t": 232.713
-        },
-        {
-          "p": "viseme_FF",
-          "t": 233.03
+          "t": 183.464
         },
         {
           "p": "viseme_E",
-          "t": 233.423
+          "t": 184.155
         }
       ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:234.350",
+      "tc_in": "00:00:185.250",
       "duration": 0.5
     },
     {
-      "type": "pause",
-      "tc_in": "00:00:234.850",
-      "duration": 0.5
-    },
-    {
-      "tc_in": "00:00:235.350",
-      "char": "MediatorB",
-      "audio": "audio/MEDIATORB_094.wav",
-      "visemes": [
-        {
-          "p": "viseme_E",
-          "t": 235.632
-        },
-        {
-          "p": "viseme_aa",
-          "t": 236.207
-        },
-        {
-          "p": "viseme_SS",
-          "t": 236.383
-        },
-        {
-          "p": "viseme_aa",
-          "t": 236.514
-        },
-        {
-          "p": "viseme_O",
-          "t": 236.69
-        },
-        {
-          "p": "viseme_aa",
-          "t": 236.862
-        },
-        {
-          "p": "viseme_O",
-          "t": 237.506
-        },
-        {
-          "p": "viseme_SS",
-          "t": 238.625
-        },
-        {
-          "p": "viseme_aa",
-          "t": 238.766
-        },
-        {
-          "p": "viseme_O",
-          "t": 239.148
-        }
-      ]
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:240.150",
-      "duration": 0.5
-    },
-    {
-      "tc_in": "00:00:240.650",
+      "tc_in": "00:00:185.750",
       "char": "Disputant1",
-      "audio": "audio/DISPUTANT1_096.wav",
+      "audio": "audio/DISPUTANT1_080.wav",
       "visemes": [
         {
           "p": "viseme_E",
-          "t": 240.793
-        },
-        {
-          "p": "viseme_aa",
-          "t": 241.058
-        },
-        {
-          "p": "viseme_E",
-          "t": 241.221
-        },
-        {
-          "p": "viseme_O",
-          "t": 241.323
-        },
-        {
-          "p": "viseme_aa",
-          "t": 241.547
-        },
-        {
-          "p": "viseme_O",
-          "t": 241.812
-        },
-        {
-          "p": "viseme_I",
-          "t": 242.021
-        },
-        {
-          "p": "viseme_E",
-          "t": 242.444
-        }
-      ]
-    },
-    {
-      "tc_in": "00:00:243.500",
-      "char": "Disputant1",
-      "audio": "audio/DISPUTANT1_097.wav",
-      "visemes": [
-        {
-          "p": "viseme_E",
-          "t": 243.713
-        },
-        {
-          "p": "viseme_PP",
-          "t": 244.375
-        },
-        {
-          "p": "viseme_E",
-          "t": 244.588
-        },
-        {
-          "p": "viseme_aa",
-          "t": 244.835
-        },
-        {
-          "p": "viseme_I",
-          "t": 244.967
+          "t": 185.892
         },
         {
           "p": "viseme_FF",
-          "t": 245.098
-        },
-        {
-          "p": "viseme_aa",
-          "t": 245.179
+          "t": 186.187
         },
         {
           "p": "viseme_E",
-          "t": 245.746
-        }
-      ]
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:246.900",
-      "duration": 0.5
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:247.400",
-      "duration": 0.5
-    },
-    {
-      "tc_in": "00:00:247.900",
-      "char": "MediatorB",
-      "audio": "audio/MEDIATORB_100.wav",
-      "visemes": [
-        {
-          "p": "viseme_SS",
-          "t": 247.976
-        },
-        {
-          "p": "viseme_O",
-          "t": 248.127
-        },
-        {
-          "p": "viseme_aa",
-          "t": 248.636
-        },
-        {
-          "p": "viseme_I",
-          "t": 248.989
-        },
-        {
-          "p": "viseme_O",
-          "t": 249.251
-        },
-        {
-          "p": "viseme_I",
-          "t": 249.775
-        },
-        {
-          "p": "viseme_aa",
-          "t": 250.44
-        },
-        {
-          "p": "viseme_O",
-          "t": 250.651
+          "t": 186.288
         },
         {
           "p": "viseme_PP",
-          "t": 251.23
+          "t": 186.664
         },
         {
-          "p": "viseme_E",
-          "t": 251.563
-        },
-        {
-          "p": "viseme_I",
-          "t": 251.952
-        },
-        {
-          "p": "viseme_CH",
-          "t": 252.339
-        },
-        {
-          "p": "viseme_E",
-          "t": 252.43
-        }
-      ]
-    },
-    {
-      "tc_in": "00:00:253.850",
-      "char": "MediatorB",
-      "audio": "audio/MEDIATORB_101.wav",
-      "visemes": [
-        {
-          "p": "viseme_I",
-          "t": 253.986
+          "p": "viseme_O",
+          "t": 186.745
         },
         {
           "p": "viseme_aa",
-          "t": 254.277
+          "t": 186.918
         },
         {
-          "p": "viseme_E",
-          "t": 254.642
+          "p": "viseme_aa",
+          "t": 187.071
+        },
+        {
+          "p": "viseme_PP",
+          "t": 187.294
+        },
+        {
+          "p": "viseme_aa",
+          "t": 187.578
         }
       ]
     },
     {
-      "tc_in": "00:00:255.600",
+      "type": "pause",
+      "tc_in": "00:00:188.450",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:188.950",
+      "char": "Disputant1",
+      "audio": "audio/DISPUTANT1_082.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 189.144
+        },
+        {
+          "p": "viseme_PP",
+          "t": 189.694
+        },
+        {
+          "p": "viseme_E",
+          "t": 190.245
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:191.250",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:191.750",
+      "char": "MediatorA",
+      "audio": "audio/MEDIATORA_084.wav",
+      "visemes": [
+        {
+          "p": "viseme_TH",
+          "t": 191.817
+        },
+        {
+          "p": "viseme_aa",
+          "t": 191.95
+        },
+        {
+          "p": "viseme_O",
+          "t": 192.088
+        },
+        {
+          "p": "viseme_O",
+          "t": 192.272
+        },
+        {
+          "p": "viseme_CH",
+          "t": 192.529
+        },
+        {
+          "p": "viseme_E",
+          "t": 192.856
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:193.750",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:194.250",
+      "char": "MediatorA",
+      "audio": "audio/MEDIATORA_086.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 194.564
+        },
+        {
+          "p": "viseme_PP",
+          "t": 195.35
+        },
+        {
+          "p": "viseme_aa",
+          "t": 195.522
+        },
+        {
+          "p": "viseme_O",
+          "t": 195.689
+        },
+        {
+          "p": "viseme_PP",
+          "t": 195.857
+        },
+        {
+          "p": "viseme_O",
+          "t": 195.988
+        },
+        {
+          "p": "viseme_I",
+          "t": 196.135
+        },
+        {
+          "p": "viseme_I",
+          "t": 196.308
+        },
+        {
+          "p": "viseme_CH",
+          "t": 196.586
+        },
+        {
+          "p": "viseme_E",
+          "t": 197.042
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:198.000",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:198.500",
+      "char": "Disputant2",
+      "audio": "audio/DISPUTANT2_088.wav",
+      "visemes": [
+        {
+          "p": "viseme_TH",
+          "t": 198.572
+        },
+        {
+          "p": "viseme_aa",
+          "t": 198.715
+        },
+        {
+          "p": "viseme_I",
+          "t": 198.847
+        },
+        {
+          "p": "viseme_O",
+          "t": 199.123
+        },
+        {
+          "p": "viseme_PP",
+          "t": 199.511
+        },
+        {
+          "p": "viseme_O",
+          "t": 199.817
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:200.700",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:201.200",
+      "char": "Disputant2",
+      "audio": "audio/DISPUTANT2_090.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 201.322
+        },
+        {
+          "p": "viseme_I",
+          "t": 201.484
+        },
+        {
+          "p": "viseme_O",
+          "t": 201.666
+        },
+        {
+          "p": "viseme_I",
+          "t": 202.0
+        },
+        {
+          "p": "viseme_E",
+          "t": 202.294
+        },
+        {
+          "p": "viseme_E",
+          "t": 202.506
+        },
+        {
+          "p": "viseme_I",
+          "t": 202.618
+        },
+        {
+          "p": "viseme_E",
+          "t": 202.775
+        },
+        {
+          "p": "viseme_SS",
+          "t": 203.366
+        },
+        {
+          "p": "viseme_I",
+          "t": 203.569
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:204.400",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:204.900",
+      "char": "MediatorA",
+      "audio": "audio/MEDIATORA_092.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 205.042
+        },
+        {
+          "p": "viseme_I",
+          "t": 205.305
+        },
+        {
+          "p": "viseme_O",
+          "t": 205.457
+        },
+        {
+          "p": "viseme_FF",
+          "t": 205.614
+        },
+        {
+          "p": "viseme_I",
+          "t": 205.704
+        },
+        {
+          "p": "viseme_E",
+          "t": 205.851
+        },
+        {
+          "p": "viseme_SS",
+          "t": 206.459
+        },
+        {
+          "p": "viseme_E",
+          "t": 206.579
+        },
+        {
+          "p": "viseme_I",
+          "t": 206.701
+        },
+        {
+          "p": "viseme_aa",
+          "t": 206.843
+        },
+        {
+          "p": "viseme_SS",
+          "t": 207.061
+        },
+        {
+          "p": "viseme_I",
+          "t": 207.334
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:208.200",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:208.700",
+      "char": "Disputant2",
+      "audio": "audio/DISPUTANT2_094.wav",
+      "visemes": [
+        {
+          "p": "viseme_FF",
+          "t": 208.968
+        },
+        {
+          "p": "viseme_aa",
+          "t": 209.503
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:210.500",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:211.000",
+      "char": "Disputant2",
+      "audio": "audio/DISPUTANT2_096.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 211.193
+        },
+        {
+          "p": "viseme_aa",
+          "t": 211.801
+        },
+        {
+          "p": "viseme_E",
+          "t": 212.024
+        },
+        {
+          "p": "viseme_O",
+          "t": 212.196
+        },
+        {
+          "p": "viseme_E",
+          "t": 212.338
+        },
+        {
+          "p": "viseme_I",
+          "t": 212.521
+        },
+        {
+          "p": "viseme_aa",
+          "t": 212.642
+        },
+        {
+          "p": "viseme_I",
+          "t": 212.764
+        },
+        {
+          "p": "viseme_CH",
+          "t": 212.886
+        },
+        {
+          "p": "viseme_aa",
+          "t": 212.967
+        },
+        {
+          "p": "viseme_E",
+          "t": 213.149
+        },
+        {
+          "p": "viseme_SS",
+          "t": 213.372
+        },
+        {
+          "p": "viseme_I",
+          "t": 213.493
+        },
+        {
+          "p": "viseme_TH",
+          "t": 213.701
+        },
+        {
+          "p": "viseme_E",
+          "t": 213.914
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:214.750",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:215.250",
+      "char": "MediatorA",
+      "audio": "audio/MEDIATORA_098.wav",
+      "visemes": [
+        {
+          "p": "viseme_TH",
+          "t": 215.317
+        },
+        {
+          "p": "viseme_aa",
+          "t": 215.45
+        },
+        {
+          "p": "viseme_O",
+          "t": 215.588
+        },
+        {
+          "p": "viseme_O",
+          "t": 215.772
+        },
+        {
+          "p": "viseme_CH",
+          "t": 216.029
+        },
+        {
+          "p": "viseme_E",
+          "t": 216.356
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:217.250",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:217.750",
+      "char": "MediatorA",
+      "audio": "audio/MEDIATORA_100.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 218.043
+        },
+        {
+          "p": "viseme_aa",
+          "t": 218.801
+        },
+        {
+          "p": "viseme_SS",
+          "t": 219.013
+        },
+        {
+          "p": "viseme_aa",
+          "t": 219.154
+        },
+        {
+          "p": "viseme_O",
+          "t": 219.316
+        },
+        {
+          "p": "viseme_aa",
+          "t": 219.478
+        },
+        {
+          "p": "viseme_O",
+          "t": 220.013
+        },
+        {
+          "p": "viseme_SS",
+          "t": 220.947
+        },
+        {
+          "p": "viseme_aa",
+          "t": 221.078
+        },
+        {
+          "p": "viseme_O",
+          "t": 221.488
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:222.500",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:223.000",
       "char": "Disputant1",
       "audio": "audio/DISPUTANT1_102.wav",
       "visemes": [
         {
-          "p": "viseme_aa",
-          "t": 255.961
-        }
-      ]
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:257.050",
-      "duration": 0.5
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:257.550",
-      "duration": 0.5
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:258.050",
-      "duration": 0.5
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:258.550",
-      "duration": 0.5
-    },
-    {
-      "tc_in": "00:00:259.050",
-      "char": "MediatorB",
-      "audio": "audio/MEDIATORB_107.wav",
-      "visemes": [
-        {
-          "p": "viseme_aa",
-          "t": 259.454
-        },
-        {
-          "p": "viseme_SS",
-          "t": 260.17
+          "p": "viseme_E",
+          "t": 223.142
         },
         {
           "p": "viseme_aa",
-          "t": 260.31
-        },
-        {
-          "p": "viseme_O",
-          "t": 260.462
-        },
-        {
-          "p": "viseme_aa",
-          "t": 260.633
+          "t": 223.435
         },
         {
           "p": "viseme_E",
-          "t": 260.916
+          "t": 223.618
         },
         {
           "p": "viseme_O",
-          "t": 261.137
-        },
-        {
-          "p": "viseme_SS",
-          "t": 262.005
+          "t": 223.749
         },
         {
           "p": "viseme_aa",
-          "t": 262.146
-        },
-        {
-          "p": "viseme_O",
-          "t": 262.488
-        }
-      ]
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:263.450",
-      "duration": 0.5
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:263.950",
-      "duration": 0.5
-    },
-    {
-      "tc_in": "00:00:264.450",
-      "char": "Disputant2",
-      "audio": "audio/DISPUTANT2_110.wav",
-      "visemes": [
-        {
-          "p": "viseme_E",
-          "t": 264.571
-        },
-        {
-          "p": "viseme_aa",
-          "t": 264.822
+          "t": 223.992
         },
         {
           "p": "viseme_I",
-          "t": 264.974
-        },
-        {
-          "p": "viseme_O",
-          "t": 265.074
-        },
-        {
-          "p": "viseme_E",
-          "t": 265.195
+          "t": 224.397
         },
         {
           "p": "viseme_I",
-          "t": 265.321
-        },
-        {
-          "p": "viseme_I",
-          "t": 265.507
-        },
-        {
-          "p": "viseme_E",
-          "t": 265.738
-        },
-        {
-          "p": "viseme_O",
-          "t": 265.99
-        },
-        {
-          "p": "viseme_SS",
-          "t": 266.423
-        },
-        {
-          "p": "viseme_I",
-          "t": 266.865
-        },
-        {
-          "p": "viseme_PP",
-          "t": 267.162
-        },
-        {
-          "p": "viseme_O",
-          "t": 267.274
-        },
-        {
-          "p": "viseme_E",
-          "t": 267.465
+          "t": 224.71
         },
         {
           "p": "viseme_FF",
-          "t": 267.611
+          "t": 225.353
         },
         {
-          "p": "viseme_E",
-          "t": 267.731
+          "p": "viseme_aa",
+          "t": 225.444
+        },
+        {
+          "p": "viseme_PP",
+          "t": 226.041
         },
         {
           "p": "viseme_I",
-          "t": 267.958
-        },
-        {
-          "p": "viseme_TH",
-          "t": 268.455
-        },
-        {
-          "p": "viseme_E",
-          "t": 268.899
+          "t": 226.294
         }
       ]
     },
     {
-      "tc_in": "00:00:269.850",
-      "char": "MediatorB",
-      "audio": "audio/MEDIATORB_111.wav",
+      "type": "pause",
+      "tc_in": "00:00:227.150",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:227.650",
+      "char": "MediatorA",
+      "audio": "audio/MEDIATORA_104.wav",
       "visemes": [
         {
-          "p": "viseme_SS",
-          "t": 269.925
-        },
-        {
-          "p": "viseme_O",
-          "t": 270.076
-        },
-        {
           "p": "viseme_aa",
-          "t": 270.445
-        },
-        {
-          "p": "viseme_E",
-          "t": 270.777
-        },
-        {
-          "p": "viseme_O",
-          "t": 271.039
-        },
-        {
-          "p": "viseme_PP",
-          "t": 271.191
-        },
-        {
-          "p": "viseme_O",
-          "t": 271.292
-        },
-        {
-          "p": "viseme_aa",
-          "t": 271.594
-        },
-        {
-          "p": "viseme_I",
-          "t": 271.836
-        },
-        {
-          "p": "viseme_O",
-          "t": 272.249
+          "t": 227.953
         },
         {
           "p": "viseme_SS",
-          "t": 272.506
-        },
-        {
-          "p": "viseme_I",
-          "t": 272.617
-        },
-        {
-          "p": "viseme_O",
-          "t": 273.066
+          "t": 228.598
         },
         {
           "p": "viseme_aa",
-          "t": 273.318
+          "t": 228.719
         },
         {
           "p": "viseme_O",
-          "t": 273.515
-        },
-        {
-          "p": "viseme_PP",
-          "t": 274.347
+          "t": 228.871
         },
         {
           "p": "viseme_aa",
-          "t": 274.629
+          "t": 229.022
+        },
+        {
+          "p": "viseme_E",
+          "t": 229.304
+        },
+        {
+          "p": "viseme_O",
+          "t": 229.567
+        },
+        {
+          "p": "viseme_SS",
+          "t": 230.338
+        },
+        {
+          "p": "viseme_aa",
+          "t": 230.469
+        },
+        {
+          "p": "viseme_O",
+          "t": 230.908
         }
       ]
     },
     {
-      "tc_in": "00:00:275.500",
-      "char": "MediatorB",
-      "audio": "audio/MEDIATORB_112.wav",
-      "visemes": [
-        {
-          "p": "viseme_I",
-          "t": 275.633
-        },
-        {
-          "p": "viseme_aa",
-          "t": 275.937
-        },
-        {
-          "p": "viseme_O",
-          "t": 276.26
-        },
-        {
-          "p": "viseme_PP",
-          "t": 276.527
-        },
-        {
-          "p": "viseme_I",
-          "t": 276.856
-        }
-      ]
+      "type": "pause",
+      "tc_in": "00:00:231.950",
+      "duration": 0.5
     },
     {
-      "tc_in": "00:00:277.750",
+      "tc_in": "00:00:232.450",
       "char": "Disputant2",
-      "audio": "audio/DISPUTANT2_113.wav",
+      "audio": "audio/DISPUTANT2_106.wav",
       "visemes": [
         {
+          "p": "viseme_E",
+          "t": 232.561
+        },
+        {
           "p": "viseme_aa",
-          "t": 278.11
+          "t": 232.784
+        },
+        {
+          "p": "viseme_I",
+          "t": 232.946
+        },
+        {
+          "p": "viseme_O",
+          "t": 233.047
+        },
+        {
+          "p": "viseme_E",
+          "t": 233.188
+        },
+        {
+          "p": "viseme_I",
+          "t": 233.34
+        },
+        {
+          "p": "viseme_aa",
+          "t": 233.491
+        },
+        {
+          "p": "viseme_E",
+          "t": 233.688
+        },
+        {
+          "p": "viseme_O",
+          "t": 233.926
+        },
+        {
+          "p": "viseme_SS",
+          "t": 234.254
+        },
+        {
+          "p": "viseme_I",
+          "t": 234.385
+        },
+        {
+          "p": "viseme_PP",
+          "t": 234.871
+        },
+        {
+          "p": "viseme_O",
+          "t": 234.982
+        },
+        {
+          "p": "viseme_I",
+          "t": 235.139
+        },
+        {
+          "p": "viseme_E",
+          "t": 235.513
+        },
+        {
+          "p": "viseme_FF",
+          "t": 235.785
+        },
+        {
+          "p": "viseme_E",
+          "t": 236.108
         }
       ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:279.200",
+      "tc_in": "00:00:237.000",
       "duration": 0.5
     },
     {
       "type": "pause",
-      "tc_in": "00:00:279.700",
+      "tc_in": "00:00:237.500",
       "duration": 0.5
     },
     {
       "type": "pause",
-      "tc_in": "00:00:280.200",
+      "tc_in": "00:00:238.000",
       "duration": 0.5
     },
     {
       "type": "pause",
-      "tc_in": "00:00:280.700",
+      "tc_in": "00:00:238.500",
       "duration": 0.5
     },
     {
-      "tc_in": "00:00:281.200",
+      "type": "pause",
+      "tc_in": "00:00:239.000",
+      "duration": 0.5
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:239.500",
+      "duration": 0.5
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:240.000",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:240.500",
+      "char": "MediatorB",
+      "audio": "audio/MEDIATORB_114.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 240.802
+        },
+        {
+          "p": "viseme_I",
+          "t": 241.375
+        },
+        {
+          "p": "viseme_SS",
+          "t": 241.551
+        },
+        {
+          "p": "viseme_E",
+          "t": 241.682
+        },
+        {
+          "p": "viseme_O",
+          "t": 241.999
+        },
+        {
+          "p": "viseme_aa",
+          "t": 242.18
+        },
+        {
+          "p": "viseme_O",
+          "t": 242.783
+        },
+        {
+          "p": "viseme_aa",
+          "t": 242.994
+        },
+        {
+          "p": "viseme_I",
+          "t": 243.346
+        },
+        {
+          "p": "viseme_O",
+          "t": 243.658
+        },
+        {
+          "p": "viseme_I",
+          "t": 243.809
+        },
+        {
+          "p": "viseme_FF",
+          "t": 243.919
+        },
+        {
+          "p": "viseme_aa",
+          "t": 244.0
+        },
+        {
+          "p": "viseme_PP",
+          "t": 244.488
+        },
+        {
+          "p": "viseme_I",
+          "t": 244.659
+        },
+        {
+          "p": "viseme_aa",
+          "t": 245.217
+        },
+        {
+          "p": "viseme_E",
+          "t": 245.599
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:246.600",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:247.100",
+      "char": "Disputant1",
+      "audio": "audio/DISPUTANT1_116.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 247.536
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:248.700",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:249.200",
       "char": "MediatorB",
       "audio": "audio/MEDIATORB_118.wav",
       "visemes": [
         {
-          "p": "viseme_E",
-          "t": 281.381
-        },
-        {
-          "p": "viseme_TH",
-          "t": 281.866
-        },
-        {
-          "p": "viseme_I",
-          "t": 281.947
-        },
-        {
-          "p": "viseme_PP",
-          "t": 282.072
-        },
-        {
-          "p": "viseme_E",
-          "t": 282.163
-        },
-        {
           "p": "viseme_aa",
-          "t": 282.309
-        },
-        {
-          "p": "viseme_O",
-          "t": 282.451
-        },
-        {
-          "p": "viseme_aa",
-          "t": 282.582
-        },
-        {
-          "p": "viseme_PP",
-          "t": 282.748
-        },
-        {
-          "p": "viseme_O",
-          "t": 282.859
+          "t": 249.522
         },
         {
           "p": "viseme_I",
-          "t": 283.389
-        },
-        {
-          "p": "viseme_O",
-          "t": 283.98
-        },
-        {
-          "p": "viseme_I",
-          "t": 284.328
-        },
-        {
-          "p": "viseme_E",
-          "t": 284.539
+          "t": 250.287
         },
         {
           "p": "viseme_SS",
-          "t": 284.741
+          "t": 250.448
         },
         {
-          "p": "viseme_aa",
-          "t": 284.882
+          "p": "viseme_E",
+          "t": 250.569
         },
         {
           "p": "viseme_O",
-          "t": 285.044
+          "t": 250.891
         },
         {
           "p": "viseme_aa",
-          "t": 285.437
-        }
-      ]
-    },
-    {
-      "tc_in": "00:00:286.450",
-      "char": "MediatorB",
-      "audio": "audio/MEDIATORB_119.wav",
-      "visemes": [
+          "t": 251.072
+        },
         {
           "p": "viseme_E",
-          "t": 286.743
-        },
-        {
-          "p": "viseme_aa",
-          "t": 287.472
-        },
-        {
-          "p": "viseme_TH",
-          "t": 287.845
-        },
-        {
-          "p": "viseme_I",
-          "t": 287.926
+          "t": 251.384
         },
         {
           "p": "viseme_O",
-          "t": 288.068
+          "t": 251.626
         },
         {
-          "p": "viseme_I",
-          "t": 288.645
+          "p": "viseme_E",
+          "t": 251.787
         },
         {
           "p": "viseme_O",
-          "t": 288.928
-        },
-        {
-          "p": "viseme_E",
-          "t": 289.08
-        },
-        {
-          "p": "viseme_I",
-          "t": 289.307
-        },
-        {
-          "p": "viseme_E",
-          "t": 289.697
-        }
-      ]
-    },
-    {
-      "tc_in": "00:00:290.700",
-      "char": "Disputant1",
-      "audio": "audio/DISPUTANT1_120.wav",
-      "visemes": [
-        {
-          "p": "viseme_E",
-          "t": 290.912
+          "t": 251.948
         },
         {
           "p": "viseme_aa",
-          "t": 291.236
+          "t": 252.149
         },
         {
-          "p": "viseme_I",
-          "t": 291.641
+          "p": "viseme_O",
+          "t": 252.35
         },
         {
           "p": "viseme_SS",
-          "t": 291.773
-        },
-        {
-          "p": "viseme_aa",
-          "t": 291.894
-        },
-        {
-          "p": "viseme_O",
-          "t": 292.137
-        },
-        {
-          "p": "viseme_SS",
-          "t": 292.39
+          "t": 252.969
         },
         {
           "p": "viseme_I",
-          "t": 292.491
+          "t": 253.1
         },
         {
-          "p": "viseme_E",
-          "t": 292.689
+          "p": "viseme_SS",
+          "t": 253.271
+        },
+        {
+          "p": "viseme_I",
+          "t": 253.362
+        },
+        {
+          "p": "viseme_O",
+          "t": 253.87
         },
         {
           "p": "viseme_FF",
-          "t": 292.851
-        },
-        {
-          "p": "viseme_O",
-          "t": 292.982
+          "t": 254.081
         },
         {
           "p": "viseme_E",
-          "t": 293.119
-        },
-        {
-          "p": "viseme_aa",
-          "t": 293.474
-        },
-        {
-          "p": "viseme_SS",
-          "t": 293.671
+          "t": 254.262
         },
         {
           "p": "viseme_I",
-          "t": 293.904
+          "t": 254.856
+        },
+        {
+          "p": "viseme_aa",
+          "t": 255.042
+        },
+        {
+          "p": "viseme_E",
+          "t": 255.329
         }
       ]
     },
     {
-      "tc_in": "00:00:294.750",
-      "char": "Disputant1",
-      "audio": "audio/DISPUTANT1_121.wav",
+      "type": "pause",
+      "tc_in": "00:00:256.250",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:256.750",
+      "char": "Disputant2",
+      "audio": "audio/DISPUTANT2_120.wav",
       "visemes": [
         {
           "p": "viseme_aa",
-          "t": 294.892
-        },
-        {
-          "p": "viseme_E",
-          "t": 295.115
-        },
-        {
-          "p": "viseme_aa",
-          "t": 295.237
-        },
-        {
-          "p": "viseme_E",
-          "t": 295.38
-        },
-        {
-          "p": "viseme_aa",
-          "t": 295.745
-        },
-        {
-          "p": "viseme_E",
-          "t": 296.162
-        },
-        {
-          "p": "viseme_SS",
-          "t": 296.385
-        },
-        {
-          "p": "viseme_I",
-          "t": 296.608
+          "t": 257.111
         }
       ]
     },
     {
-      "tc_in": "00:00:297.450",
+      "type": "pause",
+      "tc_in": "00:00:258.200",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:258.700",
       "char": "MediatorB",
       "audio": "audio/MEDIATORB_122.wav",
       "visemes": [
         {
+          "p": "viseme_E",
+          "t": 258.882
+        },
+        {
           "p": "viseme_TH",
-          "t": 297.58
+          "t": 259.371
+        },
+        {
+          "p": "viseme_I",
+          "t": 259.462
+        },
+        {
+          "p": "viseme_PP",
+          "t": 259.613
+        },
+        {
+          "p": "viseme_E",
+          "t": 259.704
         },
         {
           "p": "viseme_aa",
-          "t": 297.839
+          "t": 259.85
         },
         {
           "p": "viseme_O",
-          "t": 298.301
+          "t": 259.991
+        },
+        {
+          "p": "viseme_aa",
+          "t": 260.123
+        },
+        {
+          "p": "viseme_PP",
+          "t": 260.258
+        },
+        {
+          "p": "viseme_O",
+          "t": 260.349
+        },
+        {
+          "p": "viseme_I",
+          "t": 260.909
+        },
+        {
+          "p": "viseme_O",
+          "t": 261.58
+        },
+        {
+          "p": "viseme_I",
+          "t": 261.948
+        },
+        {
+          "p": "viseme_E",
+          "t": 262.18
+        },
+        {
+          "p": "viseme_SS",
+          "t": 262.382
+        },
+        {
+          "p": "viseme_aa",
+          "t": 262.523
+        },
+        {
+          "p": "viseme_O",
+          "t": 262.694
+        },
+        {
+          "p": "viseme_aa",
+          "t": 263.108
         }
       ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:299.300",
+      "tc_in": "00:00:264.150",
       "duration": 0.5
     },
     {
-      "type": "pause",
-      "tc_in": "00:00:299.800",
-      "duration": 0.5
-    },
-    {
-      "tc_in": "00:00:300.300",
+      "tc_in": "00:00:264.650",
       "char": "MediatorB",
-      "audio": "audio/MEDIATORB_125.wav",
-      "visemes": [
-        {
-          "p": "viseme_aa",
-          "t": 300.583
-        },
-        {
-          "p": "viseme_I",
-          "t": 301.802
-        },
-        {
-          "p": "viseme_O",
-          "t": 301.918
-        },
-        {
-          "p": "viseme_I",
-          "t": 302.495
-        },
-        {
-          "p": "viseme_O",
-          "t": 302.778
-        },
-        {
-          "p": "viseme_E",
-          "t": 302.93
-        },
-        {
-          "p": "viseme_I",
-          "t": 303.157
-        },
-        {
-          "p": "viseme_E",
-          "t": 303.547
-        }
-      ]
-    },
-    {
-      "tc_in": "00:00:304.550",
-      "char": "Disputant2",
-      "audio": "audio/DISPUTANT2_126.wav",
+      "audio": "audio/MEDIATORB_124.wav",
       "visemes": [
         {
           "p": "viseme_E",
-          "t": 304.672
+          "t": 264.923
         },
         {
           "p": "viseme_aa",
-          "t": 304.907
+          "t": 265.65
         },
         {
-          "p": "viseme_E",
-          "t": 305.127
+          "p": "viseme_TH",
+          "t": 266.084
         },
         {
           "p": "viseme_I",
-          "t": 305.244
-        },
-        {
-          "p": "viseme_aa",
-          "t": 305.673
-        }
-      ]
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:306.750",
-      "duration": 0.5
-    },
-    {
-      "tc_in": "00:00:307.250",
-      "char": "Disputant2",
-      "audio": "audio/DISPUTANT2_128.wav",
-      "visemes": [
-        {
-          "p": "viseme_aa",
-          "t": 307.382
-        },
-        {
-          "p": "viseme_E",
-          "t": 307.566
+          "t": 266.165
         },
         {
           "p": "viseme_O",
-          "t": 307.718
+          "t": 266.286
         },
         {
           "p": "viseme_I",
-          "t": 308.156
-        },
-        {
-          "p": "viseme_E",
-          "t": 308.452
+          "t": 266.882
         },
         {
           "p": "viseme_O",
-          "t": 308.726
+          "t": 267.225
         },
         {
           "p": "viseme_E",
-          "t": 309.144
+          "t": 267.417
+        },
+        {
+          "p": "viseme_I",
+          "t": 267.645
+        },
+        {
+          "p": "viseme_E",
+          "t": 267.811
+        },
+        {
+          "p": "viseme_O",
+          "t": 268.018
+        },
+        {
+          "p": "viseme_PP",
+          "t": 268.149
+        },
+        {
+          "p": "viseme_O",
+          "t": 268.24
+        },
+        {
+          "p": "viseme_aa",
+          "t": 268.366
+        },
+        {
+          "p": "viseme_O",
+          "t": 268.609
         }
       ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:310.200",
+      "tc_in": "00:00:269.500",
       "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:270.000",
+      "char": "Disputant1",
+      "audio": "audio/DISPUTANT1_126.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 270.131
+        },
+        {
+          "p": "viseme_aa",
+          "t": 270.382
+        },
+        {
+          "p": "viseme_I",
+          "t": 270.734
+        },
+        {
+          "p": "viseme_SS",
+          "t": 270.86
+        },
+        {
+          "p": "viseme_aa",
+          "t": 270.971
+        },
+        {
+          "p": "viseme_O",
+          "t": 271.217
+        },
+        {
+          "p": "viseme_SS",
+          "t": 271.458
+        },
+        {
+          "p": "viseme_I",
+          "t": 271.559
+        },
+        {
+          "p": "viseme_aa",
+          "t": 271.76
+        },
+        {
+          "p": "viseme_SS",
+          "t": 271.875
+        },
+        {
+          "p": "viseme_I",
+          "t": 271.966
+        },
+        {
+          "p": "viseme_FF",
+          "t": 272.137
+        },
+        {
+          "p": "viseme_O",
+          "t": 272.268
+        },
+        {
+          "p": "viseme_E",
+          "t": 272.413
+        },
+        {
+          "p": "viseme_I",
+          "t": 272.795
+        },
+        {
+          "p": "viseme_aa",
+          "t": 273.248
+        },
+        {
+          "p": "viseme_I",
+          "t": 273.499
+        },
+        {
+          "p": "viseme_SS",
+          "t": 273.841
+        },
+        {
+          "p": "viseme_aa",
+          "t": 273.962
+        },
+        {
+          "p": "viseme_E",
+          "t": 274.173
+        },
+        {
+          "p": "viseme_O",
+          "t": 274.364
+        },
+        {
+          "p": "viseme_PP",
+          "t": 274.53
+        },
+        {
+          "p": "viseme_E",
+          "t": 274.741
+        },
+        {
+          "p": "viseme_SS",
+          "t": 275.048
+        },
+        {
+          "p": "viseme_aa",
+          "t": 275.329
+        }
+      ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:310.700",
+      "tc_in": "00:00:276.200",
       "duration": 0.5
     },
     {
-      "tc_in": "00:00:311.200",
+      "tc_in": "00:00:276.700",
       "char": "MediatorB",
-      "audio": "audio/MEDIATORB_131.wav",
+      "audio": "audio/MEDIATORB_128.wav",
       "visemes": [
         {
-          "p": "viseme_I",
-          "t": 311.371
-        },
-        {
-          "p": "viseme_E",
-          "t": 311.69
-        },
-        {
           "p": "viseme_aa",
-          "t": 312.644
+          "t": 276.994
         },
         {
-          "p": "viseme_E",
-          "t": 312.856
+          "p": "viseme_TH",
+          "t": 278.116
+        },
+        {
+          "p": "viseme_I",
+          "t": 278.197
         },
         {
           "p": "viseme_O",
-          "t": 313.391
+          "t": 278.318
         },
         {
           "p": "viseme_I",
-          "t": 314.006
+          "t": 278.975
+        },
+        {
+          "p": "viseme_O",
+          "t": 279.319
+        },
+        {
+          "p": "viseme_E",
+          "t": 279.521
+        },
+        {
+          "p": "viseme_I",
+          "t": 279.759
+        },
+        {
+          "p": "viseme_E",
+          "t": 280.088
         }
       ]
     },
     {
-      "tc_in": "00:00:315.100",
+      "type": "pause",
+      "tc_in": "00:00:281.050",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:281.550",
+      "char": "Disputant2",
+      "audio": "audio/DISPUTANT2_130.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 281.682
+        },
+        {
+          "p": "viseme_aa",
+          "t": 281.915
+        },
+        {
+          "p": "viseme_PP",
+          "t": 282.108
+        },
+        {
+          "p": "viseme_E",
+          "t": 282.291
+        },
+        {
+          "p": "viseme_I",
+          "t": 282.443
+        },
+        {
+          "p": "viseme_aa",
+          "t": 282.697
+        },
+        {
+          "p": "viseme_TH",
+          "t": 283.056
+        },
+        {
+          "p": "viseme_aa",
+          "t": 283.351
+        },
+        {
+          "p": "viseme_I",
+          "t": 283.599
+        },
+        {
+          "p": "viseme_PP",
+          "t": 283.762
+        },
+        {
+          "p": "viseme_E",
+          "t": 283.843
+        },
+        {
+          "p": "viseme_SS",
+          "t": 284.066
+        },
+        {
+          "p": "viseme_I",
+          "t": 284.269
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:285.100",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:285.600",
       "char": "Disputant2",
       "audio": "audio/DISPUTANT2_132.wav",
       "visemes": [
         {
-          "p": "viseme_CH",
-          "t": 315.373
-        },
-        {
           "p": "viseme_aa",
-          "t": 315.918
-        },
-        {
-          "p": "viseme_I",
-          "t": 316.251
-        },
-        {
-          "p": "viseme_E",
-          "t": 316.423
+          "t": 285.743
         },
         {
           "p": "viseme_O",
-          "t": 316.787
-        },
-        {
-          "p": "viseme_I",
-          "t": 316.959
+          "t": 286.264
         },
         {
           "p": "viseme_E",
-          "t": 317.171
-        },
-        {
-          "p": "viseme_SS",
-          "t": 317.323
-        },
-        {
-          "p": "viseme_I",
-          "t": 317.444
-        },
-        {
-          "p": "viseme_aa",
-          "t": 318.04
-        },
-        {
-          "p": "viseme_PP",
-          "t": 318.611
-        },
-        {
-          "p": "viseme_E",
-          "t": 318.722
-        },
-        {
-          "p": "viseme_I",
-          "t": 318.919
-        }
-      ]
-    },
-    {
-      "tc_in": "00:00:319.750",
-      "char": "Disputant1",
-      "audio": "audio/DISPUTANT1_133.wav",
-      "visemes": [
-        {
-          "p": "viseme_E",
-          "t": 320.023
-        },
-        {
-          "p": "viseme_aa",
-          "t": 320.762
-        },
-        {
-          "p": "viseme_aa",
-          "t": 320.969
-        },
-        {
-          "p": "viseme_PP",
-          "t": 321.127
-        },
-        {
-          "p": "viseme_O",
-          "t": 321.248
-        },
-        {
-          "p": "viseme_I",
-          "t": 321.693
-        },
-        {
-          "p": "viseme_E",
-          "t": 321.86
-        },
-        {
-          "p": "viseme_aa",
-          "t": 321.966
-        },
-        {
-          "p": "viseme_O",
-          "t": 322.402
-        },
-        {
-          "p": "viseme_SS",
-          "t": 322.69
-        },
-        {
-          "p": "viseme_I",
-          "t": 322.943
+          "t": 286.744
         }
       ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:323.800",
+      "tc_in": "00:00:287.800",
       "duration": 0.5
     },
     {
-      "type": "pause",
-      "tc_in": "00:00:324.300",
-      "duration": 0.5
-    },
-    {
-      "tc_in": "00:00:324.800",
+      "tc_in": "00:00:288.300",
       "char": "MediatorB",
-      "audio": "audio/MEDIATORB_136.wav",
+      "audio": "audio/MEDIATORB_134.wav",
       "visemes": [
         {
           "p": "viseme_E",
-          "t": 325.154
+          "t": 288.674
         },
         {
           "p": "viseme_I",
-          "t": 325.801
+          "t": 289.311
+        },
+        {
+          "p": "viseme_TH",
+          "t": 289.412
         },
         {
           "p": "viseme_E",
-          "t": 325.958
+          "t": 289.493
         },
         {
           "p": "viseme_aa",
-          "t": 326.64
+          "t": 290.301
         },
         {
           "p": "viseme_E",
-          "t": 326.832
+          "t": 290.503
         },
         {
           "p": "viseme_aa",
-          "t": 327.136
+          "t": 290.817
         },
         {
           "p": "viseme_O",
-          "t": 327.419
+          "t": 291.09
         },
         {
           "p": "viseme_I",
-          "t": 328.056
+          "t": 291.746
         }
       ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:329.150",
+      "tc_in": "00:00:292.850",
       "duration": 0.5
     },
     {
-      "tc_in": "00:00:329.650",
+      "tc_in": "00:00:293.350",
       "char": "Disputant1",
-      "audio": "audio/DISPUTANT1_138.wav",
+      "audio": "audio/DISPUTANT1_136.wav",
       "visemes": [
         {
           "p": "viseme_CH",
-          "t": 329.758
+          "t": 293.618
         },
         {
           "p": "viseme_aa",
-          "t": 329.974
-        },
-        {
-          "p": "viseme_O",
-          "t": 330.246
-        },
-        {
-          "p": "viseme_I",
-          "t": 330.533
-        },
-        {
-          "p": "viseme_O",
-          "t": 330.893
-        }
-      ]
-    },
-    {
-      "tc_in": "00:00:331.900",
-      "char": "Disputant1",
-      "audio": "audio/DISPUTANT1_139.wav",
-      "visemes": [
-        {
-          "p": "viseme_E",
-          "t": 332.081
-        },
-        {
-          "p": "viseme_I",
-          "t": 332.778
-        },
-        {
-          "p": "viseme_aa",
-          "t": 332.888
+          "t": 294.153
         },
         {
           "p": "viseme_E",
-          "t": 333.08
-        },
-        {
-          "p": "viseme_I",
-          "t": 333.211
-        },
-        {
-          "p": "viseme_E",
-          "t": 333.352
+          "t": 294.79
         },
         {
           "p": "viseme_SS",
-          "t": 333.539
-        },
-        {
-          "p": "viseme_I",
-          "t": 333.67
+          "t": 294.937
         },
         {
           "p": "viseme_aa",
-          "t": 334.074
-        },
-        {
-          "p": "viseme_I",
-          "t": 334.441
-        },
-        {
-          "p": "viseme_aa",
-          "t": 334.532
-        },
-        {
-          "p": "viseme_PP",
-          "t": 334.703
-        },
-        {
-          "p": "viseme_I",
-          "t": 334.824
+          "t": 295.038
         },
         {
           "p": "viseme_E",
-          "t": 335.218
+          "t": 295.169
+        },
+        {
+          "p": "viseme_aa",
+          "t": 295.356
+        },
+        {
+          "p": "viseme_I",
+          "t": 295.462
+        },
+        {
+          "p": "viseme_aa",
+          "t": 295.659
+        },
+        {
+          "p": "viseme_PP",
+          "t": 295.956
+        },
+        {
+          "p": "viseme_I",
+          "t": 296.199
         }
       ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:336.200",
+      "tc_in": "00:00:297.050",
       "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:297.550",
+      "char": "MediatorB",
+      "audio": "audio/MEDIATORB_138.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 297.854
+        },
+        {
+          "p": "viseme_I",
+          "t": 298.491
+        },
+        {
+          "p": "viseme_E",
+          "t": 298.668
+        },
+        {
+          "p": "viseme_aa",
+          "t": 299.381
+        },
+        {
+          "p": "viseme_E",
+          "t": 299.583
+        },
+        {
+          "p": "viseme_O",
+          "t": 300.069
+        },
+        {
+          "p": "viseme_I",
+          "t": 300.706
+        }
+      ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:336.700",
+      "tc_in": "00:00:301.800",
       "duration": 0.5
     },
     {
-      "tc_in": "00:00:337.200",
+      "tc_in": "00:00:302.300",
+      "char": "Disputant2",
+      "audio": "audio/DISPUTANT2_140.wav",
+      "visemes": [
+        {
+          "p": "viseme_I",
+          "t": 302.431
+        },
+        {
+          "p": "viseme_E",
+          "t": 302.673
+        },
+        {
+          "p": "viseme_I",
+          "t": 302.986
+        },
+        {
+          "p": "viseme_E",
+          "t": 303.288
+        },
+        {
+          "p": "viseme_O",
+          "t": 303.56
+        },
+        {
+          "p": "viseme_SS",
+          "t": 303.912
+        },
+        {
+          "p": "viseme_I",
+          "t": 304.194
+        },
+        {
+          "p": "viseme_E",
+          "t": 304.386
+        },
+        {
+          "p": "viseme_aa",
+          "t": 304.527
+        },
+        {
+          "p": "viseme_I",
+          "t": 304.678
+        },
+        {
+          "p": "viseme_O",
+          "t": 304.789
+        },
+        {
+          "p": "viseme_PP",
+          "t": 304.92
+        },
+        {
+          "p": "viseme_O",
+          "t": 305.001
+        },
+        {
+          "p": "viseme_aa",
+          "t": 305.363
+        },
+        {
+          "p": "viseme_O",
+          "t": 305.686
+        },
+        {
+          "p": "viseme_SS",
+          "t": 305.938
+        },
+        {
+          "p": "viseme_I",
+          "t": 306.159
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:307.000",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:307.500",
       "char": "MediatorB",
       "audio": "audio/MEDIATORB_142.wav",
       "visemes": [
         {
           "p": "viseme_I",
-          "t": 337.372
-        },
-        {
-          "p": "viseme_TH",
-          "t": 337.625
+          "t": 307.652
         },
         {
           "p": "viseme_E",
-          "t": 337.706
+          "t": 307.931
         },
         {
           "p": "viseme_SS",
-          "t": 337.868
+          "t": 308.093
         },
         {
           "p": "viseme_aa",
-          "t": 338.07
+          "t": 308.224
         },
         {
           "p": "viseme_O",
-          "t": 338.272
+          "t": 308.382
         },
         {
           "p": "viseme_PP",
-          "t": 338.581
+          "t": 308.69
         },
         {
           "p": "viseme_O",
-          "t": 338.672
+          "t": 308.801
         },
         {
           "p": "viseme_I",
-          "t": 339.375
+          "t": 309.485
         }
       ]
     },
     {
-      "tc_in": "00:00:340.500",
+      "type": "pause",
+      "tc_in": "00:00:310.600",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:311.100",
       "char": "Disputant1",
-      "audio": "audio/DISPUTANT1_143.wav",
+      "audio": "audio/DISPUTANT1_144.wav",
       "visemes": [
         {
+          "p": "viseme_E",
+          "t": 311.243
+        },
+        {
           "p": "viseme_I",
-          "t": 340.694
+          "t": 311.721
         },
         {
           "p": "viseme_aa",
-          "t": 341.01
+          "t": 311.853
         },
         {
-          "p": "viseme_CH",
-          "t": 341.388
+          "p": "viseme_PP",
+          "t": 312.006
         },
         {
-          "p": "viseme_O",
-          "t": 341.776
+          "p": "viseme_I",
+          "t": 312.107
+        },
+        {
+          "p": "viseme_aa",
+          "t": 312.535
         }
       ]
     },
     {
-      "tc_in": "00:00:342.700",
+      "type": "pause",
+      "tc_in": "00:00:313.600",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:314.100",
       "char": "Disputant2",
-      "audio": "audio/DISPUTANT2_144.wav",
+      "audio": "audio/DISPUTANT2_146.wav",
       "visemes": [
         {
+          "p": "viseme_aa",
+          "t": 314.231
+        },
+        {
           "p": "viseme_I",
-          "t": 342.831
+          "t": 314.423
         },
         {
           "p": "viseme_aa",
-          "t": 343.224
+          "t": 314.715
         },
         {
           "p": "viseme_E",
-          "t": 343.456
-        },
-        {
-          "p": "viseme_I",
-          "t": 343.627
-        },
-        {
-          "p": "viseme_E",
-          "t": 343.798
+          "t": 315.017
         },
         {
           "p": "viseme_PP",
-          "t": 344.055
+          "t": 315.581
         },
         {
           "p": "viseme_E",
-          "t": 344.146
+          "t": 315.682
         },
         {
           "p": "viseme_I",
-          "t": 344.272
+          "t": 315.813
         },
         {
           "p": "viseme_aa",
-          "t": 344.403
+          "t": 315.944
         },
         {
           "p": "viseme_aa",
-          "t": 344.756
+          "t": 316.261
         },
         {
           "p": "viseme_I",
-          "t": 344.947
+          "t": 316.437
         },
         {
           "p": "viseme_O",
-          "t": 345.195
+          "t": 316.659
         },
         {
           "p": "viseme_E",
-          "t": 345.371
+          "t": 316.831
         },
         {
           "p": "viseme_SS",
-          "t": 345.557
+          "t": 317.264
         },
         {
           "p": "viseme_E",
-          "t": 345.708
+          "t": 317.385
         },
         {
           "p": "viseme_aa",
-          "t": 345.844
-        }
-      ]
-    },
-    {
-      "tc_in": "00:00:347.300",
-      "char": "Disputant1",
-      "audio": "audio/DISPUTANT1_145.wav",
-      "visemes": [
-        {
-          "p": "viseme_aa",
-          "t": 347.535
-        },
-        {
-          "p": "viseme_E",
-          "t": 348.147
-        },
-        {
-          "p": "viseme_I",
-          "t": 348.475
-        },
-        {
-          "p": "viseme_aa",
-          "t": 348.618
-        },
-        {
-          "p": "viseme_O",
-          "t": 348.761
-        },
-        {
-          "p": "viseme_TH",
-          "t": 348.96
-        },
-        {
-          "p": "viseme_aa",
-          "t": 349.133
+          "t": 317.505
         }
       ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:349.950",
+      "tc_in": "00:00:318.900",
       "duration": 0.5
     },
     {
-      "type": "pause",
-      "tc_in": "00:00:350.450",
-      "duration": 0.5
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:350.950",
-      "duration": 0.5
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:351.450",
-      "duration": 0.5
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:351.950",
-      "duration": 0.5
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:352.450",
-      "duration": 0.5
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:352.950",
-      "duration": 0.5
-    },
-    {
-      "tc_in": "00:00:353.450",
-      "char": "MediatorA",
-      "audio": "audio/MEDIATORA_153.wav",
+      "tc_in": "00:00:319.400",
+      "char": "MediatorB",
+      "audio": "audio/MEDIATORB_148.wav",
       "visemes": [
         {
+          "p": "viseme_SS",
+          "t": 319.48
+        },
+        {
+          "p": "viseme_O",
+          "t": 319.641
+        },
+        {
           "p": "viseme_E",
-          "t": 353.631
-        },
-        {
-          "p": "viseme_O",
-          "t": 354.125
-        },
-        {
-          "p": "viseme_E",
-          "t": 354.468
-        },
-        {
-          "p": "viseme_aa",
-          "t": 354.64
-        },
-        {
-          "p": "viseme_I",
-          "t": 354.982
-        },
-        {
-          "p": "viseme_O",
-          "t": 355.567
-        },
-        {
-          "p": "viseme_aa",
-          "t": 355.768
-        },
-        {
-          "p": "viseme_O",
-          "t": 355.91
+          "t": 319.861
         },
         {
           "p": "viseme_PP",
-          "t": 356.066
-        },
-        {
-          "p": "viseme_O",
-          "t": 356.177
-        },
-        {
-          "p": "viseme_CH",
-          "t": 356.434
+          "t": 320.066
         },
         {
           "p": "viseme_E",
-          "t": 356.595
-        },
-        {
-          "p": "viseme_O",
-          "t": 356.813
-        },
-        {
-          "p": "viseme_aa",
-          "t": 356.954
+          "t": 320.157
         },
         {
           "p": "viseme_I",
-          "t": 357.125
-        },
-        {
-          "p": "viseme_O",
-          "t": 357.322
-        },
-        {
-          "p": "viseme_aa",
-          "t": 357.624
+          "t": 320.292
         },
         {
           "p": "viseme_E",
-          "t": 358.098
+          "t": 320.623
+        },
+        {
+          "p": "viseme_aa",
+          "t": 321.094
+        },
+        {
+          "p": "viseme_I",
+          "t": 321.334
+        },
+        {
+          "p": "viseme_SS",
+          "t": 321.524
+        },
+        {
+          "p": "viseme_aa",
+          "t": 321.685
+        },
+        {
+          "p": "viseme_O",
+          "t": 322.045
+        },
+        {
+          "p": "viseme_SS",
+          "t": 322.361
+        },
+        {
+          "p": "viseme_I",
+          "t": 322.471
+        },
+        {
+          "p": "viseme_aa",
+          "t": 322.716
+        },
+        {
+          "p": "viseme_SS",
+          "t": 322.847
+        },
+        {
+          "p": "viseme_I",
+          "t": 322.967
+        },
+        {
+          "p": "viseme_aa",
+          "t": 323.378
+        },
+        {
+          "p": "viseme_I",
+          "t": 323.649
+        },
+        {
+          "p": "viseme_aa",
+          "t": 324.2
+        },
+        {
+          "p": "viseme_E",
+          "t": 324.49
+        },
+        {
+          "p": "viseme_I",
+          "t": 324.69
+        },
+        {
+          "p": "viseme_E",
+          "t": 324.971
+        },
+        {
+          "p": "viseme_O",
+          "t": 325.302
+        },
+        {
+          "p": "viseme_PP",
+          "t": 325.607
+        },
+        {
+          "p": "viseme_aa",
+          "t": 325.798
+        },
+        {
+          "p": "viseme_PP",
+          "t": 326.975
+        },
+        {
+          "p": "viseme_E",
+          "t": 327.175
+        },
+        {
+          "p": "viseme_I",
+          "t": 327.355
+        },
+        {
+          "p": "viseme_aa",
+          "t": 327.666
+        },
+        {
+          "p": "viseme_TH",
+          "t": 328.002
+        },
+        {
+          "p": "viseme_E",
+          "t": 328.172
+        },
+        {
+          "p": "viseme_O",
+          "t": 328.458
+        },
+        {
+          "p": "viseme_I",
+          "t": 328.698
+        },
+        {
+          "p": "viseme_E",
+          "t": 329.019
+        },
+        {
+          "p": "viseme_aa",
+          "t": 329.76
+        },
+        {
+          "p": "viseme_I",
+          "t": 329.89
+        },
+        {
+          "p": "viseme_TH",
+          "t": 330.011
+        },
+        {
+          "p": "viseme_E",
+          "t": 330.111
+        },
+        {
+          "p": "viseme_SS",
+          "t": 330.256
+        },
+        {
+          "p": "viseme_I",
+          "t": 330.407
+        },
+        {
+          "p": "viseme_aa",
+          "t": 330.552
+        },
+        {
+          "p": "viseme_PP",
+          "t": 330.732
+        },
+        {
+          "p": "viseme_aa",
+          "t": 330.953
+        },
+        {
+          "p": "viseme_O",
+          "t": 331.323
+        },
+        {
+          "p": "viseme_PP",
+          "t": 331.488
+        },
+        {
+          "p": "viseme_O",
+          "t": 331.579
+        },
+        {
+          "p": "viseme_aa",
+          "t": 331.824
+        },
+        {
+          "p": "viseme_aa",
+          "t": 331.989
+        },
+        {
+          "p": "viseme_I",
+          "t": 332.185
+        },
+        {
+          "p": "viseme_O",
+          "t": 332.44
+        },
+        {
+          "p": "viseme_E",
+          "t": 332.636
+        },
+        {
+          "p": "viseme_SS",
+          "t": 332.911
+        },
+        {
+          "p": "viseme_E",
+          "t": 333.042
+        },
+        {
+          "p": "viseme_aa",
+          "t": 333.167
+        },
+        {
+          "p": "viseme_O",
+          "t": 334.059
+        },
+        {
+          "p": "viseme_aa",
+          "t": 334.259
+        },
+        {
+          "p": "viseme_E",
+          "t": 334.62
         }
       ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:359.100",
+      "tc_in": "00:00:335.600",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:336.100",
+      "char": "Disputant1",
+      "audio": "audio/DISPUTANT1_150.wav",
+      "visemes": [
+        {
+          "p": "viseme_aa",
+          "t": 336.377
+        },
+        {
+          "p": "viseme_TH",
+          "t": 336.981
+        },
+        {
+          "p": "viseme_aa",
+          "t": 337.063
+        },
+        {
+          "p": "viseme_E",
+          "t": 337.493
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:338.550",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:339.050",
+      "char": "Disputant2",
+      "audio": "audio/DISPUTANT2_152.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 339.386
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:340.450",
       "duration": 0.5
     },
     {
       "type": "pause",
-      "tc_in": "00:00:359.600",
+      "tc_in": "00:00:340.950",
       "duration": 0.5
     },
     {
       "type": "pause",
-      "tc_in": "00:00:360.100",
+      "tc_in": "00:00:341.450",
       "duration": 0.5
     },
     {
       "type": "pause",
-      "tc_in": "00:00:360.600",
+      "tc_in": "00:00:341.950",
       "duration": 0.5
     },
     {
       "type": "pause",
-      "tc_in": "00:00:361.100",
+      "tc_in": "00:00:342.450",
       "duration": 0.5
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:342.950",
+      "duration": 0.5
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:343.450",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:343.950",
+      "char": "MediatorA",
+      "audio": "audio/MEDIATORA_160.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 344.122
+        },
+        {
+          "p": "viseme_O",
+          "t": 344.596
+        },
+        {
+          "p": "viseme_E",
+          "t": 344.928
+        },
+        {
+          "p": "viseme_aa",
+          "t": 345.089
+        },
+        {
+          "p": "viseme_I",
+          "t": 345.392
+        },
+        {
+          "p": "viseme_O",
+          "t": 345.876
+        },
+        {
+          "p": "viseme_aa",
+          "t": 346.057
+        },
+        {
+          "p": "viseme_O",
+          "t": 346.219
+        },
+        {
+          "p": "viseme_PP",
+          "t": 346.385
+        },
+        {
+          "p": "viseme_O",
+          "t": 346.496
+        },
+        {
+          "p": "viseme_CH",
+          "t": 346.687
+        },
+        {
+          "p": "viseme_E",
+          "t": 346.838
+        },
+        {
+          "p": "viseme_O",
+          "t": 347.327
+        },
+        {
+          "p": "viseme_aa",
+          "t": 347.468
+        },
+        {
+          "p": "viseme_TH",
+          "t": 347.579
+        },
+        {
+          "p": "viseme_I",
+          "t": 347.66
+        },
+        {
+          "p": "viseme_O",
+          "t": 347.881
+        },
+        {
+          "p": "viseme_aa",
+          "t": 348.184
+        },
+        {
+          "p": "viseme_E",
+          "t": 348.668
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:349.700",
+      "duration": 0.5
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:350.200",
+      "duration": 0.5
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:350.700",
+      "duration": 0.5
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:351.200",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:351.700",
+      "char": "MediatorA",
+      "audio": "audio/MEDIATORA_165.wav",
+      "visemes": [
+        {
+          "p": "viseme_I",
+          "t": 351.874
+        },
+        {
+          "p": "viseme_aa",
+          "t": 352.15
+        },
+        {
+          "p": "viseme_I",
+          "t": 352.304
+        },
+        {
+          "p": "viseme_aa",
+          "t": 352.743
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:353.800",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:354.300",
+      "char": "MediatorA",
+      "audio": "audio/MEDIATORA_167.wav",
+      "visemes": [
+        {
+          "p": "viseme_E",
+          "t": 354.541
+        },
+        {
+          "p": "viseme_I",
+          "t": 354.983
+        },
+        {
+          "p": "viseme_O",
+          "t": 355.245
+        },
+        {
+          "p": "viseme_PP",
+          "t": 355.41
+        },
+        {
+          "p": "viseme_O",
+          "t": 355.501
+        },
+        {
+          "p": "viseme_aa",
+          "t": 355.757
+        },
+        {
+          "p": "viseme_I",
+          "t": 355.968
+        },
+        {
+          "p": "viseme_O",
+          "t": 356.35
+        },
+        {
+          "p": "viseme_SS",
+          "t": 356.55
+        },
+        {
+          "p": "viseme_I",
+          "t": 356.631
+        },
+        {
+          "p": "viseme_PP",
+          "t": 356.912
+        },
+        {
+          "p": "viseme_O",
+          "t": 357.073
+        },
+        {
+          "p": "viseme_aa",
+          "t": 357.354
+        },
+        {
+          "p": "viseme_I",
+          "t": 357.826
+        },
+        {
+          "p": "viseme_aa",
+          "t": 358.138
+        },
+        {
+          "p": "viseme_O",
+          "t": 358.751
+        },
+        {
+          "p": "viseme_aa",
+          "t": 358.901
+        },
+        {
+          "p": "viseme_SS",
+          "t": 359.147
+        },
+        {
+          "p": "viseme_I",
+          "t": 359.238
+        },
+        {
+          "p": "viseme_aa",
+          "t": 359.393
+        },
+        {
+          "p": "viseme_I",
+          "t": 359.514
+        },
+        {
+          "p": "viseme_O",
+          "t": 359.735
+        },
+        {
+          "p": "viseme_E",
+          "t": 360.057
+        },
+        {
+          "p": "viseme_FF",
+          "t": 360.343
+        },
+        {
+          "p": "viseme_E",
+          "t": 360.694
+        }
+      ]
     },
     {
       "type": "pause",
@@ -4488,654 +4681,580 @@
       "duration": 0.5
     },
     {
-      "type": "pause",
       "tc_in": "00:00:362.100",
-      "duration": 0.5
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:362.600",
-      "duration": 0.5
-    },
-    {
-      "tc_in": "00:00:363.100",
       "char": "MediatorA",
-      "audio": "audio/MEDIATORA_162.wav",
+      "audio": "audio/MEDIATORA_169.wav",
       "visemes": [
         {
-          "p": "viseme_I",
-          "t": 363.274
-        },
-        {
           "p": "viseme_aa",
-          "t": 363.55
+          "t": 362.382
         },
         {
           "p": "viseme_I",
-          "t": 363.703
-        },
-        {
-          "p": "viseme_aa",
-          "t": 364.143
-        }
-      ]
-    },
-    {
-      "tc_in": "00:00:365.200",
-      "char": "MediatorA",
-      "audio": "audio/MEDIATORA_163.wav",
-      "visemes": [
-        {
-          "p": "viseme_E",
-          "t": 365.441
-        },
-        {
-          "p": "viseme_I",
-          "t": 365.894
+          "t": 362.905
         },
         {
           "p": "viseme_O",
+          "t": 363.127
+        },
+        {
+          "p": "viseme_E",
+          "t": 363.298
+        },
+        {
+          "p": "viseme_I",
+          "t": 363.962
+        },
+        {
+          "p": "viseme_E",
+          "t": 364.103
+        },
+        {
+          "p": "viseme_O",
+          "t": 364.435
+        },
+        {
+          "p": "viseme_SS",
+          "t": 364.702
+        },
+        {
+          "p": "viseme_I",
+          "t": 364.833
+        },
+        {
+          "p": "viseme_TH",
+          "t": 365.225
+        },
+        {
+          "p": "viseme_E",
+          "t": 365.356
+        },
+        {
+          "p": "viseme_O",
+          "t": 365.612
+        },
+        {
+          "p": "viseme_I",
+          "t": 365.834
+        },
+        {
+          "p": "viseme_E",
           "t": 366.146
         },
         {
-          "p": "viseme_PP",
-          "t": 366.292
-        },
-        {
           "p": "viseme_O",
-          "t": 366.383
-        },
-        {
-          "p": "viseme_aa",
-          "t": 366.659
-        },
-        {
-          "p": "viseme_I",
-          "t": 366.871
-        },
-        {
-          "p": "viseme_O",
-          "t": 367.233
+          "t": 366.538
         },
         {
           "p": "viseme_SS",
-          "t": 367.444
-        },
-        {
-          "p": "viseme_I",
-          "t": 367.545
-        },
-        {
-          "p": "viseme_PP",
-          "t": 367.841
-        },
-        {
-          "p": "viseme_O",
-          "t": 367.972
+          "t": 366.74
         },
         {
           "p": "viseme_aa",
-          "t": 368.219
+          "t": 366.961
         },
         {
           "p": "viseme_I",
-          "t": 368.45
-        },
-        {
-          "p": "viseme_aa",
-          "t": 368.753
-        },
-        {
-          "p": "viseme_O",
-          "t": 369.366
-        },
-        {
-          "p": "viseme_aa",
-          "t": 369.517
-        },
-        {
-          "p": "viseme_SS",
-          "t": 369.799
-        },
-        {
-          "p": "viseme_I",
-          "t": 369.9
-        },
-        {
-          "p": "viseme_aa",
-          "t": 370.061
-        },
-        {
-          "p": "viseme_I",
-          "t": 370.181
-        },
-        {
-          "p": "viseme_O",
-          "t": 370.403
-        },
-        {
-          "p": "viseme_E",
-          "t": 370.725
+          "t": 367.193
         },
         {
           "p": "viseme_FF",
-          "t": 370.992
-        },
-        {
-          "p": "viseme_E",
-          "t": 371.344
-        }
-      ]
-    },
-    {
-      "tc_in": "00:00:372.250",
-      "char": "MediatorA",
-      "audio": "audio/MEDIATORA_164.wav",
-      "visemes": [
-        {
-          "p": "viseme_aa",
-          "t": 372.511
-        },
-        {
-          "p": "viseme_I",
-          "t": 372.965
-        },
-        {
-          "p": "viseme_O",
-          "t": 373.196
-        },
-        {
-          "p": "viseme_E",
-          "t": 373.397
-        },
-        {
-          "p": "viseme_I",
-          "t": 374.021
-        },
-        {
-          "p": "viseme_E",
-          "t": 374.193
-        },
-        {
-          "p": "viseme_O",
-          "t": 374.495
-        },
-        {
-          "p": "viseme_SS",
-          "t": 374.782
-        },
-        {
-          "p": "viseme_I",
-          "t": 374.893
-        },
-        {
-          "p": "viseme_TH",
-          "t": 375.139
-        },
-        {
-          "p": "viseme_E",
-          "t": 375.28
-        },
-        {
-          "p": "viseme_O",
-          "t": 375.552
-        },
-        {
-          "p": "viseme_I",
-          "t": 375.783
-        },
-        {
-          "p": "viseme_E",
-          "t": 376.105
-        },
-        {
-          "p": "viseme_O",
-          "t": 376.488
-        },
-        {
-          "p": "viseme_SS",
-          "t": 376.71
+          "t": 367.474
         },
         {
           "p": "viseme_aa",
-          "t": 376.931
-        },
-        {
-          "p": "viseme_I",
-          "t": 377.152
-        },
-        {
-          "p": "viseme_aa",
-          "t": 377.49
+          "t": 367.555
         }
       ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:379.000",
+      "tc_in": "00:00:369.150",
       "duration": 0.5
     },
     {
-      "type": "pause",
-      "tc_in": "00:00:379.500",
-      "duration": 0.5
-    },
-    {
-      "tc_in": "00:00:380.000",
+      "tc_in": "00:00:369.650",
       "char": "MediatorA",
-      "audio": "audio/MEDIATORA_167.wav",
+      "audio": "audio/MEDIATORA_171.wav",
       "visemes": [
         {
+          "p": "viseme_PP",
+          "t": 369.736
+        },
+        {
           "p": "viseme_O",
-          "t": 380.091
+          "t": 369.907
+        },
+        {
+          "p": "viseme_E",
+          "t": 370.233
+        },
+        {
+          "p": "viseme_aa",
+          "t": 370.495
+        },
+        {
+          "p": "viseme_I",
+          "t": 371.149
+        },
+        {
+          "p": "viseme_O",
+          "t": 371.38
+        },
+        {
+          "p": "viseme_aa",
+          "t": 371.572
+        },
+        {
+          "p": "viseme_aa",
+          "t": 371.747
+        },
+        {
+          "p": "viseme_I",
+          "t": 371.934
+        },
+        {
+          "p": "viseme_O",
+          "t": 372.18
+        },
+        {
+          "p": "viseme_E",
+          "t": 372.356
+        },
+        {
+          "p": "viseme_I",
+          "t": 373.08
+        },
+        {
+          "p": "viseme_E",
+          "t": 373.236
+        },
+        {
+          "p": "viseme_I",
+          "t": 373.362
+        },
+        {
+          "p": "viseme_aa",
+          "t": 373.452
         },
         {
           "p": "viseme_PP",
-          "t": 380.416
+          "t": 373.619
         },
         {
-          "p": "viseme_O",
-          "t": 380.517
-        },
-        {
-          "p": "viseme_I",
-          "t": 380.74
-        },
-        {
-          "p": "viseme_O",
-          "t": 380.954
+          "p": "viseme_aa",
+          "t": 373.79
         },
         {
           "p": "viseme_I",
-          "t": 381.324
+          "t": 373.986
         },
         {
-          "p": "viseme_TH",
-          "t": 381.583
+          "p": "viseme_SS",
+          "t": 374.162
         },
         {
           "p": "viseme_I",
-          "t": 381.908
+          "t": 374.293
+        },
+        {
+          "p": "viseme_SS",
+          "t": 374.549
+        },
+        {
+          "p": "viseme_E",
+          "t": 374.69
+        },
+        {
+          "p": "viseme_aa",
+          "t": 374.8
+        },
+        {
+          "p": "viseme_I",
+          "t": 375.414
+        },
+        {
+          "p": "viseme_FF",
+          "t": 375.524
+        },
+        {
+          "p": "viseme_aa",
+          "t": 375.605
+        },
+        {
+          "p": "viseme_aa",
+          "t": 375.826
         }
       ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:382.800",
+      "tc_in": "00:00:377.200",
       "duration": 0.5
     },
     {
-      "tc_in": "00:00:383.300",
+      "tc_in": "00:00:377.700",
+      "char": "MediatorA",
+      "audio": "audio/MEDIATORA_173.wav",
+      "visemes": [
+        {
+          "p": "viseme_O",
+          "t": 377.812
+        },
+        {
+          "p": "viseme_PP",
+          "t": 378.163
+        },
+        {
+          "p": "viseme_O",
+          "t": 378.275
+        },
+        {
+          "p": "viseme_I",
+          "t": 378.535
+        },
+        {
+          "p": "viseme_O",
+          "t": 378.76
+        },
+        {
+          "p": "viseme_I",
+          "t": 379.131
+        },
+        {
+          "p": "viseme_TH",
+          "t": 379.385
+        },
+        {
+          "p": "viseme_I",
+          "t": 379.742
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:380.650",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:381.150",
       "char": "Disputant1",
-      "audio": "audio/DISPUTANT1_169.wav",
+      "audio": "audio/DISPUTANT1_175.wav",
       "visemes": [
         {
           "p": "viseme_aa",
-          "t": 383.595
-        },
-        {
-          "p": "viseme_E",
-          "t": 384.298
-        },
-        {
-          "p": "viseme_I",
-          "t": 384.685
+          "t": 381.586
         }
       ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:385.700",
+      "tc_in": "00:00:382.750",
       "duration": 0.5
     },
     {
-      "tc_in": "00:00:386.200",
-      "char": "Disputant2",
-      "audio": "audio/DISPUTANT2_171.wav",
-      "visemes": [
-        {
-          "p": "viseme_E",
-          "t": 386.294
-        },
-        {
-          "p": "viseme_I",
-          "t": 386.721
-        }
-      ]
-    },
-    {
-      "tc_in": "00:00:387.700",
-      "char": "MediatorA",
-      "audio": "audio/MEDIATORA_172.wav",
-      "visemes": [
-        {
-          "p": "viseme_PP",
-          "t": 387.792
-        },
-        {
-          "p": "viseme_I",
-          "t": 387.976
-        },
-        {
-          "p": "viseme_E",
-          "t": 388.231
-        },
-        {
-          "p": "viseme_I",
-          "t": 388.394
-        },
-        {
-          "p": "viseme_aa",
-          "t": 388.578
-        },
-        {
-          "p": "viseme_SS",
-          "t": 388.737
-        },
-        {
-          "p": "viseme_E",
-          "t": 388.849
-        },
-        {
-          "p": "viseme_PP",
-          "t": 389.13
-        },
-        {
-          "p": "viseme_O",
-          "t": 389.457
-        }
-      ]
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:390.350",
-      "duration": 0.5
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:390.850",
-      "duration": 0.5
-    },
-    {
-      "tc_in": "00:00:391.350",
-      "char": "MediatorA",
-      "audio": "audio/MEDIATORA_175.wav",
-      "visemes": [
-        {
-          "p": "viseme_I",
-          "t": 391.501
-        },
-        {
-          "p": "viseme_TH",
-          "t": 391.713
-        },
-        {
-          "p": "viseme_E",
-          "t": 391.794
-        },
-        {
-          "p": "viseme_O",
-          "t": 392.349
-        },
-        {
-          "p": "viseme_aa",
-          "t": 392.51
-        },
-        {
-          "p": "viseme_O",
-          "t": 392.652
-        },
-        {
-          "p": "viseme_E",
-          "t": 392.869
-        },
-        {
-          "p": "viseme_O",
-          "t": 392.965
-        },
-        {
-          "p": "viseme_I",
-          "t": 393.106
-        },
-        {
-          "p": "viseme_aa",
-          "t": 393.318
-        },
-        {
-          "p": "viseme_FF",
-          "t": 393.505
-        },
-        {
-          "p": "viseme_O",
-          "t": 393.656
-        },
-        {
-          "p": "viseme_I",
-          "t": 393.863
-        },
-        {
-          "p": "viseme_FF",
-          "t": 394.135
-        },
-        {
-          "p": "viseme_I",
-          "t": 394.458
-        }
-      ]
-    },
-    {
-      "type": "pause",
-      "tc_in": "00:00:395.350",
-      "duration": 0.5
-    },
-    {
-      "tc_in": "00:00:395.850",
+      "tc_in": "00:00:383.250",
       "char": "Disputant2",
       "audio": "audio/DISPUTANT2_177.wav",
       "visemes": [
         {
-          "p": "viseme_SS",
-          "t": 395.972
-        },
-        {
           "p": "viseme_aa",
-          "t": 396.215
-        },
-        {
-          "p": "viseme_E",
-          "t": 396.428
-        },
-        {
-          "p": "viseme_SS",
-          "t": 396.56
-        },
-        {
-          "p": "viseme_E",
-          "t": 396.641
-        },
-        {
-          "p": "viseme_I",
-          "t": 396.763
-        },
-        {
-          "p": "viseme_E",
-          "t": 396.915
-        },
-        {
-          "p": "viseme_TH",
-          "t": 397.067
-        },
-        {
-          "p": "viseme_aa",
-          "t": 397.148
-        },
-        {
-          "p": "viseme_E",
-          "t": 397.848
-        },
-        {
-          "p": "viseme_aa",
-          "t": 397.97
-        },
-        {
-          "p": "viseme_PP",
-          "t": 398.198
-        },
-        {
-          "p": "viseme_aa",
-          "t": 398.513
+          "t": 383.611
         }
       ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:399.400",
+      "tc_in": "00:00:384.700",
       "duration": 0.5
     },
     {
-      "tc_in": "00:00:399.900",
-      "char": "Disputant1",
-      "audio": "audio/DISPUTANT1_179.wav",
+      "tc_in": "00:00:385.200",
+      "char": "MediatorA",
+      "audio": "audio/MEDIATORA_179.wav",
+      "visemes": [
+        {
+          "p": "viseme_PP",
+          "t": 385.317
+        },
+        {
+          "p": "viseme_I",
+          "t": 385.552
+        },
+        {
+          "p": "viseme_E",
+          "t": 385.823
+        },
+        {
+          "p": "viseme_I",
+          "t": 385.996
+        },
+        {
+          "p": "viseme_aa",
+          "t": 386.149
+        },
+        {
+          "p": "viseme_SS",
+          "t": 386.317
+        },
+        {
+          "p": "viseme_E",
+          "t": 386.43
+        },
+        {
+          "p": "viseme_PP",
+          "t": 386.7
+        },
+        {
+          "p": "viseme_O",
+          "t": 387.047
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:387.950",
+      "duration": 0.5
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:388.450",
+      "duration": 0.5
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:388.950",
+      "duration": 0.5
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:389.450",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:389.950",
+      "char": "MediatorA",
+      "audio": "audio/MEDIATORA_184.wav",
       "visemes": [
         {
           "p": "viseme_I",
-          "t": 400.083
+          "t": 390.061
+        },
+        {
+          "p": "viseme_E",
+          "t": 390.299
+        },
+        {
+          "p": "viseme_O",
+          "t": 390.859
+        },
+        {
+          "p": "viseme_aa",
+          "t": 391.021
+        },
+        {
+          "p": "viseme_O",
+          "t": 391.142
+        },
+        {
+          "p": "viseme_E",
+          "t": 391.329
+        },
+        {
+          "p": "viseme_O",
+          "t": 391.455
+        },
+        {
+          "p": "viseme_I",
+          "t": 391.607
+        },
+        {
+          "p": "viseme_aa",
+          "t": 391.798
         },
         {
           "p": "viseme_FF",
-          "t": 400.428
-        },
-        {
-          "p": "viseme_E",
-          "t": 400.591
-        },
-        {
-          "p": "viseme_I",
-          "t": 401.211
+          "t": 391.975
         },
         {
           "p": "viseme_O",
-          "t": 401.384
+          "t": 392.106
         },
         {
           "p": "viseme_I",
-          "t": 401.495
+          "t": 392.283
+        },
+        {
+          "p": "viseme_FF",
+          "t": 392.536
+        },
+        {
+          "p": "viseme_I",
+          "t": 392.859
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "tc_in": "00:00:393.750",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:394.250",
+      "char": "Disputant1",
+      "audio": "audio/DISPUTANT1_186.wav",
+      "visemes": [
+        {
+          "p": "viseme_SS",
+          "t": 394.377
         },
         {
           "p": "viseme_aa",
-          "t": 401.607
+          "t": 394.63
+        },
+        {
+          "p": "viseme_E",
+          "t": 394.838
+        },
+        {
+          "p": "viseme_I",
+          "t": 395.0
+        },
+        {
+          "p": "viseme_E",
+          "t": 395.892
+        },
+        {
+          "p": "viseme_I",
+          "t": 396.054
         },
         {
           "p": "viseme_O",
-          "t": 401.75
+          "t": 396.247
+        },
+        {
+          "p": "viseme_I",
+          "t": 396.389
+        },
+        {
+          "p": "viseme_aa",
+          "t": 396.51
+        },
+        {
+          "p": "viseme_O",
+          "t": 396.672
         },
         {
           "p": "viseme_SS",
-          "t": 402.024
+          "t": 396.936
         },
         {
           "p": "viseme_I",
-          "t": 402.288
+          "t": 397.159
         }
       ]
     },
     {
-      "tc_in": "00:00:403.150",
-      "char": "Disputant1",
-      "audio": "audio/DISPUTANT1_180.wav",
+      "type": "pause",
+      "tc_in": "00:00:398.000",
+      "duration": 0.5
+    },
+    {
+      "tc_in": "00:00:398.500",
+      "char": "Disputant2",
+      "audio": "audio/DISPUTANT2_188.wav",
       "visemes": [
         {
-          "p": "viseme_I",
-          "t": 403.324
+          "p": "viseme_E",
+          "t": 398.775
+        },
+        {
+          "p": "viseme_SS",
+          "t": 399.648
         },
         {
           "p": "viseme_aa",
-          "t": 403.633
-        },
-        {
-          "p": "viseme_O",
-          "t": 403.813
+          "t": 399.791
         },
         {
           "p": "viseme_E",
-          "t": 404.002
+          "t": 399.964
+        },
+        {
+          "p": "viseme_O",
+          "t": 400.167
+        },
+        {
+          "p": "viseme_E",
+          "t": 400.736
         }
       ]
     },
     {
       "type": "pause",
-      "tc_in": "00:00:405.400",
+      "tc_in": "00:00:401.750",
       "duration": 0.5
     },
     {
-      "type": "pause",
-      "tc_in": "00:00:405.900",
-      "duration": 0.5
-    },
-    {
-      "tc_in": "00:00:406.400",
+      "tc_in": "00:00:402.250",
       "char": "MediatorA",
-      "audio": "audio/MEDIATORA_183.wav",
+      "audio": "audio/MEDIATORA_190.wav",
       "visemes": [
         {
           "p": "viseme_TH",
-          "t": 406.486
+          "t": 402.336
         },
         {
           "p": "viseme_aa",
-          "t": 406.657
+          "t": 402.508
         },
         {
           "p": "viseme_O",
-          "t": 406.91
+          "t": 402.725
         },
         {
           "p": "viseme_I",
-          "t": 407.354
+          "t": 403.145
         },
         {
           "p": "viseme_PP",
-          "t": 407.602
+          "t": 403.398
         },
         {
           "p": "viseme_E",
-          "t": 407.865
+          "t": 403.671
         },
         {
           "p": "viseme_I",
-          "t": 408.107
+          "t": 403.918
         },
         {
           "p": "viseme_aa",
-          "t": 408.339
+          "t": 404.141
         },
         {
           "p": "viseme_E",
-          "t": 408.774
+          "t": 404.414
         },
         {
           "p": "viseme_O",
-          "t": 408.996
-        },
-        {
-          "p": "viseme_PP",
-          "t": 409.309
+          "t": 404.616
         },
         {
           "p": "viseme_aa",
-          "t": 409.39
+          "t": 404.985
         },
         {
           "p": "viseme_O",
-          "t": 409.511
+          "t": 405.091
         },
         {
           "p": "viseme_aa",
-          "t": 409.753
+          "t": 405.324
         },
         {
           "p": "viseme_E",
-          "t": 410.198
+          "t": 405.738
         }
       ]
     }

@@ -7,19 +7,20 @@ Minimal Flask API to submit video generation jobs.
 - pip install -r requirements.txt
 - python app/server.py
 
-## New architecture (CPU API + GPU Batch)
+## New architecture (CPU API + CPU Batch/Workers)
 
-This repo now supports a **CPU-first Flask API** that queues jobs and offloads **GPU work (WhisperX + Blender render)** to **AWS Batch**, while keeping **mux/overlays/final delivery** on CPU.
+This repo supports a **CPU-first Flask API** that queues jobs and runs **director + render + finalize** on CPU workers (EC2+SQS or AWS Batch CPU), with S3 as the shared artifact store.
 
 ### What runs where
 - **CPU (Flask / worker)**
   - Receives requests in the shape of `generator_inputs.json` + `script.txt`
+  - Uploads job inputs to S3 and enqueues SQS payloads with S3 URIs (portable across worker hosts)
   - Builds a manifest CSV with **stable audio hashing** and **S3 audio URIs**
   - Generates missing audio via Typecast and uploads to S3
-  - Submits AWS Batch GPU jobs (director + render array)
-- **GPU (AWS Batch)**
-  - `scripts/gpu_build_director.py`: downloads manifest + audio from S3 and runs WhisperX → uploads `director_visemes.json`
-  - `scripts/batch_render_array_entrypoint.py`: Batch array job that renders **frame ranges** in parallel → uploads PNG frames to S3
+  - Submits/renders director + frame shards on CPU execution targets
+- **CPU render/align workers (EC2 ASG or AWS Batch CPU)**
+  - `scripts/gpu_build_director.py`: downloads manifest + audio from S3 and runs WhisperX (CPU mode) → uploads `director_visemes.json`
+  - `scripts/batch_render_array_entrypoint.py`: renders **frame ranges** in parallel shards → uploads PNG frames to S3
 
 ### Audio caching (stable hashing)
 `scripts/parse_screenplay_to_manifest.py` now writes:
@@ -50,10 +51,12 @@ Distributed render shards render with `--no_audio` (timeline end estimated from 
 docker compose -f docker-compose.cpu.yml up --build
 ```
 
-### GPU worker container (local GPU host)
+### CPU render worker container (local/EC2 CPU host)
+
+Build a CPU-only render image (Blender + WhisperX CPU toolchain):
 
 ```bash
-docker compose -f docker-compose.gpu.worker.yml up --build
+docker build -f docker/Dockerfile.render-cpu -t vpg-render-cpu .
 ```
 
 ### Prevent re-downloading WhisperX/PyTorch models + avoid filling container `/tmp`
@@ -101,23 +104,22 @@ docker volume prune -f
 You will create:
 - **S3 bucket** for job inputs/audio/frames/output
 - **SQS queue** for job requests (CPU worker pulls from this)
-- **AWS Batch Compute Environment (GPU)** using `g5.*` (optionally Spot) + max vCPU cap
-- **AWS Batch Job Queue (GPU)** pointing to that compute environment
-- **AWS Batch Job Definitions**:
-  - GPU director job definition (image built from `docker/Dockerfile.gpu`) running:
-    - `python scripts/gpu_build_director.py ...`
-  - GPU render array job definition (same GPU image) running:
-    - `python scripts/batch_render_array_entrypoint.py ...`
+- Optional **AWS Batch Compute Environment (CPU)** (Spot-friendly) + job queue
+- **AWS Batch Job Definitions** (CPU image from `docker/Dockerfile.render-cpu`):
+  - director job definition running `python scripts/gpu_build_director.py ...`
+  - render array job definition running `python scripts/batch_render_array_entrypoint.py ...`
 
 ### Required environment variables (CPU API / worker)
 - `AWS_REGION`
 - `VPG_S3_BUCKET`
 - `VPG_S3_PREFIX` (default: `vpg`)
 - `VPG_SQS_QUEUE_URL`
-- `VPG_BATCH_JOB_QUEUE_GPU`
-- `VPG_BATCH_JOB_DEF_GPU_DIRECTOR`
-- `VPG_BATCH_JOB_DEF_GPU_RENDER`
+- `VPG_BATCH_JOB_QUEUE_RENDER` (or legacy `VPG_BATCH_JOB_QUEUE_GPU`)
+- `VPG_BATCH_JOB_DEF_DIRECTOR` (or legacy `VPG_BATCH_JOB_DEF_GPU_DIRECTOR`)
+- `VPG_BATCH_JOB_DEF_RENDER` (or legacy `VPG_BATCH_JOB_DEF_GPU_RENDER`)
 - `VPG_RENDER_SHARDS` (default: `8`)
+- `VPG_WORKER_CONCURRENCY` (default: `1`)
+- `VPG_SQS_VISIBILITY_TIMEOUT` (default: `3600`)
 
 Optional (keep one GPU warm via endpoints):
 - `VPG_BATCH_COMPUTE_ENV`
@@ -140,6 +142,10 @@ If `VPG_SQS_QUEUE_URL` is set, jobs are queued to SQS and processed by:
 ```bash
 python -m app.worker
 ```
+
+Queue payloads are S3-based (`scriptS3`, `generatorInputsS3`) so workers can run on independent instances without shared local filesystems.
+
+Operational hardening guidance (DLQ, autoscaling, CloudWatch, S3 lifecycle): `docs/aws_cpu_scaling_ops.md`.
 
 See `config.example.env` for a copy/paste starter.
 

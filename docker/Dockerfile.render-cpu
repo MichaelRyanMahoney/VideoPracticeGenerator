@@ -1,0 +1,52 @@
+FROM python:3.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    VPG_DATA_DIR=/data \
+    NLTK_DATA=/app/nltk_data \
+    BLENDER_VERSION=4.1.1 \
+    BLENDER_DIR=/usr/local/blender
+
+# Keep large temp/cache artifacts on attached volumes.
+ENV XDG_CACHE_HOME=/data/.cache \
+    TORCH_HOME=/data/.cache/torch \
+    HF_HOME=/data/.cache/huggingface \
+    VPG_ALIGN_MODEL_DIR=/data/.cache/torchaudio \
+    VPG_WORK_DIR=/data/tmp \
+    VPG_AUDIO_CACHE_DIR=/data/cache/audio
+
+WORKDIR /app
+
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    ca-certificates curl wget xz-utils ffmpeg \
+    libglu1-mesa libgl1 libx11-6 libxi6 libxxf86vm1 libxrender1 libxfixes3 libsm6 libxext6 libglib2.0-0 \
+    libglvnd0 libglx0 libegl1 libgles2 libdrm2 libgbm1 \
+    libxrandr2 libxkbcommon0 libwayland-client0 libwayland-server0 \
+    xvfb xauth \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p ${BLENDER_DIR} /app/nltk_data && \
+    BLENDER_URL="https://download.blender.org/release/Blender${BLENDER_VERSION%.*}/blender-${BLENDER_VERSION}-linux-x64.tar.xz" && \
+    curl -fL --retry 5 --retry-delay 5 "$BLENDER_URL" -o /tmp/blender.txz && \
+    tar -xJf /tmp/blender.txz -C ${BLENDER_DIR} --strip-components=1 && \
+    ln -sf ${BLENDER_DIR}/blender /usr/local/bin/blender && \
+    rm -f /tmp/blender.txz
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY app app
+COPY scripts scripts
+COPY assets assets
+COPY scenes scenes
+COPY manifests manifests
+COPY run_full_video_creation_sequence.config.json run_full_video_creation_sequence.config.json
+
+# CPU-only inference toolchain for director generation.
+RUN pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cpu torch torchaudio && \
+    pip install --no-cache-dir whisperx g2p_en nltk
+
+RUN python -c "import nltk; nltk.download('averaged_perceptron_tagger_eng'); nltk.download('punkt')"
+
+ENV VPG_BLENDER_BIN=/usr/local/bin/blender
+

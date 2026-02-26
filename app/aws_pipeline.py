@@ -180,9 +180,9 @@ class AwsJobConfig:
     s3_bucket: str
     s3_prefix: str
     batch_job_queue: str
-    batch_job_def_gpu_director: str
-    batch_job_def_gpu_render: str
-    batch_job_def_gpu_prepare_scene: str
+    batch_job_def_director: str
+    batch_job_def_render: str
+    batch_job_def_prepare_scene: str
     render_shards: int = 8
     batch_compute_env: str = ""  # optional (for warm/off)
     email_to: str = ""
@@ -195,28 +195,28 @@ def load_aws_config() -> AwsJobConfig:
     if not bucket:
         raise RuntimeError("Missing VPG_S3_BUCKET")
     prefix = (os.environ.get("VPG_S3_PREFIX") or "vpg").strip().strip("/")
-    # If we're using a dedicated GPU executor EC2 service (Option A) OR running GPU steps locally,
+    # If we're using a dedicated executor service OR running compute steps locally,
     # AWS Batch is not required.
     gpu_exec_url = (os.environ.get("VPG_GPU_EXECUTOR_URL") or "").strip()
-    run_gpu_locally = (os.environ.get("VPG_RUN_GPU_LOCALLY") or "").strip() == "1"
-    queue = (os.environ.get("VPG_BATCH_JOB_QUEUE_GPU") or "").strip()
-    jd_director = (os.environ.get("VPG_BATCH_JOB_DEF_GPU_DIRECTOR") or "").strip()
-    jd_render = (os.environ.get("VPG_BATCH_JOB_DEF_GPU_RENDER") or "").strip()
-    jd_prepare = (os.environ.get("VPG_BATCH_JOB_DEF_GPU_PREPARE_SCENE") or "").strip() or jd_render
-    if not gpu_exec_url and not run_gpu_locally:
+    run_compute_locally = (os.environ.get("VPG_RUN_COMPUTE_LOCALLY") or os.environ.get("VPG_RUN_GPU_LOCALLY") or "").strip() == "1"
+    queue = (os.environ.get("VPG_BATCH_JOB_QUEUE_RENDER") or os.environ.get("VPG_BATCH_JOB_QUEUE_GPU") or "").strip()
+    jd_director = (os.environ.get("VPG_BATCH_JOB_DEF_DIRECTOR") or os.environ.get("VPG_BATCH_JOB_DEF_GPU_DIRECTOR") or "").strip()
+    jd_render = (os.environ.get("VPG_BATCH_JOB_DEF_RENDER") or os.environ.get("VPG_BATCH_JOB_DEF_GPU_RENDER") or "").strip()
+    jd_prepare = (os.environ.get("VPG_BATCH_JOB_DEF_PREPARE_SCENE") or os.environ.get("VPG_BATCH_JOB_DEF_GPU_PREPARE_SCENE") or "").strip() or jd_render
+    if not gpu_exec_url and not run_compute_locally:
         if not queue:
-            raise RuntimeError("Missing VPG_BATCH_JOB_QUEUE_GPU")
+            raise RuntimeError("Missing VPG_BATCH_JOB_QUEUE_RENDER (or legacy VPG_BATCH_JOB_QUEUE_GPU)")
         if not jd_director or not jd_render:
-            raise RuntimeError("Missing VPG_BATCH_JOB_DEF_GPU_DIRECTOR or VPG_BATCH_JOB_DEF_GPU_RENDER")
+            raise RuntimeError("Missing VPG_BATCH_JOB_DEF_DIRECTOR/VPG_BATCH_JOB_DEF_RENDER (or legacy GPU names)")
     shards = int(os.environ.get("VPG_RENDER_SHARDS") or "8")
     return AwsJobConfig(
         region=region,
         s3_bucket=bucket,
         s3_prefix=prefix,
         batch_job_queue=queue,
-        batch_job_def_gpu_director=jd_director,
-        batch_job_def_gpu_render=jd_render,
-        batch_job_def_gpu_prepare_scene=jd_prepare,
+        batch_job_def_director=jd_director,
+        batch_job_def_render=jd_render,
+        batch_job_def_prepare_scene=jd_prepare,
         render_shards=max(1, shards),
         batch_compute_env=(os.environ.get("VPG_BATCH_COMPUTE_ENV") or "").strip(),
         email_to=(os.environ.get("VPG_EMAIL_TO") or "").strip(),
@@ -269,14 +269,14 @@ def submit_full_job(project_root: Path, project_id: str, job_id: str, script_txt
       - uploads inputs to S3
       - builds manifest with audio hashes and S3 audio URIs
       - generates missing audio via Typecast and uploads to S3
-      - submits GPU director job + GPU render array job
+      - submits director job + render array job
     """
     cfg = load_aws_config()
     s3 = boto3.client("s3", region_name=cfg.region)
     gpu_exec_url = (os.environ.get("VPG_GPU_EXECUTOR_URL") or "").strip().rstrip("/")
     gpu_exec_token = (os.environ.get("VPG_GPU_EXECUTOR_TOKEN") or "").strip()
-    run_gpu_locally = (os.environ.get("VPG_RUN_GPU_LOCALLY") or "").strip() == "1"
-    batch = boto3.client("batch", region_name=cfg.region) if (not gpu_exec_url and not run_gpu_locally) else None
+    run_compute_locally = (os.environ.get("VPG_RUN_COMPUTE_LOCALLY") or os.environ.get("VPG_RUN_GPU_LOCALLY") or "").strip() == "1"
+    batch = boto3.client("batch", region_name=cfg.region) if (not gpu_exec_url and not run_compute_locally) else None
 
     paths = job_paths(cfg, project_id, job_id)
     write_status(s3, paths["status"], job_id, "queued", {"projectId": project_id})
@@ -345,7 +345,7 @@ def submit_full_job(project_root: Path, project_id: str, job_id: str, script_txt
 
     # ---- Single-node mode: run GPU steps locally on this machine (no Batch, no GPU executor HTTP) ----
     # IMPORTANT: this must happen BEFORE any Batch submission logic below.
-    if run_gpu_locally:
+    if run_compute_locally:
         env_gpu = os.environ.copy()
         env_gpu["AWS_REGION"] = cfg.region
         env_gpu.setdefault("AWS_DEFAULT_REGION", cfg.region)
@@ -601,7 +601,7 @@ def submit_full_job(project_root: Path, project_id: str, job_id: str, script_txt
     director_job = batch.submit_job(
         jobName=f"vpg-director-{project_id}-{job_id[:8]}",
         jobQueue=cfg.batch_job_queue,
-        jobDefinition=cfg.batch_job_def_gpu_director,
+        jobDefinition=cfg.batch_job_def_director,
         containerOverrides={
             "command": [
                 "python",
@@ -625,7 +625,7 @@ def submit_full_job(project_root: Path, project_id: str, job_id: str, script_txt
         prepare_job = batch.submit_job(
             jobName=f"vpg-scene-{project_id}-{job_id[:8]}",
             jobQueue=cfg.batch_job_queue,
-            jobDefinition=cfg.batch_job_def_gpu_prepare_scene,
+            jobDefinition=cfg.batch_job_def_prepare_scene,
             containerOverrides={
                 "command": [
                     "python",
@@ -647,7 +647,7 @@ def submit_full_job(project_root: Path, project_id: str, job_id: str, script_txt
     render_submit = {
         "jobName": f"vpg-render-{project_id}-{job_id[:8]}",
         "jobQueue": cfg.batch_job_queue,
-        "jobDefinition": cfg.batch_job_def_gpu_render,
+        "jobDefinition": cfg.batch_job_def_render,
         "dependsOn": depends,
         "containerOverrides": {
             "environment": [{"name": "VPG_RENDER_SHARDS", "value": str(int(cfg.render_shards))}],

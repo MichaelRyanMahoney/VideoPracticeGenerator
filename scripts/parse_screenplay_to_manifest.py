@@ -64,14 +64,13 @@ def normalize_speaker(raw_role, raw_name):
     raise ValueError(f"Unrecognized canonical role '{key}'")
 
 def _parse_kv_blob(blob: str) -> dict:
-    """Parse a simple 'key=value' blob separated by spaces or commas.
-    Values can be quoted; whitespace around '=' is allowed.
+    """Parse inline attrs with either 'key=value' or 'key: value' syntax.
+    Values can be quoted; attributes may be space- or comma-separated.
     """
     if not blob:
         return {}
     out = {}
-    # split by spaces or commas that are not inside quotes
-    tokens = re.findall(r'(\w+)\s*=\s*("[^"]*"|\'[^\']*\'|[^,\s]+)', blob)
+    tokens = re.findall(r'(\w+)\s*[:=]\s*("[^"]*"|\'[^\']*\'|[^,\s]+)', blob)
     for k, v in tokens:
         v = v.strip().strip('"\'')
         key = k.strip().lower()
@@ -105,6 +104,10 @@ def _coerce_types(d: dict) -> dict:
                 out["volume"] = int(v)
             except Exception:
                 pass
+        elif kk == "hesitant":
+            # Used to steer Typecast smart-prompt delivery only (NOT part of spoken text).
+            raw = str(v).strip().lower()
+            out["hesitant"] = raw in {"1", "true", "yes", "y", "t", "on"}
     return out
 
 
@@ -165,6 +168,8 @@ def parse_script(lines):
                     attrs = dict(current_defaults)
                     attrs.update(inline_kv)
                     attrs["typecast_mode"] = "preset" if has_explicit_emotion else "smart"
+                    if bool(attrs.get("hesitant")) is True:
+                        attrs["typecast_mode"] = "smart"
                     entries.append({
                         "kind": "speech",
                         "speaker": cur_speaker,
@@ -214,6 +219,8 @@ def parse_script(lines):
                 attrs = dict(current_defaults)
                 attrs.update(row_kv)
                 attrs["typecast_mode"] = "preset" if has_explicit_emotion else "smart"
+                if bool(attrs.get("hesitant")) is True:
+                    attrs["typecast_mode"] = "smart"
                 entries.append({
                     "kind": "speech",
                     "speaker": cur_speaker,
@@ -270,7 +277,7 @@ def main():
 
     def audio_hash_for(role: str, transcript: str, attrs: dict) -> str:
         vid = voice_ids.get(role, "")
-        payload = {
+        payload: dict = {
             "v": 1,
             "project_id": project_id,
             "role": role,
@@ -284,6 +291,9 @@ def main():
             "pitch": float(attrs.get("pitch", 0.0)),
             "volume": int(attrs.get("volume", 100)),
         }
+        # Only include hesitant when explicitly enabled so existing hashes remain stable.
+        if bool(attrs.get("hesitant")) is True:
+            payload["hesitant"] = True
         raw = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
         return hashlib.sha256(raw).hexdigest()
     with open(args.out_csv, "w", newline="") as f:
@@ -296,6 +306,7 @@ def main():
             "transcript",
             "duration",     # seconds for pause rows; empty for speech rows
             "typecast_mode",
+            "hesitant",
             "emotion_preset","emotion_intensity","tempo","pitch","volume"
         ])
         for idx, entry in enumerate(entries, start=1):
@@ -324,6 +335,7 @@ def main():
                 txt,
                 duration,
                 attrs.get("typecast_mode","smart") if kind != "pause" else "",
+                "true" if (kind != "pause" and bool(attrs.get("hesitant")) is True) else "",
                 attrs.get("emotion_preset","normal") if kind != "pause" else "",
                 attrs.get("emotion_intensity",1.0) if kind != "pause" else "",
                 attrs.get("tempo",1.0) if kind != "pause" else "",

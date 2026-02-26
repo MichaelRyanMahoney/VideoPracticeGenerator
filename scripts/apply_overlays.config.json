@@ -9,6 +9,10 @@
 
   "pf_icon": "../scenes/ProcessFormIcon.png",
   "pf_width": 200,
+  "pf_pen": "../scenes/ProcessFormPen.png",
+  "pf_pen_width": 110,
+  "pf_pen_dx": 150,
+  "pf_pen_dy": -180,
   "pf_anim_sec": 0.5,
 
   "overlay_image": "../scenes/VideoPauseOverlay1.png",
@@ -45,6 +49,10 @@
     "conflict_description_overlay": "../scenes/ConflictDescriptionOverlay.png",
     "table_overlay": "../out/exports/characters/Table_01_Diningtableroundfor4people.png",
     "process_form_overlay": "../scenes/ProcessFormReadyOverlay.png",
+    "process_form_pen": "../scenes/ProcessFormPen.png",
+    "process_form_pen_width": 230,
+    "process_form_pen_x": 1285,
+    "process_form_pen_y": 225,
     "process_form_duration": 4.0,
     "table_duration": 4.0,
     "char_width": 1400,

@@ -308,7 +308,7 @@ def resolve_paths_in_config(cfg: Dict[str, Any], cfg_dir: Path) -> Dict[str, Any
     """
     path_keys = {
         "script", "director", "base", "overlay_image", "out",
-        "pf_icon", "labels_bubble", "labels_fontfile",
+        "pf_icon", "pf_pen", "labels_bubble", "labels_fontfile",
         "intro_fontfile", "final_overlay"
     }
     # intro_bg is a list of paths
@@ -329,6 +329,8 @@ def resolve_paths_in_config(cfg: Dict[str, Any], cfg_dir: Path) -> Dict[str, Any
                 intro2["title_slide"] = _resolve_path(cfg_dir, intro2.get("title_slide"))
             if "process_form_overlay" in intro2:
                 intro2["process_form_overlay"] = _resolve_path(cfg_dir, intro2.get("process_form_overlay"))
+            if "process_form_pen" in intro2:
+                intro2["process_form_pen"] = _resolve_path(cfg_dir, intro2.get("process_form_pen"))
             if "table_overlay" in intro2:
                 intro2["table_overlay"] = _resolve_path(cfg_dir, intro2.get("table_overlay"))
             if "conflict_description_overlay" in intro2:
@@ -526,6 +528,10 @@ def main():
     # ProcessForm moving icon options
     ap.add_argument("--pf_icon", help="Path to ProcessFormIcon.png (small floating icon)")
     ap.add_argument("--pf_width", type=int, default=200, help="Icon width in px (height auto)")
+    ap.add_argument("--pf_pen", help="Path to ProcessFormPen.png (small pen layered over moving form)")
+    ap.add_argument("--pf_pen_width", type=int, default=110, help="Pen width in px (height auto)")
+    ap.add_argument("--pf_pen_dx", type=int, default=105, help="Pen X offset relative to form icon")
+    ap.add_argument("--pf_pen_dy", type=int, default=8, help="Pen Y offset relative to form icon")
     ap.add_argument("--pf_dx", type=int, default=300, help="Horizontal delta between right and left positions")
     ap.add_argument("--pf_margin", type=int, default=60, help="Margin from edges in px")
     ap.add_argument("--pf_y", type=int, default=60, help="Y position from top in px")
@@ -792,6 +798,15 @@ def main():
             filter_parts.append(f"[{next_input_idx}:v]scale={int(args.pf_width)}:-1,format=rgba[ic]")
             filter_parts.append(f"[0:v][ic]overlay=x={xexpr}:y={pf_y_expr}:format=auto[v0]")
             next_input_idx += 1
+            # Optional pen rides with the moving process form icon and is layered above it.
+            if args.pf_pen:
+                pf_pen_x_expr = f"({xexpr}+{int(args.pf_pen_dx)})"
+                pf_pen_y_expr = f"({pf_y_expr}+{int(args.pf_pen_dy)})"
+                input_args += ["-loop", "1", "-i", str(Path(args.pf_pen))]
+                filter_parts.append(f"[{next_input_idx}:v]scale={int(args.pf_pen_width)}:-1,format=rgba[ic_pen]")
+                filter_parts.append(f"[v0][ic_pen]overlay=x={pf_pen_x_expr}:y={pf_pen_y_expr}:format=auto[v0p]")
+                next_input_idx += 1
+                filter_parts.append("[v0p]format=rgba[v0]")
         else:
             # normalize pixel format to avoid odd overlay behavior
             filter_parts.append(f"[0:v]format=rgba[v0]")
@@ -1361,6 +1376,10 @@ def main():
         m_bubbles_delay = float(intro2_cfg.get("m_bubbles_delay", bubble_delay))
         process_after_m_bubbles = float(intro2_cfg.get("process_after_m_bubbles", 1.0))
         process_overlay = str(Path(intro2_cfg.get("process_form_overlay", ""))) if intro2_cfg.get("process_form_overlay") else ""
+        process_pen = str(Path(intro2_cfg.get("process_form_pen", ""))) if intro2_cfg.get("process_form_pen") else ""
+        process_pen_width = int(intro2_cfg.get("process_form_pen_width", 230))
+        process_pen_x = int(intro2_cfg.get("process_form_pen_x", 1285))
+        process_pen_y = int(intro2_cfg.get("process_form_pen_y", 225))
         table_overlay = str(Path(intro2_cfg.get("table_overlay", ""))) if intro2_cfg.get("table_overlay") else ""
         conflict_overlay = str(Path(intro2_cfg.get("conflict_description_overlay", ""))) if intro2_cfg.get("conflict_description_overlay") else ""
         process_time = float(intro2_cfg.get("process_form_time", max(0.0, intro_total - 2.0)))
@@ -1560,6 +1579,11 @@ def main():
         if process_overlay:
             input_args += ["-loop", "1", "-t", f"{intro_total:.3f}", "-i", process_overlay]
             pf_idx = next_idx
+            next_idx += 1
+        pf_pen_idx = None
+        if process_pen:
+            input_args += ["-loop", "1", "-t", f"{intro_total:.3f}", "-i", process_pen]
+            pf_pen_idx = next_idx
             next_idx += 1
         table_idx = None
         if table_overlay:
@@ -1782,6 +1806,18 @@ def main():
                 f"[{cur}][pf]overlay=x=0:y=0:format=auto:enable='between(t,{process_time:.3f},{min(intro_total, process_time+process_duration):.3f})'[vout]"
             )
             cur = "vout"
+        # Optional pen overlay locked to process-form timing and layered above it.
+        if pf_pen_idx is not None:
+            process_end = min(intro_total, process_time + process_duration)
+            filter_parts.append(
+                f"[{pf_pen_idx}:v]scale={int(process_pen_width)}:-1,format=rgba,"
+                f"fade=t=in:st={process_time:.3f}:d={intro_fade:.3f}:alpha=1[pfpen]"
+            )
+            filter_parts.append(
+                f"[{cur}][pfpen]overlay=x={process_pen_x}:y={process_pen_y}:format=auto:"
+                f"enable='between(t,{process_time:.3f},{process_end:.3f})'[vout_pen]"
+            )
+            cur = "vout_pen"
 
         # Permanent logo overlay across the intro (bottom-right)
         if logo_idx is not None:

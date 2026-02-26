@@ -19,6 +19,10 @@ def _load_project_id_from_generator_inputs(path: Path) -> str:
     except Exception:
         return ""
 
+
+def _s3_uri(bucket: str, key: str) -> str:
+    return f"s3://{bucket}/{key.lstrip('/')}"
+
 @app.get("/health")
 def health():
     return jsonify(status="ok")
@@ -40,20 +44,46 @@ def create_job():
     # Initialize status and start background job
     (jdir / "status.json").write_text(json.dumps({"jobId": job_id, "status": "queued", "projectId": project_id}))
 
-    # If SQS is configured, enqueue for the AWS worker; otherwise fall back to local orchestrator.
+    # If SQS is configured, upload inputs to S3 and enqueue a portable payload
+    # so any worker instance can process the job (no shared local disk dependency).
     sqs_url = (os.environ.get("VPG_SQS_QUEUE_URL") or "").strip()
     if sqs_url:
         import boto3
         region = os.environ.get("AWS_REGION") or os.environ.get("AWS_DEFAULT_REGION") or "us-east-1"
+        bucket = (os.environ.get("VPG_S3_BUCKET") or "").strip()
+        prefix = (os.environ.get("VPG_S3_PREFIX") or "vpg").strip().strip("/")
+        if not bucket:
+            return jsonify(error="VPG_S3_BUCKET is required when VPG_SQS_QUEUE_URL is set"), 500
+
+        base_key = f"{prefix}/projects/{project_id}/jobs/{job_id}"
+        script_key = f"{base_key}/inputs/script.txt"
+        generator_inputs_key = f"{base_key}/inputs/generator_inputs.json"
+        status_key = f"{base_key}/status.json"
+
+        s3 = boto3.client("s3", region_name=region)
+        script_local = (jdir / "inputs" / "script.txt").resolve()
+        gen_local = (jdir / "inputs" / "generator_inputs.json").resolve()
+        if not script_local.exists() or not gen_local.exists():
+            return jsonify(error="Both script and generator_inputs files are required"), 400
+
+        s3.upload_file(str(script_local), bucket, script_key)
+        s3.upload_file(str(gen_local), bucket, generator_inputs_key)
+        s3.put_object(
+            Bucket=bucket,
+            Key=status_key,
+            Body=json.dumps({"jobId": job_id, "status": "queued", "projectId": project_id}).encode("utf-8"),
+            ContentType="application/json",
+        )
+
         sqs = boto3.client("sqs", region_name=region)
         body = {
             "jobId": job_id,
             "projectId": project_id,
-            "localScriptPath": str((jdir / "inputs" / "script.txt").resolve()),
-            "localGeneratorInputsPath": str((jdir / "inputs" / "generator_inputs.json").resolve()),
+            "scriptS3": _s3_uri(bucket, script_key),
+            "generatorInputsS3": _s3_uri(bucket, generator_inputs_key),
         }
         sqs.send_message(QueueUrl=sqs_url, MessageBody=json.dumps(body))
-        return jsonify(jobId=job_id, projectId=project_id, status="queued", mode="aws_sqs", dataDir=str(jdir))
+        return jsonify(jobId=job_id, projectId=project_id, status="queued", mode="aws_sqs_s3", dataDir=str(jdir))
 
     # Local legacy mode
     from .jobs import start_job  # local import to avoid circulars in WSGI reload

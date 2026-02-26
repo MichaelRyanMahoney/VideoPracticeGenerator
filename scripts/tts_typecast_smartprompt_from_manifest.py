@@ -26,6 +26,56 @@ DEFAULT_EMOTION_INTENSITY = 1.0
 VALID_EMOTION_PRESETS = {"normal", "happy", "sad", "angry", "whisper", "toneup", "tonedown"}
 
 
+HESITANT_PREVIOUS_CONTEXT = (
+    "The speaker is about to respond, but they hesitate. Their energy is noticeably low, and their tone is skeptical—"
+    " as if they are not fully convinced by what was just said. They choose their words carefully, speaking softly"
+    " with small pauses, sounding uncertain rather than assertive."
+)
+
+HESITANT_NEXT_CONTEXT = (
+    "The other person hears that tentative, skeptical remark and replies carefully. They keep their own energy low"
+    " and measured, responding as if the conversation is delicate and the speaker is unsure. The exchange stays cautious,"
+    " with an undercurrent of doubt and restrained emotion."
+)
+
+
+def _boolish(value: object) -> bool:
+    if value is None:
+        return False
+    if isinstance(value, bool):
+        return value
+    s = str(value).strip().lower()
+    return s in {"1", "true", "yes", "y", "t", "on"}
+
+
+def _try_load_json(path: str) -> dict:
+    try:
+        p = Path(path)
+        if not p.exists():
+            return {}
+        data = json.loads(p.read_text())
+        return data if isinstance(data, dict) else {}
+    except Exception:
+        return {}
+
+
+def _load_hesitant_contexts(delivery_contexts_json: str) -> tuple[str, str]:
+    """
+    Load smart-prompt delivery contexts (NOT spoken text) from JSON.
+    Falls back to the built-in defaults if missing/invalid.
+    """
+    data = _try_load_json(delivery_contexts_json)
+    sp = (data.get("smart_prompt") or {}) if isinstance(data, dict) else {}
+    hes = (sp.get("hesitant") or {}) if isinstance(sp, dict) else {}
+    prev = (hes.get("previous_text") or "").strip()
+    nxt = (hes.get("next_text") or "").strip()
+    if not prev:
+        prev = HESITANT_PREVIOUS_CONTEXT
+    if not nxt:
+        nxt = HESITANT_NEXT_CONTEXT
+    return prev, nxt
+
+
 def require_api_key() -> str:
     api_key = os.environ.get("TYPECAST_API_KEY")
     if not api_key:
@@ -411,6 +461,14 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--manifest_csv", default=str(Path(__file__).resolve().parents[1] / "manifests/scene1.csv"))
     ap.add_argument("--generator_inputs_json", default=str(Path(__file__).resolve().parents[1] / "manifests/generator_inputs.json"))
+    ap.add_argument(
+        "--delivery_contexts_json",
+        default=(
+            os.environ.get("VPG_TYPECAST_DELIVERY_CONTEXTS_JSON")
+            or str(Path(__file__).resolve().parents[1] / "manifests/typecast_delivery_contexts.json")
+        ),
+        help="Optional JSON defining Typecast smart-prompt delivery contexts (not spoken).",
+    )
     ap.add_argument("--voice_map", default="")
     ap.add_argument("--context_char_limit", type=int, default=DEFAULT_CONTEXT_CHAR_LIMIT)
     ap.add_argument(
@@ -426,6 +484,7 @@ def main():
     context_char_limit = max(1, min(DEFAULT_CONTEXT_CHAR_LIMIT, int(args.context_char_limit)))
 
     api_key = require_api_key()
+    hesitant_prev_ctx, hesitant_next_ctx = _load_hesitant_contexts(args.delivery_contexts_json)
 
     voice_map: dict[str, str] = {}
     role_to_name: dict[str, str] = {}
@@ -485,6 +544,7 @@ def main():
                 f"Manifest speech row id={rid} speaker={speaker} missing transcript."
             )
         typecast_mode = (row.get("typecast_mode") or "smart").strip().lower()
+        hesitant = _boolish(row.get("hesitant"))
         character_defaults = (
             typecast_defaults_by_role.get(speaker)
             or typecast_defaults_by_role.get(speaker.capitalize())
@@ -493,6 +553,9 @@ def main():
         )
         character_has_emotion_override = "emotion_preset" in character_defaults
         use_preset_mode = (typecast_mode == "preset") or character_has_emotion_override
+        # Force smart prompt when hesitant is enabled, regardless of any preset emotion overrides.
+        if hesitant:
+            use_preset_mode = False
 
         r_tempo = pick_csv_or_character_default(
             row=row,
@@ -574,13 +637,16 @@ def main():
                 volume=r_volume,
             )
         else:
-            previous_text, next_text = build_smart_prompt_context(
-                rows=rows,
-                row_idx=i,
-                role_to_name=role_to_name,
-                char_limit=context_char_limit,
-                include_speaker_labels=include_speaker_labels,
-            )
+            if hesitant:
+                previous_text, next_text = hesitant_prev_ctx, hesitant_next_ctx
+            else:
+                previous_text, next_text = build_smart_prompt_context(
+                    rows=rows,
+                    row_idx=i,
+                    role_to_name=role_to_name,
+                    char_limit=context_char_limit,
+                    include_speaker_labels=include_speaker_labels,
+                )
 
             print(
                 f"[Typecast SmartPrompt] {rid} {speaker} -> {audio_out.name}  voice_id={vid}  "
