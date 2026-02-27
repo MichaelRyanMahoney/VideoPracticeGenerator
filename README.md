@@ -37,7 +37,7 @@ The TTS pipeline uses Typecast `ssfm-v30` (`POST /v1/text-to-speech`) with prese
 - Supported `emotion_preset`: `normal`, `happy`, `sad`, `angry`, `whisper`, `toneup`, `tonedown`
 - `emotion_intensity`: `0.0` to `2.0`
 - `tempo`: `0.5` to `2.0`
-- `pitch`: accepts either semitone shift (`0` neutral) or ratio (`1.0` neutral, converted to semitones)
+- `pitch`: semitone shift (`0` neutral, range `-12..12`)
 - `volume`: `0` to `200`
 
 ### Parallel rendering (Batch array jobs)

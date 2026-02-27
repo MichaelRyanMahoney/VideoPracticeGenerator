@@ -13,6 +13,7 @@ import argparse
 import csv
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -109,6 +110,45 @@ def _blender_env(scratch_dir: Path) -> dict[str, str]:
     return env
 
 
+def _scan_existing_frames(frames_dir: Path, stem: str) -> set[int]:
+    """
+    Return frame numbers already present in frames_dir.
+    Expected filename format: <stem>_####.png
+    """
+    out: set[int] = set()
+    if not frames_dir.exists():
+        return out
+    pat = re.compile(rf"^{re.escape(stem)}_(\d{{4}})\.png$")
+    for p in frames_dir.glob("*.png"):
+        m = pat.match(p.name)
+        if not m:
+            continue
+        try:
+            out.add(int(m.group(1)))
+        except Exception:
+            pass
+    return out
+
+
+def _missing_ranges_in_span(start: int, end: int, existing: set[int]) -> list[tuple[int, int]]:
+    """
+    Compute missing contiguous frame ranges in [start, end] inclusive.
+    """
+    missing: list[tuple[int, int]] = []
+    cur_s = None
+    for f in range(int(start), int(end) + 1):
+        if f in existing:
+            if cur_s is not None:
+                missing.append((cur_s, f - 1))
+                cur_s = None
+            continue
+        if cur_s is None:
+            cur_s = f
+    if cur_s is not None:
+        missing.append((cur_s, int(end)))
+    return missing
+
+
 def parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser()
     ap.add_argument(
@@ -123,6 +163,11 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--skip_prepare", action="store_true", help="Skip prepare stage and reuse existing prepared scene")
     ap.add_argument("--prepared_scene", default="", help="Explicit prepared scene path to reuse")
     ap.add_argument("--render_only", action="store_true", help="Skip pre-render pipeline (parse/TTS/Whisper)")
+    ap.add_argument(
+        "--resume",
+        action="store_true",
+        help="Resume: keep existing frames and only render missing spans (does not delete frames folder).",
+    )
     ap.add_argument("--skip_mux", action="store_true", help="Skip mux step")
     ap.add_argument("--skip_overlays", action="store_true", help="Skip apply_overlays final pass")
     ap.add_argument("--cleanup", action="store_true", help="Delete prepared scene and temp scratch dirs at end")
@@ -311,47 +356,69 @@ def main() -> None:
         if not prepared_scene.exists():
             raise SystemExit(f"--skip_prepare provided but prepared scene not found: {prepared_scene}")
 
-    if frames_dir.exists():
+    if frames_dir.exists() and (not args.resume):
         shutil.rmtree(frames_dir, ignore_errors=True)
     frames_dir.mkdir(parents=True, exist_ok=True)
 
+    existing_frames = _scan_existing_frames(frames_dir, out_video.stem) if args.resume else set()
+    if args.resume:
+        have = len([f for f in existing_frames if frame_start <= f <= frame_end])
+        need = (frame_end - frame_start + 1) - have
+        print(f"[resume] existing_frames_in_range={have} missing_frames={max(0, need)}", flush=True)
+
     def _run_shard(idx: int, r: tuple[int, int]) -> None:
         s, e = r
+        if args.resume:
+            missing_spans = _missing_ranges_in_span(s, e, existing_frames)
+            if not missing_spans:
+                print(f"[shard:{idx}] skip (already complete) frames={s}..{e}", flush=True)
+                return
+            print(f"[shard:{idx}] resume missing_spans={missing_spans}", flush=True)
+        else:
+            missing_spans = [(s, e)]
+
         shard_env = _blender_env(tmp_dir / f"shard_run_{ts}_{idx}")
-        shard_cmd = [
-            blender_bin,
-            "-b",
-            str(prepared_scene),
-            "--python-exit-code",
-            "1",
-            "--python",
-            str(single_blender_py),
-            "--",
-            "--generator_inputs_json",
-            str(generator_inputs),
-            "--input_scene",
-            str(prepared_scene),
-            "--director_json",
-            str(director_json),
-            "--out_video",
-            str(out_video),
-            "--frame_start",
-            str(s),
-            "--frame_end",
-            str(e),
-            "--max_frame_end",
-            str(max_frame_end),
-            "--no_audio",
-            "--no_clean_frames",
-            "--hdri_from_config",
-            str(cfg_path),
-        ]
-        if hdri_path_cfg:
-            shard_cmd += ["--hdri_path", str(hdri_path_cfg)]
-        if hdri_strength_cfg is not None:
-            shard_cmd += ["--hdri_strength", str(hdri_strength_cfg)]
+
+        def _render_span(ss: int, ee: int) -> None:
+            shard_cmd = [
+                blender_bin,
+                "-b",
+                str(prepared_scene),
+                "--python-exit-code",
+                "1",
+                "--python",
+                str(single_blender_py),
+                "--",
+                "--generator_inputs_json",
+                str(generator_inputs),
+                "--input_scene",
+                str(prepared_scene),
+                "--run_configure_roles",
+                "--director_json",
+                str(director_json),
+                "--out_video",
+                str(out_video),
+                "--frame_start",
+                str(ss),
+                "--frame_end",
+                str(ee),
+                "--max_frame_end",
+                str(max_frame_end),
+                "--no_audio",
+                "--no_clean_frames",
+                "--hdri_from_config",
+                str(cfg_path),
+            ]
+            if hdri_path_cfg:
+                shard_cmd += ["--hdri_path", str(hdri_path_cfg)]
+            if hdri_strength_cfg is not None:
+                shard_cmd += ["--hdri_strength", str(hdri_strength_cfg)]
+            print(f"[shard:{idx}] render frames={ss}..{ee}", flush=True)
+            _run(shard_cmd, env=shard_env)
+
         print(f"[shard:{idx}] start frames={s}..{e}", flush=True)
-        _run(shard_cmd, env=shard_env)
+        for ss, ee in missing_spans:
+            _render_span(ss, ee)
         print(f"[shard:{idx}] done frames={s}..{e}", flush=True)
 
     with ThreadPoolExecutor(max_workers=max_parallel) as ex:
@@ -360,10 +427,14 @@ def main() -> None:
             fut.result()
 
     expected = frame_end - frame_start + 1
-    produced = len(list(frames_dir.glob("*.png")))
-    print(f"[shard] frames produced={produced} expected={expected}", flush=True)
-    if produced < expected:
-        raise SystemExit(f"Missing frames: expected {expected}, produced {produced}")
+    final_existing = _scan_existing_frames(frames_dir, out_video.stem)
+    missing_final = [f for f in range(frame_start, frame_end + 1) if f not in final_existing]
+    produced_in_range = expected - len(missing_final)
+    print(f"[shard] frames produced_in_range={produced_in_range} expected={expected}", flush=True)
+    if missing_final:
+        # Print a small preview; the user can rerun with --resume to fill gaps.
+        preview = missing_final[:25]
+        raise SystemExit(f"Missing frames (first {len(preview)} of {len(missing_final)}): {preview}")
 
     if not args.skip_mux:
         cmd_mux = [
@@ -406,6 +477,8 @@ def main() -> None:
             str(target_overlay_out),
             "--fps",
             str(overlay_fps),
+            "--generator_inputs_json",
+            str(generator_inputs),
         ]
         if overlay_image.exists():
             cmd_apply += ["--overlay_image", str(overlay_image)]

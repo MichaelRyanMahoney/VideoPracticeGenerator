@@ -332,15 +332,34 @@ def submit_full_job(project_root: Path, project_id: str, job_id: str, script_txt
     scene_cache_key = _scene_cache_key(project_root, generator_inputs_json.resolve())
     scene_cache_uri = s3_uri(cfg, f"projects/{project_id}/scene_cache/{scene_cache_key}/prepared_scene.blend")
     scene_cache_hit = _s3_exists(s3, scene_cache_uri)
+    # Always render against a concrete prepared scene URI. Prefer the per-job path for isolation,
+    # but fall back to the shared cache object if copy fails for any reason.
+    scene_s3_for_render = paths["prepared_scene"]
+    scene_copy_ok = False
+    scene_copy_error = ""
     if scene_cache_hit:
-        # Keep job outputs isolated: copy cached scene into this job's scene location.
-        _s3_copy(s3, scene_cache_uri, paths["prepared_scene"])
+        try:
+            # Keep job outputs isolated: copy cached scene into this job's scene location.
+            _s3_copy(s3, scene_cache_uri, paths["prepared_scene"])
+            scene_copy_ok = _s3_exists(s3, paths["prepared_scene"])
+        except Exception as ex:
+            scene_copy_ok = False
+            scene_copy_error = str(ex)
+        if not scene_copy_ok:
+            scene_s3_for_render = scene_cache_uri
         write_status(
             s3,
             paths["status"],
             job_id,
             "scene_cache_hit",
-            {"sceneCacheKey": scene_cache_key, "sceneCacheUri": scene_cache_uri, "sceneCacheHit": True},
+            {
+                "sceneCacheKey": scene_cache_key,
+                "sceneCacheUri": scene_cache_uri,
+                "sceneCacheHit": True,
+                "sceneCopyOk": bool(scene_copy_ok),
+                "sceneCopyError": scene_copy_error,
+                "sceneS3ForRender": scene_s3_for_render,
+            },
         )
 
     # ---- Single-node mode: run GPU steps locally on this machine (no Batch, no GPU executor HTTP) ----
@@ -352,7 +371,7 @@ def submit_full_job(project_root: Path, project_id: str, job_id: str, script_txt
         env_gpu.setdefault("VPG_BLENDER_BIN", "/usr/local/bin/blender")
         env_gpu.setdefault("VPG_XVFB", "1")
 
-        # Ensure scene exists (cache hit means it was copied above)
+        # Ensure scene exists (cache hit means we can render from cache or per-job copy)
         if not scene_cache_hit:
             write_status(s3, paths["status"], job_id, "gpu_scene_local")
             cmd = [
@@ -480,7 +499,7 @@ def submit_full_job(project_root: Path, project_id: str, job_id: str, script_txt
             "--generator_inputs_s3",
             paths["generator_inputs"],
             "--scene_s3",
-            paths["prepared_scene"],
+            scene_s3_for_render,
             "--frames_out_s3_prefix",
             frames_prefix_for_render,
             "--shards",
@@ -511,7 +530,7 @@ def submit_full_job(project_root: Path, project_id: str, job_id: str, script_txt
         if gpu_exec_token:
             hdrs["X-VPG-Token"] = gpu_exec_token
 
-        # Ensure scene exists (cache hit means it was copied above)
+        # Ensure scene exists (cache hit means we can render from cache or per-job copy)
         if not scene_cache_hit:
             write_status(s3, paths["status"], job_id, "gpu_scene")
             payload = {
@@ -578,7 +597,7 @@ def submit_full_job(project_root: Path, project_id: str, job_id: str, script_txt
             "aws_region": cfg.region,
             "director_s3": paths["director"],
             "generator_inputs_s3": paths["generator_inputs"],
-            "scene_s3": paths["prepared_scene"],
+            "scene_s3": scene_s3_for_render,
             "frames_out_s3_prefix": frames_prefix_for_render,
             # Let the GPU side compute frame ranges
             "xvfb": 1,
@@ -659,7 +678,7 @@ def submit_full_job(project_root: Path, project_id: str, job_id: str, script_txt
                 "--generator_inputs_s3",
                 paths["generator_inputs"],
                 "--scene_s3",
-                paths["prepared_scene"],
+                scene_s3_for_render,
                 "--frames_out_s3_prefix",
                 paths["frames_prefix"],
                 "--shards",

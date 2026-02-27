@@ -18,7 +18,7 @@ import subprocess
 import os
 import tempfile
 from pathlib import Path
-import boto3
+from typing import Optional
 
 from workdir_utils import cleanup_work_dir, make_work_dir, should_keep_workdir
 
@@ -36,7 +36,59 @@ def parse_timecode_to_seconds(tc: str) -> float:
         return 0.0
 
 
-def build_ffmpeg_cmd(frames_pattern: str, fps: int, audio_offsets_ms: list[tuple[str, int]], out_mp4: str, crf: int = 18, audio_bitrate: str = "192k", max_duration: float | None = None) -> list[str]:
+def _load_project_id_from_generator_inputs(path: Path) -> str:
+    try:
+        data = json.loads(path.read_text() or "{}")
+        run_cfg = data.get("run") or {}
+        pid = (
+            (run_cfg.get("project_name") or "")
+            or (run_cfg.get("projectId") or "")
+            or (run_cfg.get("project_id") or "")
+            or (run_cfg.get("project") or "")
+        )
+        return str(pid).strip()
+    except Exception:
+        return ""
+
+
+def _find_child_case_insensitive(parent: Path, desired_name: str) -> Optional[Path]:
+    try:
+        if not parent.exists() or not parent.is_dir():
+            return None
+        want = (desired_name or "").lower()
+        if not want:
+            return None
+        for ch in parent.iterdir():
+            try:
+                if ch.name.lower() == want:
+                    return ch
+            except Exception:
+                continue
+    except Exception:
+        return None
+    return None
+
+
+def _prefer_project_prefixed_path(path_str: str, project_id: str) -> str:
+    """
+    If a sibling file exists with '<project_id>-<basename>' (case-insensitive),
+    prefer it. Otherwise return the original string.
+    """
+    pid = (project_id or "").strip()
+    if (not pid) or (not path_str):
+        return path_str
+    p0 = Path(path_str)
+    prefix = f"{pid}-".lower()
+    try:
+        if p0.name.lower().startswith(prefix):
+            return path_str
+    except Exception:
+        pass
+    hit = _find_child_case_insensitive(p0.parent, f"{pid}-{p0.name}")
+    return str(hit) if hit else path_str
+
+
+def build_ffmpeg_cmd(frames_pattern: str, fps: int, audio_offsets_ms: list[tuple[str, int]], out_mp4: str, crf: int = 18, audio_bitrate: str = "192k", max_duration: Optional[float] = None) -> list[str]:
     """
     frames_pattern: e.g., "/.../out/four_heads_demo_frames/four_heads_demo_%04d.png"
     audio_offsets_ms: list of tuples (audio_path, delay_ms)
@@ -108,6 +160,9 @@ def main():
     ap.add_argument("--fg_width_ratio", type=float, default=0.73, help="Foreground width as a fraction of output width (preserve aspect). Default 0.73")
     ap.add_argument("--fg_contrast", type=float, default=1.0, help="Foreground contrast multiplier. Default 1.0 (no change)")
     ap.add_argument("--fg_sharpen", type=float, default=0.0, help="Foreground unsharp luma amount (0-5). Default 0.0 (off)")
+    ap.add_argument("--patch_image", help="Optional full-frame PNG to overlay on top of video (e.g., to patch a render glitch).")
+    ap.add_argument("--patch_frame_start", type=int, default=0, help="Start frame number in filename space (e.g., 261 for *_0261.png). Inclusive. Default 0 (disabled).")
+    ap.add_argument("--patch_frame_end", type=int, default=0, help="End frame number in filename space (e.g., 1288 for *_1288.png). Inclusive. Default 0 (disabled).")
     ap.add_argument("--crf", type=int, default=18, help="Video quality (lower=better; default 18)")
     ap.add_argument("--audio_bitrate", default="192k", help="AAC bitrate (default 192k)")
     ap.add_argument("--dry_run", action="store_true", help="Print ffmpeg command and exit")
@@ -121,6 +176,7 @@ def main():
     # 3) fps from director JSON
     # 4) fallback 24
     fps = None
+    project_id = ""
     if args.fps:
         fps = int(args.fps)
     else:
@@ -144,10 +200,18 @@ def main():
                 run_cfg = gen_inputs.get("run") or {}
                 if "fps" in run_cfg:
                     fps = int(run_cfg["fps"])
+                project_id = _load_project_id_from_generator_inputs(gen_inputs_path)
         except Exception:
             fps = None
         if fps is None:
             fps = int(data.get("fps", 24))
+
+    # Prefer project-prefixed background/patch assets when present.
+    if project_id:
+        if args.background:
+            args.background = _prefer_project_prefixed_path(str(args.background), project_id)
+        if args.patch_image:
+            args.patch_image = _prefer_project_prefixed_path(str(args.patch_image), project_id)
     # Resolution (for background scaling/cropping if needed)
     try:
         render_res = data.get("render", {}).get("resolution", [1920, 1080])
@@ -166,12 +230,26 @@ def main():
         no = uri[5:]
         return no.split("/", 1)[0], no.split("/", 1)[1]
 
-    s3 = boto3.client("s3", region_name=os.environ.get("AWS_REGION") or os.environ.get("AWS_DEFAULT_REGION"))
+    s3 = None  # lazily initialized only if we see s3:// audio URIs
     dl_dir = make_work_dir("vpg_mux_audio_")
 
     def ensure_local_audio(audio_ref: str) -> Path:
         if not is_s3(audio_ref):
-            return Path(audio_ref)
+            p = Path(audio_ref)
+            if not p.is_absolute():
+                p = (director_path.parent / p).resolve()
+            return p
+        try:
+            import boto3  # type: ignore
+        except Exception as e:
+            raise SystemExit(
+                "mux_from_director: audio URI is s3://... but boto3 is not installed.\n"
+                "Install it with: pip install boto3\n"
+                f"Details: {e}"
+            )
+        nonlocal s3
+        if s3 is None:
+            s3 = boto3.client("s3", region_name=os.environ.get("AWS_REGION") or os.environ.get("AWS_DEFAULT_REGION"))
         b, k = s3_parse(audio_ref)
         safe = k.replace("/", "__")
         dst = dl_dir / safe
@@ -182,6 +260,8 @@ def main():
         return dst
 
     try:
+        # Only initialize S3 client if we actually need it.
+        s3 = None
         for b in beats:
             audio = (b.get("audio") or "").strip()
             if not audio:
@@ -212,6 +292,11 @@ def main():
         fg_target_w = max(2, int(round(width * fg_ratio)))
         if fg_target_w % 2:
             fg_target_w += 1
+
+        patch_enabled = bool(args.patch_image and int(args.patch_frame_start) > 0 and int(args.patch_frame_end) > 0 and int(args.patch_frame_end) >= int(args.patch_frame_start))
+        patch_start_idx = max(0, int(args.patch_frame_start) - 1)  # frames are typically numbered starting at 0001; ffmpeg n starts at 0
+        patch_end_idx = max(0, int(args.patch_frame_end) - 1)
+
         if args.background:
             bg_path = str(Path(args.background))
             cmd: list[str] = []
@@ -220,6 +305,9 @@ def main():
             cmd += ["-loop", "1", "-framerate", str(int(fps)), "-i", bg_path]
             # Foreground frames (RGBA PNG sequence)
             cmd += ["-framerate", str(int(fps)), "-i", frames_pattern]
+            # Optional patch image (looped)
+            if patch_enabled:
+                cmd += ["-loop", "1", "-framerate", str(int(fps)), "-i", str(Path(args.patch_image))]
             # Audio inputs
             for audio_path, _ms in audio_offsets_ms:
                 cmd += ["-i", audio_path]
@@ -230,26 +318,38 @@ def main():
             # [0:v] = bg, [1:v] = frames
             # 1) Ensure background is even-sized for H.264
             filter_parts.append(f"[0:v]scale=ceil(iw/2)*2:ceil(ih/2)*2[bg]")
+            # 2) Optional patch overlay applied in raw PNG space (before scaling/compositing)
+            if patch_enabled:
+                enable_expr = f"between(n\\,{patch_start_idx}\\,{patch_end_idx})"
+                filter_parts.append(f"[1:v]format=rgba[fgsrc]")
+                filter_parts.append(f"[2:v]format=rgba[patch0]")
+                filter_parts.append(f"[patch0][fgsrc]scale2ref=w=main_w:h=main_h[patch][fgref]")
+                filter_parts.append(f"[fgref][patch]overlay=x=0:y=0:format=auto:enable='{enable_expr}'[fgsrcp]")
+                fg_in = "fgsrcp"
+            else:
+                fg_in = "1:v"
             # 2) Keep foreground at its original render size; optional minimal processing
             #    Keep alpha intact by processing in yuva444p domain only if needed
             c = float(args.fg_contrast)
             s = float(args.fg_sharpen)
             if c != 1.0 or s > 0.0:
                 filter_parts.append(
-                    f"[1:v]format=rgba,format=yuva444p,scale={fg_target_w}:-1:flags=bicubic,eq=contrast={c}" + (f",unsharp=7:7:{s}:7:7:0.0" if s > 0.0 else "") + ",format=rgba[fg]"
+                    f"[{fg_in}]format=rgba,format=yuva444p,scale={fg_target_w}:-1:flags=bicubic,eq=contrast={c}" + (f",unsharp=7:7:{s}:7:7:0.0" if s > 0.0 else "") + ",format=rgba[fg]"
                 )
             else:
                 filter_parts.append(
-                    f"[1:v]format=rgba,scale={fg_target_w}:-1:flags=bicubic[fg]"
+                    f"[{fg_in}]format=rgba,scale={fg_target_w}:-1:flags=bicubic[fg]"
                 )
             # 3) Ensure alpha on foreground for proper compositing
             filter_parts.append(f"[fg]format=rgba[fg]")
             # 4) Center horizontally and bottom-align the foreground over the background
-            filter_parts.append(f"[bg][fg]overlay=x=(main_w-overlay_w)/2:y=main_h-overlay_h:shortest=1[outv]")
+            filter_parts.append(f"[bg][fg]overlay=x=(main_w-overlay_w)/2:y=main_h-overlay_h:shortest=1[outv0]")
+            outv_tag = "outv0"
 
-            # Audio delays/mix: inputs start at index 2 when bg is provided
+            # Audio delays/mix: inputs start after (bg, frames, optional patch)
             labels: list[str] = []
-            for i, (_path, delay_ms) in enumerate(audio_offsets_ms, start=2):
+            audio_start_idx = 3 if patch_enabled else 2
+            for i, (_path, delay_ms) in enumerate(audio_offsets_ms, start=audio_start_idx):
                 a_in = f"{i}:a"
                 a_out = f"a{i}"
                 delay_expr = f"{int(delay_ms)}|{int(delay_ms)}"
@@ -260,7 +360,7 @@ def main():
                 filter_parts.append(amix)
             cmd += ["-filter_complex", "; ".join(filter_parts)]
             # Map the composed video and audio
-            cmd += ["-map", "[outv]"]
+            cmd += ["-map", f"[{outv_tag}]"]
             if labels:
                 cmd += ["-map", "[amix]"]
             # Encoding
@@ -277,22 +377,36 @@ def main():
             # still keep legacy composition behavior by scaling foreground and bottom-aligning
             # into a fixed canvas (director render resolution).
             cmd = ["ffmpeg", "-y", "-framerate", str(int(fps)), "-i", frames_pattern]
+            if patch_enabled:
+                cmd += ["-loop", "1", "-framerate", str(int(fps)), "-i", str(Path(args.patch_image))]
             for audio_path, _ms in audio_offsets_ms:
                 cmd += ["-i", audio_path]
 
             filter_parts: list[str] = []
+            # Optional patch overlay applied in raw PNG space (before scaling/padding)
+            if patch_enabled:
+                enable_expr = f"between(n\\,{patch_start_idx}\\,{patch_end_idx})"
+                filter_parts.append(f"[0:v]format=rgba[fgsrc]")
+                filter_parts.append(f"[1:v]format=rgba[patch0]")
+                filter_parts.append(f"[patch0][fgsrc]scale2ref=w=main_w:h=main_h[patch][fgref]")
+                filter_parts.append(f"[fgref][patch]overlay=x=0:y=0:format=auto:enable='{enable_expr}'[fgsrcp]")
+                fg_in = "fgsrcp"
+            else:
+                fg_in = "0:v"
             c = float(args.fg_contrast)
             s = float(args.fg_sharpen)
             if c != 1.0 or s > 0.0:
                 filter_parts.append(
-                    f"[0:v]format=rgba,format=yuva444p,scale={fg_target_w}:-1:flags=bicubic,eq=contrast={c}" + (f",unsharp=7:7:{s}:7:7:0.0" if s > 0.0 else "") + ",format=rgba[fg]"
+                    f"[{fg_in}]format=rgba,format=yuva444p,scale={fg_target_w}:-1:flags=bicubic,eq=contrast={c}" + (f",unsharp=7:7:{s}:7:7:0.0" if s > 0.0 else "") + ",format=rgba[fg]"
                 )
             else:
-                filter_parts.append(f"[0:v]format=rgba,scale={fg_target_w}:-1:flags=bicubic[fg]")
-            filter_parts.append(f"[fg]pad={width}:{height}:(ow-iw)/2:(oh-ih):black[outv]")
+                filter_parts.append(f"[{fg_in}]format=rgba,scale={fg_target_w}:-1:flags=bicubic[fg]")
+            filter_parts.append(f"[fg]pad={width}:{height}:(ow-iw)/2:(oh-ih):black[outv0]")
+            outv_tag = "outv0"
 
             labels: list[str] = []
-            for i, (_path, delay_ms) in enumerate(audio_offsets_ms, start=1):
+            audio_start_idx = 2 if patch_enabled else 1
+            for i, (_path, delay_ms) in enumerate(audio_offsets_ms, start=audio_start_idx):
                 a_in = f"{i}:a"
                 a_out = f"a{i}"
                 delay_expr = f"{int(delay_ms)}|{int(delay_ms)}"
@@ -303,7 +417,7 @@ def main():
                 filter_parts.append(amix)
 
             cmd += ["-filter_complex", "; ".join(filter_parts)]
-            cmd += ["-map", "[outv]"]
+            cmd += ["-map", f"[{outv_tag}]"]
             if labels:
                 cmd += ["-map", "[amix]"]
             cmd += ["-c:v", "libx264", "-crf", str(int(args.crf)), "-pix_fmt", "yuv420p"]

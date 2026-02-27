@@ -170,20 +170,15 @@ def pick_csv_or_character_default(
 
 
 def parse_pitch_to_semitones(value: object) -> float:
-    """Accept either semitone pitch or multiplier ratio.
+    """Parse pitch as semitone shift (Typecast output.audio_pitch).
 
-    - If pitch is in [0.5, 2.0], treat it as a ratio where 1.0 means neutral.
-    - Otherwise treat it as semitones directly.
+    Typecast expects semitones in [-12, 12], where 0 is neutral.
     """
     try:
         raw = float(value)
     except Exception:
         return float(DEFAULT_PITCH)
-    if 0.5 <= raw <= 2.0:
-        semitones = 12.0 * math.log(raw, 2)
-    else:
-        semitones = raw
-    return max(-12.0, min(12.0, semitones))
+    return max(-12.0, min(12.0, raw))
 
 
 def tts_typecast(api_key: str, voice_id: str, text: str, out_wav: Path,
@@ -203,7 +198,7 @@ def tts_typecast(api_key: str, voice_id: str, text: str, out_wav: Path,
     except Exception:
         vol = 100
     emotion_preset = normalize_emotion_preset(emotion)
-    pitch_semitones = parse_pitch_to_semitones(pitch)
+    pitch_semitones = int(round(parse_pitch_to_semitones(pitch)))
     tempo_out = max(0.5, min(2.0, float(tempo)))
 
     payload = {
@@ -288,7 +283,7 @@ def tts_typecast_smart_prompt(
         vol = int(max(0, min(200, int(volume))))
     except Exception:
         vol = 100
-    pitch_semitones = parse_pitch_to_semitones(pitch)
+    pitch_semitones = int(round(parse_pitch_to_semitones(pitch)))
     tempo_out = max(0.5, min(2.0, float(tempo)))
 
     payload = {

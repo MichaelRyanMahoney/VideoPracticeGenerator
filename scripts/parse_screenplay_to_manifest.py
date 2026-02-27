@@ -117,13 +117,10 @@ def _has_explicit_emotion_key(raw_kv: dict) -> bool:
 def parse_script(lines):
     entries = []
     i=0; cur_speaker=None
-    current_defaults = {  # applied to every entry unless overridden
-        "emotion_preset": "normal",
-        "emotion_intensity": 1.0,
-        "tempo": 1.0,
-        "pitch": 0.0,
-        "volume": 100,
-    }
+    # Only attributes explicitly provided via {DEFAULTS ...} should be emitted into the CSV.
+    # If a field is absent in the manifest row, downstream TTS will fall back to per-character
+    # defaults from generator_inputs.json (preferred) and then internal defaults.
+    current_defaults: dict = {}
     while i < len(lines):
         line = lines[i].rstrip("\n")
         stripped = line.strip()
@@ -254,6 +251,7 @@ def main():
     # Optional: load generator_inputs.json (next to out_csv or in_txt folder) to include voice_id in hash
     # This makes audio cache robust to voice changes.
     voice_ids: dict[str, str] = {}
+    typecast_defaults: dict[str, dict] = {}
     try:
         # Prefer env override (useful in Batch) else look beside script/out_csv.
         gen_path = os.environ.get("VPG_GENERATOR_INPUTS_JSON")
@@ -269,30 +267,72 @@ def main():
         if gen_inputs_path and Path(gen_inputs_path).exists():
             gi = json.loads(Path(gen_inputs_path).read_text())
             for role, conf in (gi.get("characters") or {}).items():
-                vid = ((conf.get("typecast") or {}).get("voice_id") or "").strip()
+                tc = ((conf.get("typecast") or {}) if isinstance(conf, dict) else {})
+                vid = (tc.get("voice_id") or "").strip()
                 if vid:
                     voice_ids[str(role)] = vid
+                # Capture per-role defaults so audio_hash (and caching) changes when these change.
+                d: dict = {}
+                emo = tc.get("emotion")
+                if emo is not None and str(emo).strip() != "":
+                    e = str(emo).strip().lower()
+                    d["emotion_preset"] = e if e in VALID_EMOTION_PRESETS else "normal"
+                tempo = tc.get("tempo")
+                if tempo is None or str(tempo).strip() == "":
+                    tempo = tc.get("speed")
+                if tempo is not None and str(tempo).strip() != "":
+                    try:
+                        d["tempo"] = float(tempo)
+                    except Exception:
+                        pass
+                pitch = tc.get("pitch")
+                if pitch is not None and str(pitch).strip() != "":
+                    try:
+                        d["pitch"] = float(pitch)
+                    except Exception:
+                        pass
+                volume = tc.get("volume")
+                if volume is not None and str(volume).strip() != "":
+                    try:
+                        d["volume"] = int(volume)
+                    except Exception:
+                        pass
+                if d:
+                    typecast_defaults[str(role)] = d
     except Exception:
         voice_ids = {}
+        typecast_defaults = {}
+
+    def _effective_attr(role: str, attrs: dict, key: str, fallback):
+        if isinstance(attrs, dict) and key in attrs:
+            return attrs.get(key)
+        return (typecast_defaults.get(role, {}) or {}).get(key, fallback)
 
     def audio_hash_for(role: str, transcript: str, attrs: dict) -> str:
         vid = voice_ids.get(role, "")
+        effective_hesitant = bool((attrs or {}).get("hesitant")) is True
+        base_mode = str((attrs or {}).get("typecast_mode", "smart")).strip().lower() or "smart"
+        if effective_hesitant:
+            effective_mode = "smart"
+        else:
+            character_has_emotion = "emotion_preset" in (typecast_defaults.get(role, {}) or {})
+            effective_mode = "preset" if (base_mode == "preset" or character_has_emotion) else "smart"
         payload: dict = {
             "v": 1,
             "project_id": project_id,
             "role": role,
             "voice_id": vid,
             "transcript": transcript,
-            "typecast_mode": str(attrs.get("typecast_mode", "smart")).strip().lower() or "smart",
+            "typecast_mode": effective_mode,
             # include the per-line delivery attrs so cache invalidates correctly
-            "emotion_preset": attrs.get("emotion_preset", "normal"),
-            "emotion_intensity": float(attrs.get("emotion_intensity", 1.0)),
-            "tempo": float(attrs.get("tempo", 1.0)),
-            "pitch": float(attrs.get("pitch", 0.0)),
-            "volume": int(attrs.get("volume", 100)),
+            "emotion_preset": str(_effective_attr(role, attrs, "emotion_preset", "normal")),
+            "emotion_intensity": float(_effective_attr(role, attrs, "emotion_intensity", 1.0)),
+            "tempo": float(_effective_attr(role, attrs, "tempo", 1.0)),
+            "pitch": float(_effective_attr(role, attrs, "pitch", 0.0)),
+            "volume": int(_effective_attr(role, attrs, "volume", 100)),
         }
         # Only include hesitant when explicitly enabled so existing hashes remain stable.
-        if bool(attrs.get("hesitant")) is True:
+        if effective_hesitant:
             payload["hesitant"] = True
         raw = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
         return hashlib.sha256(raw).hexdigest()
@@ -327,6 +367,15 @@ def main():
                 else:
                     # Local default: keep legacy name for human readability, but include hash for caching/migration
                     audio = f"audio/{spk.upper()}_{rid}.wav"
+            # Keep the manifest aligned with the actual synthesis behavior: if a character has an emotion
+            # override in generator_inputs.json, the smartprompt TTS pipeline will use preset mode.
+            typecast_mode_out = attrs.get("typecast_mode","smart") if kind != "pause" else ""
+            if kind != "pause":
+                if bool(attrs.get("hesitant")) is True:
+                    typecast_mode_out = "smart"
+                else:
+                    if str(typecast_mode_out).strip().lower() != "preset" and "emotion_preset" in (typecast_defaults.get(spk, {}) or {}):
+                        typecast_mode_out = "preset"
             w.writerow([
                 rid,
                 spk,
@@ -334,13 +383,13 @@ def main():
                 ah,
                 txt,
                 duration,
-                attrs.get("typecast_mode","smart") if kind != "pause" else "",
+                typecast_mode_out,
                 "true" if (kind != "pause" and bool(attrs.get("hesitant")) is True) else "",
-                attrs.get("emotion_preset","normal") if kind != "pause" else "",
-                attrs.get("emotion_intensity",1.0) if kind != "pause" else "",
-                attrs.get("tempo",1.0) if kind != "pause" else "",
-                attrs.get("pitch",0.0) if kind != "pause" else "",
-                attrs.get("volume",100) if kind != "pause" else "",
+                attrs.get("emotion_preset","") if kind != "pause" else "",
+                attrs.get("emotion_intensity","") if kind != "pause" else "",
+                attrs.get("tempo","") if kind != "pause" else "",
+                attrs.get("pitch","") if kind != "pause" else "",
+                attrs.get("volume","") if kind != "pause" else "",
             ])
     print(f"Wrote {args.out_csv} with {len(entries)} rows")
 

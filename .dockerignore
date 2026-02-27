@@ -2,10 +2,11 @@
 data/
 out/
 nltk_data/
+.pycache/
 __pycache__/
 .git/
 .DS_Store
 *.pyc
 *.mp4
 *.png
-*.blend1
+**/*.blend1

@@ -171,7 +171,9 @@ def main():
         if input_scene:
             render_cmd += ["--input_scene", str(input_scene)]
         else:
-            render_cmd += ["--base_scene_blend", str(base_scene_path), "--work_scene", str(ts_scene)]
+            # When not using a prepared scene, open the base scene directly. Do NOT pass --work_scene
+            # unless the file exists; blender_pipeline_single_process will attempt to open it.
+            render_cmd += ["--base_scene_blend", str(base_scene_path)]
         if engine_cli:
             render_cmd += ["--engine", engine_cli]
         if quality_cli:

@@ -18,12 +18,15 @@ Notes
   content stays aligned.
 - Requires ffmpeg in PATH.
 """
+from __future__ import annotations
+
 import argparse
 import json
 import shlex
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
+import os
 import re
 import tempfile
 from typing import Any, Dict
@@ -359,6 +362,216 @@ def resolve_paths_in_config(cfg: Dict[str, Any], cfg_dir: Path) -> Dict[str, Any
     return resolved
 
 
+def _load_project_id_from_generator_inputs(path: Path) -> str:
+    """
+    Read generator_inputs.json and return a project identifier string, or "".
+    """
+    try:
+        data = json.loads(path.read_text() or "{}")
+        run_cfg = data.get("run") or {}
+        pid = (
+            (run_cfg.get("project_name") or "")
+            or (run_cfg.get("projectId") or "")
+            or (run_cfg.get("project_id") or "")
+            or (run_cfg.get("project") or "")
+        )
+        return str(pid).strip()
+    except Exception:
+        return ""
+
+
+def _find_child_case_insensitive(parent: Path, desired_name: str) -> Path | None:
+    """
+    Return an existing child path of parent whose name matches desired_name
+    case-insensitively. Returns None if not found or parent missing.
+    """
+    try:
+        if not parent.exists() or not parent.is_dir():
+            return None
+        want = (desired_name or "").lower()
+        if not want:
+            return None
+        for ch in parent.iterdir():
+            try:
+                if ch.name.lower() == want:
+                    return ch
+            except Exception:
+                continue
+    except Exception:
+        return None
+    return None
+
+
+def _prefer_project_prefixed_path(path_str: str, project_id: str) -> str:
+    """
+    If a sibling file exists with '<project_id>-<basename>' (case-insensitive),
+    prefer it. Otherwise return the original string.
+    """
+    p0 = Path(path_str or "")
+    pid = (project_id or "").strip()
+    if (not pid) or (not path_str):
+        return path_str
+    prefix = f"{pid}-".lower()
+    try:
+        if p0.name.lower().startswith(prefix):
+            return path_str
+    except Exception:
+        pass
+    parent = p0.parent
+    desired = f"{pid}-{p0.name}"
+    hit = _find_child_case_insensitive(parent, desired)
+    return str(hit) if hit else path_str
+
+
+def _infer_project_id(args: argparse.Namespace) -> str:
+    """
+    Determine project id for asset prefixing.
+    Priority:
+      1) --project_id
+      2) --generator_inputs_json (if exists)
+      3) $VPG_GENERATOR_INPUTS_JSON (if exists)
+      4) sibling inputs/generator_inputs.json next to director
+      5) repo default manifests/generator_inputs.json
+    """
+    pid = str(getattr(args, "project_id", "") or "").strip()
+    if pid:
+        return pid
+    # explicit generator_inputs_json
+    gen_arg = str(getattr(args, "generator_inputs_json", "") or "").strip()
+    if gen_arg:
+        gp = Path(gen_arg).expanduser()
+        if gp.exists():
+            pid = _load_project_id_from_generator_inputs(gp)
+            if pid:
+                return pid
+    # env
+    env_path = (os.environ.get("VPG_GENERATOR_INPUTS_JSON") or "").strip()
+    if env_path:
+        gp = Path(env_path).expanduser()
+        if gp.exists():
+            pid = _load_project_id_from_generator_inputs(gp)
+            if pid:
+                return pid
+    # inferred from director path
+    try:
+        director_path = Path(getattr(args, "director")).expanduser()
+        inferred = director_path.parent / "inputs" / "generator_inputs.json"
+        if inferred.exists():
+            pid = _load_project_id_from_generator_inputs(inferred)
+            if pid:
+                return pid
+    except Exception:
+        pass
+    # repo default
+    repo_default = Path(__file__).resolve().parents[1] / "manifests" / "generator_inputs.json"
+    if repo_default.exists():
+        pid = _load_project_id_from_generator_inputs(repo_default)
+        if pid:
+            return pid
+    return ""
+
+
+def _apply_project_prefixed_assets(args: argparse.Namespace, project_id: str) -> None:
+    """
+    Mutate parsed args so overlay/title assets prefer '<project_id>-*.png' variants.
+    """
+    pid = (project_id or "").strip()
+    if not pid:
+        return
+    # Top-level assets
+    for k in ("overlay_image", "final_overlay", "pf_icon", "pf_pen", "labels_bubble"):
+        v = getattr(args, k, None)
+        if isinstance(v, str) and v:
+            setattr(args, k, _prefer_project_prefixed_path(v, pid))
+    # intro2 nested assets
+    intro2 = getattr(args, "intro2", None)
+    if isinstance(intro2, dict):
+        intro2 = dict(intro2)
+        for k in ("title_slide", "conflict_description_overlay", "process_form_overlay", "process_form_pen", "bg"):
+            v = intro2.get(k)
+            if isinstance(v, str) and v:
+                intro2[k] = _prefer_project_prefixed_path(v, pid)
+        setattr(args, "intro2", intro2)
+    # overlays list
+    overlays = getattr(args, "overlays", None)
+    if isinstance(overlays, list):
+        new_list = []
+        for item in overlays:
+            if isinstance(item, dict) and isinstance(item.get("image"), str):
+                it = dict(item)
+                it["image"] = _prefer_project_prefixed_path(str(it.get("image") or ""), pid)
+                new_list.append(it)
+            else:
+                new_list.append(item)
+        setattr(args, "overlays", new_list)
+    # step overlays (if present)
+    step_overlays = getattr(args, "step_overlays", None)
+    if isinstance(step_overlays, list):
+        new_steps = []
+        for item in step_overlays:
+            if isinstance(item, dict) and isinstance(item.get("image"), str):
+                it = dict(item)
+                it["image"] = _prefer_project_prefixed_path(str(it.get("image") or ""), pid)
+                new_steps.append(it)
+            else:
+                new_steps.append(item)
+        setattr(args, "step_overlays", new_steps)
+
+
+def _overlay_candidate_dirs(
+    args: argparse.Namespace,
+    cfg_dir: Path | None,
+    script_path: Path,
+    base_path: Path,
+) -> list[Path]:
+    dirs: list[Path] = []
+    try:
+        dirs.append(Path(str(getattr(args, "overlay_image", "") or "")).parent)
+    except Exception:
+        pass
+    dirs += [
+        script_path.parent / "assets",
+        script_path.parent / "scenes",
+        base_path.parent / "assets",
+        base_path.parent / "scenes",
+    ]
+    if cfg_dir:
+        dirs += [cfg_dir, cfg_dir / "assets", cfg_dir / "scenes"]
+    # De-dup while preserving order
+    out: list[Path] = []
+    seen: set[str] = set()
+    for d in dirs:
+        try:
+            key = str(d.resolve())
+        except Exception:
+            key = str(d)
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(d)
+    return out
+
+
+def _project_has_prefixed_numbered_overlays(project_id: str, dirs: list[Path]) -> bool:
+    pid = (project_id or "").strip()
+    if not pid:
+        return False
+    pat = re.compile(rf"^{re.escape(pid)}-overlay\d+\.png$", re.IGNORECASE)
+    for d in dirs:
+        try:
+            if not d.exists() or not d.is_dir():
+                continue
+            for ch in d.iterdir():
+                try:
+                    if ch.is_file() and pat.match(ch.name):
+                        return True
+                except Exception:
+                    continue
+        except Exception:
+            continue
+    return False
+
+
 def build_overlay_config_lookup(cfg: Dict[str, Any]) -> Dict[str, Any]:
     """
     Build a lookup:
@@ -389,6 +602,8 @@ def find_overlay_image_for_id(
     cfg_dir: Path | None,
     script_path: Path,
     base_path: Path,
+    project_id: str = "",
+    unified_numbered_overlay: str = "",
 ) -> str:
     """
     Resolve the overlay image path for a given overlay_id.
@@ -398,41 +613,61 @@ def find_overlay_image_for_id(
       3) File named Overlay{n}.png in candidate folders (if id is not None)
       4) Fallback to args.overlay_image
     """
+    # Special rule: if this project has no project-prefixed numbered overlays at all,
+    # then all numbered overlays should use Overlay.png (if provided).
+    if overlay_id is not None and unified_numbered_overlay:
+        try:
+            if Path(unified_numbered_overlay).exists():
+                return str(Path(unified_numbered_overlay))
+        except Exception:
+            pass
     # 1) per-id config
     by_id = cfg_lookup.get("by_id", {})
     default_cfg = cfg_lookup.get("default", {})
     img = None
     if overlay_id is not None and overlay_id in by_id:
         img = by_id[overlay_id].get("image")
-        if img and Path(img).exists():
-            return str(Path(img))
+        if img:
+            preferred = _prefer_project_prefixed_path(str(img), project_id)
+            if preferred and Path(preferred).exists():
+                return str(Path(preferred))
+            if Path(str(img)).exists():
+                return str(Path(str(img)))
     # 2) default config image
     img = default_cfg.get("image")
-    if img and Path(img).exists():
-        return str(Path(img))
+    if img:
+        preferred = _prefer_project_prefixed_path(str(img), project_id)
+        if preferred and Path(preferred).exists():
+            return str(Path(preferred))
+        if Path(str(img)).exists():
+            return str(Path(str(img)))
     # 3) auto-discovery Overlay{n}.png
     if overlay_id is not None:
         name = f"Overlay{overlay_id}.png"
-        candidates: list[Path] = []
+        dirs: list[Path] = []
         args_img_dir = Path(args_overlay_image).parent
-        candidates += [
-            args_img_dir / name,
-            script_path.parent / "assets" / name,
-            script_path.parent / "scenes" / name,
-            base_path.parent / "assets" / name,
-            base_path.parent / "scenes" / name,
+        dirs += [
+            args_img_dir,
+            script_path.parent / "assets",
+            script_path.parent / "scenes",
+            base_path.parent / "assets",
+            base_path.parent / "scenes",
         ]
         if cfg_dir:
-            candidates += [
-                cfg_dir / name,
-                cfg_dir / "assets" / name,
-                cfg_dir / "scenes" / name,
-            ]
-        for c in candidates:
-            if c.exists():
-                return str(c)
+            dirs += [cfg_dir, cfg_dir / "assets", cfg_dir / "scenes"]
+        # Prefer project-prefixed files (case-insensitive), then unprefixed.
+        if project_id:
+            pref = f"{project_id}-{name}"
+            for d in dirs:
+                hit = _find_child_case_insensitive(d, pref)
+                if hit:
+                    return str(hit)
+        for d in dirs:
+            hit = _find_child_case_insensitive(d, name)
+            if hit:
+                return str(hit)
     # 4) fallback to global overlay_image
-    return str(Path(args_overlay_image))
+    return _prefer_project_prefixed_path(str(Path(args_overlay_image)), project_id)
 
 
 def run(cmd: list[str]) -> None:
@@ -549,6 +784,8 @@ def main():
     ap.add_argument("--crf", type=int, default=18, help="libx264 quality (default 18)")
     ap.add_argument("--audio_bitrate", default="192k", help="AAC bitrate (default 192k)")
     ap.add_argument("--fps", type=int, default=0, help="Override FPS; defaults to director fps")
+    ap.add_argument("--generator_inputs_json", default="", help="Optional generator_inputs.json for project_id-based asset selection")
+    ap.add_argument("--project_id", default="", help="Optional project id (overrides generator_inputs.json) for project-prefixed assets")
     # Intro slate from conflict description
     ap.add_argument("--intro_bg", action="append", help="Path to intro background image (PNG/JPG). If multiple provided, first is used for now.")
     ap.add_argument("--intro_duration", type=float, default=5.0, help="Intro duration seconds (default 5)")
@@ -584,6 +821,34 @@ def main():
         if cfg_path:
             hint += f"\nValues can be provided via --config {cfg_path} or CLI flags."
         raise SystemExit(hint)
+
+    project_id = _infer_project_id(args)
+    if project_id:
+        _apply_project_prefixed_assets(args, project_id)
+        # Keep config dict (used later for intro2) in sync with prefixed choices.
+        # Some phases read from `cfg` rather than `args`.
+        if isinstance(cfg, dict) and cfg:
+            try:
+                if isinstance(cfg.get("intro2"), dict) and isinstance(getattr(args, "intro2", None), dict):
+                    cfg["intro2"] = dict(getattr(args, "intro2"))
+            except Exception:
+                pass
+
+    # If this project has no project-prefixed numbered overlay assets at all,
+    # then default all numbered overlays (Overlay1, Overlay2, ...) to Overlay.png.
+    unified_numbered_overlay = ""
+    if project_id:
+        try:
+            cfg_dir_for_overlays = cfg_path.parent if cfg_path else None
+            _dirs = _overlay_candidate_dirs(args, cfg_dir_for_overlays, Path(args.script), Path(args.base))
+            if not _project_has_prefixed_numbered_overlays(project_id, _dirs):
+                for d in _dirs:
+                    hit = _find_child_case_insensitive(d, "Overlay.png")
+                    if hit and hit.exists():
+                        unified_numbered_overlay = str(hit)
+                        break
+        except Exception:
+            unified_numbered_overlay = ""
 
     # Preflight summary and sanity checks
     base_input = str(Path(args.base))
@@ -1032,6 +1297,8 @@ def main():
                 cfg_path.parent if 'cfg_path' in locals() and cfg_path else None,
                 Path(args.script),
                 Path(args.base),
+                project_id,
+                unified_numbered_overlay,
             )
             # Apply pre-roll (shift earlier)
             t_ins = max(0.0, t_overlay - this_pre_roll)

@@ -75,12 +75,10 @@
   "final_overlay_duration": 6.0,
   "final_overlay_fade": 0.6,
   "overlays": [
-    { "id": 1, "image": "../scenes/Overlay1.png", "duration": 12 },
-    { "id": 2, "image": "../scenes/Overlay2.png", "duration": 12 },
-    { "id": 3, "image": "../scenes/Overlay3.png", "duration": 6 },
-    { "id": 4, "image": "../scenes/Overlay4.png", "duration": 6 },
-    { "id": 5, "image": "../scenes/Overlay5.png", "duration": 8 },
-    { "id": 6, "image": "../scenes/Overlay6.png", "duration": 8 },
-    { "id": 7, "image": "../scenes/Overlay7.png", "duration": 25 }
+    { "id": 1, "image": "../scenes/Overlay1.png", "duration": 40 },
+    { "id": 2, "image": "../scenes/Overlay2.png", "duration": 40 },
+    { "id": 3, "image": "../scenes/Overlay3.png", "duration": 45 },
+    { "id": 4, "image": "../scenes/Overlay4.png", "duration": 45 },
+    { "id": 5, "image": "../scenes/Overlay5.png", "duration": 55 }
   ]
 }

@@ -428,6 +428,7 @@ def main():
             "--base", str(out_video),
             "--out", str(target_overlay_out),
             "--fps", str(overlay_fps),
+            "--generator_inputs_json", str(generator_inputs_json),
         ]
         if overlay_image:
             cmd_apply += ["--overlay_image", str(overlay_image)]

@@ -61,10 +61,16 @@ def main():
             work_dir = data_dir / "jobs" / job_id / "_queue_inputs"
             script_path = _download_s3_to_path(script_s3, work_dir / "script.txt")
             gen_path = _download_s3_to_path(gen_s3, work_dir / "generator_inputs.json")
-        else:
+        elif (body.get("localScriptPath") and body.get("localGeneratorInputsPath")):
             # Backward-compatible fallback for older queue payloads.
-            script_path = Path(body["localScriptPath"])
-            gen_path = Path(body["localGeneratorInputsPath"])
+            script_path = Path(str(body["localScriptPath"]))
+            gen_path = Path(str(body["localGeneratorInputsPath"]))
+        else:
+            raise RuntimeError(
+                "Invalid SQS message body: expected scriptS3+generatorInputsS3 (preferred) "
+                "or localScriptPath+localGeneratorInputsPath (legacy). "
+                f"Got keys={sorted(list(body.keys()))}"
+            )
         submit_full_job(project_root, project_id, job_id, script_path, gen_path)
 
     while True:
