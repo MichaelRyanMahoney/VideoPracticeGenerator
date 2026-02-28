@@ -7,6 +7,7 @@ FROM python:3.11-slim
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     VPG_DATA_DIR=/data \
+    VPG_REPO_ROOT=/app \
     NLTK_DATA=/app/nltk_data \
     BLENDER_VERSION=4.1.1 \
     BLENDER_DIR=/usr/local/blender

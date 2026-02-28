@@ -1,6 +1,6 @@
 {
   "run": {
-    "project_name": "VIDEO-02",
+    "project_name": "VIDEO-03",
     "fps": 1,
     "resolution": {
       "width": 1920,
@@ -17,84 +17,82 @@
   },
   "characters": {
     "MediatorB": {
-      "name": "Sara",
+      "name": "Alex",
       "typecast": {
-        "voice_name": "Zoey",
-        "voice_id": "tc_67d238428572120c4aa644cc",
+        "voice_name": "Aaron",
+        "voice_id": "tc_67b6985d4d5d632d97478263",
         "languages": [
           "English"
-        ],
-        "pitch": 1
+        ]
       },
       "blender": {
-        "gender": "F",
-        "skin_hex": "59362A",
-        "hair_hex": "161616",
+        "gender": "M",
+        "skin_hex": "A47561",
+        "hair_hex": "5A4832",
         "selectors": {
-          "hair": "hair.012",
-          "shirt": "geo_girl_sweater",
-          "pants": "slacks_pants_girl"
+          "hair": "hair.004",
+          "shirt": "sweater_boy",
+          "pants": "black_pants"
         }
       }
     },
     "MediatorA": {
-      "name": "David",
+      "name": "Maria",
       "typecast": {
-        "voice_name": "Jake",
-        "voice_id": "tc_643797da6738883e188505b7",
+        "voice_name": "Liz",
+        "voice_id": "tc_639ad2972cce84809db3cfd3",
         "languages": [
           "English"
-        ],
-        "pitch": 1
+        ]
       },
       "blender": {
-        "gender": "M",
-        "skin_hex": "F6B092",
-        "hair_hex": "433625",
+        "gender": "F",
+        "skin_hex": "A3634D",
+        "hair_hex": "675A3D",
         "selectors": {
-          "hair": "hair.005",
+          "hair": "hair.013",
           "shirt": "sweater_boy",
           "pants": "black_pants"
         }
       }
     },
     "Disputant1": {
-      "name": "Christina",
+      "name": "Jordan",
       "typecast": {
-        "voice_name": "Claire",
-        "voice_id": "tc_628d9c881374f768260298b0",
+        "voice_name": "Kevin",
+        "voice_id": "tc_61095f50876293488937d5db",
         "languages": [
           "English"
         ]
       },
       "blender": {
-        "gender": "F",
-        "skin_hex": "FF9B79",
-        "hair_hex": "2A220B",
+        "gender": "M",
+        "skin_hex": "E3A387",
+        "hair_hex": "DFBB79",
         "selectors": {
-          "hair": "hair.011",
-          "shirt": "geo_girl_sweater",
-          "pants": "slacks_pants_girl"
+          "hair": "hair.006",
+          "shirt": "sweater_boy",
+          "pants": "black_pants"
         }
       }
     },
     "Disputant2": {
-      "name": "Monica",
+      "name": "Daniel",
       "typecast": {
-        "voice_name": "Zoey",
-        "voice_id": "tc_67d238428572120c4aa644cc",
+        "voice_name": "Owen",
+        "voice_id": "tc_62e8f1e86627e27dcffd8884",
         "languages": [
           "English"
         ]
       },
       "blender": {
-        "gender": "F",
-        "skin_hex": "CF7E62",
-        "hair_hex": "3F3311",
+        "gender": "M",
+        "skin_hex": "6D4234",
+        "hair_hex": "342515",
         "selectors": {
-          "hair": "hair.016",
-          "shirt": "geo_girl_sweater",
-          "pants": "slacks_pants_girl"
+          "hair": "hair.002",
+          "shirt": "sweater_boy",
+          "pants": "black_pants"
         }
       }
     }

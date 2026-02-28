@@ -15,7 +15,7 @@
   "pf_pen_dy": -180,
   "pf_anim_sec": 0.5,
 
-  "overlay_image": "../scenes/VideoPauseOverlay1.png",
+  "overlay_image": "../scenes/Overlay.png",
   "duration": 12,
   "fade": 0.5,
   "overlay_alpha": 1,
@@ -23,7 +23,7 @@
   "pre_roll_frames": 4,
 
   "intro_bg": [
-    "../scenes/SceneBackground1.png"
+    "../scenes/SceneBackground.png"
   ],
   "intro_duration": 5,
   "intro_fontfile": "../assets/Inter-VariableFont_opsz,wght.ttf",
@@ -75,10 +75,16 @@
   "final_overlay_duration": 6.0,
   "final_overlay_fade": 0.6,
   "overlays": [
-    { "id": 1, "image": "../scenes/Overlay1.png", "duration": 40 },
-    { "id": 2, "image": "../scenes/Overlay2.png", "duration": 40 },
-    { "id": 3, "image": "../scenes/Overlay3.png", "duration": 45 },
-    { "id": 4, "image": "../scenes/Overlay4.png", "duration": 45 },
-    { "id": 5, "image": "../scenes/Overlay5.png", "duration": 55 }
+    { "id": 1, "image": "../scenes/Overlay1.png", "duration": 30 },
+    { "id": 2, "image": "../scenes/Overlay2.png", "duration": 30 },
+    { "id": 3, "image": "../scenes/Overlay3.png", "duration": 30 },
+    { "id": 4, "image": "../scenes/Overlay4.png", "duration": 30 },
+    { "id": 5, "image": "../scenes/Overlay5.png", "duration": 90 }
+  ],
+  "pre_overlays": [
+    { "id": 1, "image": "../scenes/PreOverlay1.png", "duration": 7 },
+    { "id": 2, "image": "../scenes/PreOverlay2.png", "duration": 7 },
+    { "id": 3, "image": "../scenes/PreOverlay3.png", "duration": 7 },
+    { "id": 4, "image": "../scenes/PreOverlay4.png", "duration": 7 }
   ]
 }

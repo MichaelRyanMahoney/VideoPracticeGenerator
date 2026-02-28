@@ -1,261 +1,266 @@
-TITLE: Christina & Monica
+TITLE: Jordan & Daniel
 PROJECT: Mock Scenario
-VERSION: 02/26/2026
+VERSION: 02/27/2026
 
-DISPUTANT 1 NAME: Christina
-DISPUTANT 1 PROFILE: 7th Grade Girl
+DISPUTANT 1 NAME: Jordan
+DISPUTANT 1 PROFILE: 6th Grade Boy
 
-DISPUTANT 2 NAME: Monica
-DISPUTANT 2 PROFILE: 7th Grade Girl
+DISPUTANT 2 NAME: Daniel
+DISPUTANT 2 PROFILE: 6th Grade Boy
 
-MEDIATOR A NAME: David
-MEDIATOR B NAME: Sara
+MEDIATOR A NAME: Maria
+MEDIATOR B NAME: Alex
 
-CONFLICT DESCRIPTION: Monica shared a screenshot of a private group chat message that Christina sent. Another student showed Christina the screenshot at school, and other students started talking about her. Christina yelled at Monica in the hallway the next day.
-CONFLICT BEHAVIORS: Posting or messaging
+CONFLICT DESCRIPTION: During a history group project, Jordan started assigning roles to other students in the group. Daniel told Jordan to stop "trying to run everything" in front of the group, which led the two students to start arguing.
+CONFLICT BEHAVIORS: Insulting, Arguing in class
 
 WHAT HAPPENED (ACCORDING TO D1):
-Christina says Monica screenshotted a private Snapchat group chat and sent it to other people without asking, and someone showed it to her at school.
+Jordan says he was trying to help the group finish before class ended, and no one else was stepping up to assign roles.
 
 WHAT HAPPENED (ACCORDING TO D2):
-Monica says she shared the screenshot with one friend who asked for proof and didn’t realize it would spread. She says that Christina yelled at her and called her fake in the hallway where other students could hear.
+Daniel says that Jordan started picking roles without asking anyone else, and told Daniel to print the outline for the project. Daniel says that his printer at home is broken.
 
 WHAT D1 WAS MOST BOTHERED BY:
-Christina was bothered by her private message being screenshotted and sent around without her permission.
+Jordan was bothered by getting called out in front of everyone.
 
 WHAT D2 WAS MOST BOTHERED BY:
-Monica was bothered by getting yelled at in front of other students.
+Daniel was bothered by Jordan deciding roles without checking with the group first.
 
 WHAT D1 FELT:
-Christina felt betrayed when she saw the screenshot and realized people at school were talking about her behind her back.
+Jordan felt mad when Daniel said he was trying to run everything.
 
 WHAT D2 FELT:
-Monica felt embarrassed when Christina yelled at her and called her fake in front of other students.
+Daniel felt irritated when Jordan told him he needed to print the outline.
 
 WHAT D1 WANTS:
-Christina wants Monica to delete the screenshot and to not share her messages with other people.
+Jordan wants Daniel to not call him out in front of everyone during group work.
 
 WHAT D2 WANTS:
-Monica wants Christina to talk to her privately and address the problem calmly instead of calling her out publicly.
+Daniel wants Jordan to ask the group before picking roles and let people choose when possible.
 
 WHAT D1 CAN DO DIFFERENTLY:
-Christina can talk to Monica privately instead of yelling at her in the hallway.
+Jordan can ask the group before assigning roles and listen to what roles people want.
 
 WHAT D2 CAN DO DIFFERENTLY:
-Monica can think before screenshotting messages and say no if friends ask for proof.
+Daniel can say what he thinks calmly instead of calling Jordan out in front of everyone.
 
 WHAT BOTH CAN DO DIFFERENTLY:
-Both can try to respect each other’s privacy both online and in school.
+Both can listen to each other and try to make decisions together.
 
 AGREEMENT – D1:
-Christina agrees to not yell or call Monica names and to talk to her one-on-one if something bothers her.
+Jordan agrees to ask the group before assigning roles so that group members can discuss which roles they want.
 
 AGREEMENT – D2:
-Monica agrees to delete the screenshot and to not share private messages again.
+Daniel agrees to not call Jordan out or say negative things about him in front of the group.
 
 AGREEMENT – BOTH:
-Both Christina and Monica agree to talk privately if there is a problem in the future and not share each other’s private messages with others.
+Both Jordan and Daniel agree to go together to the library to print the outline if no one else in the group can print it.
 
 ### STEP 1: PRESENT YOURSELF AND PEER MEDIATION
-MEDIATOR A (DAVID)
-“Hello! My name is David. This is Sara and we are your peer mediators. What are your names?”
+MEDIATOR A (MARIA)
+“Hello! My name is Maria. This is Alex, and we are your peer mediators. What are your names?”
 
 [PAUSE]
-DISPUTANT 1 (CHRISTINA) {hesitant=true}
-“Christina.”
+DISPUTANT 1 (JORDAN) {hesitant=true}
+“Jordan.”
 
 [PAUSE]
-DISPUTANT 2 (MONICA) {hesitant=true}
-“Monica.”
+DISPUTANT 2 (DANIEL) {hesitant=true}
+“Daniel.”
 
 [PAUSE]
-MEDIATOR A (DAVID)
+MEDIATOR A (MARIA)
 “You’re not in trouble. We heard you had a disagreement.”
 
-MEDIATOR A (DAVID)
+MEDIATOR A (MARIA)
 “This is peer mediation, where students can work things out together. We won’t share what you say with other students.”
 
-MEDIATOR A (DAVID)
+MEDIATOR A (MARIA)
 “We won’t take sides. We’ll help you find a solution that gives you both something you want.”
 
-MEDIATOR A (DAVID)
+MEDIATOR A (MARIA)
 “We can help you resolve things here, instead of in the office. Does that sound okay?”
 
 [PAUSE]
-DISPUTANT 1 (CHRISTINA) {hesitant=true}
+DISPUTANT 1 (JORDAN) {hesitant=true}
 “Yeah… I guess.”
 
 [PAUSE]
-DISPUTANT 2 (MONICA) {hesitant=true}
-“Okay.”
+DISPUTANT 2 (DANIEL) {hesitant=true}
+“Sure…”
 
 ### STEP 2: EXPLAIN THE RULES
 [PAUSE]
 [ProcessFormSwap]
 [PAUSE]
 [PAUSE]
-MEDIATOR B (SARA)
+MEDIATOR B (ALEX)
 “To have a good mediation, there are a few rules we all need to follow.”
 
-MEDIATOR B (SARA)
+MEDIATOR B (ALEX)
 “The Confidentiality Rule is for us mediators. We won’t share what you say with other students.”
 
-MEDIATOR B (SARA)
+MEDIATOR B (ALEX)
 “The One Mic Rule is for both of you. It means that one person speaks at a time.”
 
-MEDIATOR B (SARA)
-“The Respect Rule is for all of us. We have to speak respectfully.” 
+MEDIATOR B (ALEX)
+“The Respect Rule is for all of us. We have to speak respectfully.”
 
-MEDIATOR B (SARA)
+MEDIATOR B (ALEX)
 “Do you both agree to follow the rules?”
 
 [PAUSE]
-DISPUTANT 1 (CHRISTINA) {hesitant=true}
-“Fine.”
+DISPUTANT 1 (JORDAN) {hesitant=true}
+“Okay…”
 
 [PAUSE]
-DISPUTANT 2 (MONICA) {hesitant=true}
-“Yeah.”
+DISPUTANT 2 (DANIEL) {hesitant=true}
+“Yeah, I guess.”
 
 ### STEP 3: ASK BOTH SIDES TO SHARE
 [PAUSE]
 [ProcessFormSwap]
 [PAUSE]
 [PAUSE]
-MEDIATOR A (DAVID)
-“We want to hear both of your perspectives on what we were told:”
+MEDIATOR A (MARIA)
+“We want to hear both of your perspectives on what we were told.”
 
-MEDIATOR A (DAVID)
-“Monica shared a screenshot of a private group chat message that Christina sent. Another student showed Christina the screenshot at school, and other students started talking about her. Christina yelled at Monica in the hallway the next day.”
+MEDIATOR A (MARIA)
+“During a history group project, Jordan started assigning roles to other students in the group. Daniel told Jordan to stop ‘trying to run everything’ in front of the group, which led the two students to start arguing.”
 
-MEDIATOR A (DAVID)
-“Christina, from your perspective, what happened between you two?”
-
-[PAUSE]
-DISPUTANT 1 (CHRISTINA)
-“Okay, so… I sent a message in our Snapchat group chat, and I thought it was private.”
-
-DISPUTANT 1 (CHRISTINA)
-“Then Monica screenshotted it and sent it to other people, like without asking me.”
-
-DISPUTANT 1 (CHRISTINA)
-“And then someone at school literally showed me the screenshot, and people were talking about me.”
+MEDIATOR A (MARIA)
+“Jordan, from your perspective, what happened between you two?”
 
 [PAUSE]
-MEDIATOR A (DAVID)
-“What I heard you say is that you shared something in a private Snapchat group chat, and Monica screenshotted it and sent it to other people without asking, and then you found out at school when someone showed you and people started talking about you. Is that right?”
+[PAUSE]
+[PREOVERLAY1]
+[PAUSE]
+[PAUSE]
+DISPUTANT 1 (JORDAN)
+“I was just trying to help us finish before class ended.”
+
+DISPUTANT 1 (JORDAN)
+“Like, nobody else was really stepping up to assign roles, so I started doing it.”
 
 [PAUSE]
-DISPUTANT 1 (CHRISTINA)
-“Yeah. That’s it.”
+MEDIATOR A (MARIA)
+“What I heard you say is you were trying to help the group finish on time, and since no one else was assigning roles, you stepped in and did it. Is that right?”
 
 [PAUSE]
-MEDIATOR A (DAVID)
+DISPUTANT 1 (JORDAN)
+“Yeah.”
+
+[PAUSE]
+MEDIATOR A (MARIA)
 “Is there anything else you want to share?”
 
 [PAUSE]
-DISPUTANT 1 (CHRISTINA)
-“No.”
+DISPUTANT 1 (JORDAN)
+“And then Daniel said I was trying to run everything, and it was in front of everyone.”
 
 [PAUSE]
 [PAUSE]
 [OVERLAY1]
 [PAUSE]
 [PAUSE]
-MEDIATOR A (DAVID)
-“Monica, from your perspective, what happened between you two?”
+MEDIATOR A (MARIA)
+“Daniel, from your perspective, what happened between you two?”
 
 [PAUSE]
-DISPUTANT 2 (MONICA)
-“Umm… I did screenshot it, but I didn’t send it to, like, a bunch of people.”
+[PAUSE]
+[PREOVERLAY2]
+[PAUSE]
+[PAUSE]
+DISPUTANT 2 (DANIEL)
+“Jordan started picking roles without asking.”
 
-DISPUTANT 2 (MONICA)
-“One friend asked me for proof, and I sent it to her, and I honestly didn’t think it would spread.”
+DISPUTANT 2 (DANIEL)
+“And he told me to print the outline for the project.”
 
-DISPUTANT 2 (MONICA)
-“And then the next day Christina yelled at me in the hallway and called me fake, and people could hear.”
+DISPUTANT 2 (DANIEL)
+“My printer at home is broken, so I couldn’t just do that.”
 
 [PAUSE]
-MEDIATOR A (DAVID)
-“What I heard you say is that you shared the screenshot with one friend because she asked for proof, and you didn’t realize it would spread, and then Christina yelled at you and called you fake in the hallway where other students could hear. Is that right?”
+MEDIATOR A (MARIA)
+“What I heard you say is Jordan picked roles without checking with the group first, and he told you to print the outline, but your printer is broken, so that wasn’t really possible. Is that right?”
 
 [PAUSE]
-DISPUTANT 2 (MONICA)
+DISPUTANT 2 (DANIEL)
 “Yeah.”
 
 [PAUSE]
-MEDIATOR A (DAVID)
+MEDIATOR A (MARIA)
 “Is there anything else you want to share?”
 
 [PAUSE]
-DISPUTANT 2 (MONICA)
-“No.”
+DISPUTANT 2 (DANIEL)
+“I mean… I got annoyed, and then we started arguing.”
 
 [PAUSE]
 [PAUSE]
 [OVERLAY2]
 [PAUSE]
 [PAUSE]
-MEDIATOR A (DAVID)
-“Christina, what bothered you most in this situation?”
+MEDIATOR A (MARIA)
+“Jordan, what bothered you most in this situation?”
 
 [PAUSE]
-DISPUTANT 1 (CHRISTINA)
-“That it was private, and it got screenshotted and sent around without me saying it was okay.”
+DISPUTANT 1 (JORDAN)
+“Getting called out in front of everyone.”
 
 [PAUSE]
-MEDIATOR A (DAVID)
-“How did you feel when it got screenshotted?”
+MEDIATOR A (MARIA)
+“How did you feel when Daniel called you out?”
 
 [PAUSE]
-DISPUTANT 1 (CHRISTINA)
-“Betrayed. Like… I didn’t know people were talking about me behind my back until I saw it.”
+DISPUTANT 1 (JORDAN)
+“Mad.”
 
 [PAUSE]
-MEDIATOR A (DAVID)
+MEDIATOR A (MARIA)
+“Thank you for sharing.”
+
+MEDIATOR A (MARIA)
+“Daniel, what bothered you most in this situation?”
+
+[PAUSE]
+DISPUTANT 2 (DANIEL)
+“That he was deciding roles without checking with the group first.”
+
+[PAUSE]
+MEDIATOR A (MARIA)
+“How did you feel when Jordan was deciding roles?”
+
+[PAUSE]
+DISPUTANT 2 (DANIEL)
+“I was irritated, because I can’t print it at home.”
+
+[PAUSE]
+MEDIATOR A (MARIA)
 “Thank you for sharing.”
 
 [PAUSE]
-MEDIATOR A (DAVID)
-“Monica, what bothered you most in this situation?”
+[PAUSE]
+[PREOVERLAY3]
+[PAUSE]
+[PAUSE]
+MEDIATOR A (MARIA)
+“Jordan, what’s something you want Daniel to do, or to stop doing?”
 
 [PAUSE]
-DISPUTANT 2 (MONICA)
-“That she yelled at me in front of people.”
+DISPUTANT 1 (JORDAN)
+“I want him to not call me out in front of everyone during group work.”
 
 [PAUSE]
-MEDIATOR A (DAVID)
-“How did you feel when Christina yelled at you?”
+MEDIATOR A (MARIA)
+“Daniel, what’s something you want Jordan to do, or to stop doing?”
 
 [PAUSE]
-DISPUTANT 2 (MONICA)
-“Embarrassed. Because people were looking, and she called me fake.”
+DISPUTANT 2 (DANIEL)
+“I want him to ask the group before picking roles.”
 
-[PAUSE]
-MEDIATOR A (DAVID)
-“Thank you for sharing.”
-
-[PAUSE]
-MEDIATOR A (DAVID)
-“Christina, what’s something you want Monica to do, or to stop doing?”
-
-[PAUSE]
-DISPUTANT 1 (CHRISTINA)
-“I want her to delete the screenshot.”
-
-DISPUTANT 1 (CHRISTINA)
-“And I want her to not share my messages with other people.”
-
-[PAUSE]
-MEDIATOR A (DAVID)
-“Monica, what’s something you want Christina to do, or to stop doing?”
-
-[PAUSE]
-DISPUTANT 2 (MONICA)
-“I want her to talk to me privately if there’s a problem.”
-
-DISPUTANT 2 (MONICA)
-“And like… be calm instead of calling me out in the hallway.”
+DISPUTANT 2 (DANIEL)
+“And like… let people choose when possible.”
 
 [PAUSE]
 [PAUSE]
@@ -267,88 +272,93 @@ DISPUTANT 2 (MONICA)
 [ProcessFormSwap]
 [PAUSE]
 [PAUSE]
-MEDIATOR B (SARA)
-“Christina, it sounds like you want Monica to delete the screenshot and not share your messages with other people. Is that right?”
+MEDIATOR B (ALEX)
+“Jordan, it sounds like you want Daniel to not call you out in front of everyone during group work. Is that right?”
 
 [PAUSE]
-DISPUTANT 1 (CHRISTINA)
+DISPUTANT 1 (JORDAN)
 “Yeah.”
 
 [PAUSE]
-MEDIATOR B (SARA)
-“Monica, it sounds like you want Christina to talk to you privately and be calm instead of calling you out publicly. Is that right?”
+MEDIATOR B (ALEX)
+“Daniel, it sounds like you want Jordan to ask the group before picking roles and let people choose when possible. Is that right?”
 
 [PAUSE]
-DISPUTANT 2 (MONICA)
+DISPUTANT 2 (DANIEL)
 “Yeah.”
 
 [PAUSE]
-MEDIATOR B (SARA)
+MEDIATOR B (ALEX)
 “Now let’s think about what you can both do differently, so you each get something you want.”
 
-MEDIATOR B (SARA)
-“Christina, what’s one thing you could do differently to help this work for both of you?”
+[PAUSE]
+[PAUSE]
+[PREOVERLAY4]
+[PAUSE]
+[PAUSE]
+MEDIATOR B (ALEX)
+“Jordan, what’s one thing you could do differently to help this work for both of you?”
 
 [PAUSE]
-DISPUTANT 1 (CHRISTINA) {hesitant=true}
+DISPUTANT 1 (JORDAN) {hesitant=true}
 “Ummm... I don’t know..."
 
 [PAUSE]
 [PAUSE]
-MEDIATOR B (SARA)
-“Okay, Monica, what’s one thing you could do differently to help this work?”
+MEDIATOR B (ALEX)
+“Okay, Daniel, what’s one thing you could do differently to help this work?”
 
 [PAUSE]
-DISPUTANT 2 (MONICA)
-“I can think before I screenshot stuff.”
+DISPUTANT 2 (DANIEL)
+“I can say what I think calmly.”
 
-DISPUTANT 2 (MONICA)
-“And if my friends ask for proof, I can just say no.”
-
-[PAUSE]
-MEDIATOR B (SARA)
-“Christina, is there anything else you’d like Monica to do differently?”
+DISPUTANT 2 (DANIEL)
+“Like not call him out in front of everyone.”
 
 [PAUSE]
-DISPUTANT 1 (CHRISTINA)
-“Just… don’t share private messages again.”
+MEDIATOR B (ALEX)
+“Jordan, is there anything else you’d like Daniel to do differently?”
 
 [PAUSE]
-MEDIATOR B (SARA)
-“Monica, is there anything else you’d like Christina to do differently?”
+DISPUTANT 1 (JORDAN)
+“Just don’t say negative stuff about me in front of the group.”
 
 [PAUSE]
-DISPUTANT 2 (MONICA)
-“Yeah. Don’t yell at me or call me names.”
+MEDIATOR B (ALEX)
+“Daniel, is there anything else you’d like Jordan to do differently?”
 
 [PAUSE]
-MEDIATOR B (SARA)
+DISPUTANT 2 (DANIEL)
+“Ask the group before he assigns roles.”
+
+[PAUSE]
+MEDIATOR B (ALEX)
 “Is there something you could both do differently?”
 
 [PAUSE]
-DISPUTANT 1 (CHRISTINA)
-“Both of us can talk one-on-one if there’s a problem.”
+DISPUTANT 1 (JORDAN)
+“Ummm… we can both listen more and not talk over each other.”
 
 [PAUSE]
-DISPUTANT 2 (MONICA)
-“Ummm… yeah, and like, respect each other’s privacy online and at school.”
+DISPUTANT 2 (DANIEL)
+“Yeah. And try to decide stuff together, instead of just one person doing it.”
 
 [PAUSE]
-MEDIATOR B (SARA)
-“So what I’m hearing is: Monica will delete the screenshot, not share private messages again, and say no if someone asks for proof.”
+MEDIATOR B (ALEX)
+“So what I’m hearing for the plan is: Jordan, you’ll ask the group before assigning roles and listen to what roles people want.”
 
-MEDIATOR B (SARA)
-“And Christina will talk to Monica privately if something bothers her, and not yell or call her names in public.”
+MEDIATOR B (ALEX)
+“And Daniel, you’ll say what you think calmly and not call Jordan out or say negative things about him in front of the group.”
 
-MEDIATOR B (SARA)
-“And you’ll both handle problems privately and respect each other’s privacy. Would that work?”
-
-[PAUSE]
-DISPUTANT 1 (CHRISTINA)
-“Yeah.”
+MEDIATOR B (ALEX)
+“And both of you will listen to each other and try to make decisions together. Would that work?”
 
 [PAUSE]
-DISPUTANT 2 (MONICA)
+DISPUTANT 1 (JORDAN)
+“Yeah, that’s fine.”
+
+[PAUSE]
+DISPUTANT 2 (DANIEL)
 “Okay.”
 
 [PAUSE]
@@ -361,7 +371,7 @@ DISPUTANT 2 (MONICA)
 [ProcessFormSwap]
 [PAUSE]
 [PAUSE]
-MEDIATOR A (DAVID)
+MEDIATOR A (MARIA)
 “Now we’re going to write an agreement using what you both shared, so that this doesn’t happen again.”
 
 [PAUSE]
@@ -369,46 +379,54 @@ MEDIATOR A (DAVID)
 [OVERLAY5]
 [PAUSE]
 [PAUSE]
-MEDIATOR A (DAVID)
+MEDIATOR A (MARIA)
 “Here’s what we have.”
 
-MEDIATOR A (DAVID)
-“Christina agrees to not yell or call Monica names and to talk to her one-on-one if something bothers her.”
+MEDIATOR A (MARIA)
+“Jordan agrees to ask the group before assigning roles so that group members can discuss which roles they want.”
 
-MEDIATOR A (DAVID)
-“Monica agrees to delete the screenshot and to not share private messages again.”
+MEDIATOR A (MARIA)
+“Daniel agrees to not call Jordan out or say negative things about him in front of the group.”
 
-MEDIATOR A (DAVID)
-“Both Christina and Monica agree to talk privately if there is a problem in the future and not share each other’s private messages with others.”
+MEDIATOR A (MARIA)
+“Both Jordan and Daniel agree to go together to the library to print the outline if no one else in the group can print it.”
 
-MEDIATOR A (DAVID)
+MEDIATOR A (MARIA)
 “Do you both agree to do these things?”
 
 [PAUSE]
-DISPUTANT 1 (CHRISTINA)
+DISPUTANT 1 (JORDAN)
 “Yeah.”
 
 [PAUSE]
-DISPUTANT 2 (MONICA)
-“Sure.”
+DISPUTANT 2 (DANIEL)
+“Yeah, I guess.”
 
 [PAUSE]
-MEDIATOR A (DAVID)
+MEDIATOR A (MARIA)
 “Please read it and sign below.”
 
 [PAUSE]
-MEDIATOR A (DAVID)
+DISPUTANT 1 (JORDAN)
+“Okay.”
+
+[PAUSE]
+DISPUTANT 2 (DANIEL)
+“Alright.”
+
+[PAUSE]
+MEDIATOR A (MARIA)
 “Is there anything you want to say to each other before we finish?”
 
 [PAUSE]
-DISPUTANT 1 (CHRISTINA)
-“Ummm… no, not really.”
+DISPUTANT 2 (DANIEL)
+“Not really… I’ll just say it calmer next time.”
 
 [PAUSE]
-DISPUTANT 2 (MONICA)
-“Not really… I’ll just delete it.”
+DISPUTANT 1 (JORDAN)
+“Yeah, thanks.”
 
 [PAUSE]
-MEDIATOR A (DAVID)
+MEDIATOR A (MARIA)
 “Thanks for doing this mediation with us. We’ll walk you back to class now.”
 

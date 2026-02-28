@@ -82,6 +82,7 @@ def main():
     ap.add_argument("--frames_prefix_s3", required=True, help="s3://.../frames (contains PNGs)")
     ap.add_argument("--out_mp4_s3", required=True)
     ap.add_argument("--script_s3", default="", help="Optional script.txt for overlays timing")
+    ap.add_argument("--generator_inputs_s3", default="", help="Optional generator_inputs.json (recommended; used for FPS and project-prefixed assets).")
     ap.add_argument("--overlay_config_s3", default="", help="Optional overlays config (json/yaml) for apply_overlays.py")
     ap.add_argument("--email_to", default="", help="Optional email recipient (SES).")
     ap.add_argument("--email_from", default="", help="Optional SES verified sender.")
@@ -98,14 +99,14 @@ def main():
         frames_dir = work / "frames"
         frames_dir.mkdir(parents=True, exist_ok=True)
         script_local = work / "script.txt"
-        overlay_cfg_local = work / "overlays.config"
+        gen_inputs_local = work / "inputs" / "generator_inputs.json"
 
         s3_download_file(s3, args.director_s3, director_local)
         s3_sync_down_prefix(s3, args.frames_prefix_s3, frames_dir)
         if args.script_s3:
             s3_download_file(s3, args.script_s3, script_local)
-        if args.overlay_config_s3:
-            s3_download_file(s3, args.overlay_config_s3, overlay_cfg_local)
+        if args.generator_inputs_s3:
+            s3_download_file(s3, args.generator_inputs_s3, gen_inputs_local)
 
         # Determine frame pattern stem (expects something_%04d.png)
         first = next(frames_dir.rglob("*.png"), None)
@@ -116,10 +117,21 @@ def main():
 
         project_root = Path(__file__).resolve().parents[1]
         base_out = work / "base.mp4"
+        # Infer project_id from S3 paths (used for project-prefixed overlay assets like Video-01-Overlay1.png).
+        project_id = ""
+        try:
+            _b, _k = s3_parse(args.out_mp4_s3)
+            parts = (_k or "").split("/")
+            if "projects" in parts:
+                i = parts.index("projects")
+                if i + 1 < len(parts):
+                    project_id = parts[i + 1]
+        except Exception:
+            project_id = ""
 
         # Mux (downloads S3 audio on demand inside mux_from_director.py)
         mux_py = project_root / "scripts" / "mux_from_director.py"
-        run([
+        mux_cmd = [
             sys.executable,
             str(mux_py),
             "--director",
@@ -128,21 +140,51 @@ def main():
             str(pattern),
             "--out",
             str(base_out),
-        ], cwd=project_root)
+        ]
+        if gen_inputs_local.exists():
+            mux_cmd += ["--generator_inputs_json", str(gen_inputs_local)]
+        # Default background image lives in the container image (scenes/SceneBackground.png).
+        bg = (os.environ.get("VPG_MUX_BACKGROUND") or "").strip()
+        if not bg:
+            default_bg = project_root / "scenes" / "SceneBackground.png"
+            if default_bg.exists():
+                bg = str(default_bg)
+        if bg:
+            mux_cmd += ["--background", str(bg)]
+        run(mux_cmd, cwd=project_root)
 
         final_out = base_out
-        if args.overlay_config_s3 and args.script_s3:
-            # Apply overlays using config (expects script+director+base+overlay_image+out inside config)
+        if args.script_s3:
+            # Apply overlays using config for overlay *assets/settings*, but always pass job-scoped
+            # script/director/base/out explicitly (those live in the workdir).
             apply_py = project_root / "scripts" / "apply_overlays.py"
             out2 = work / "final.mp4"
-            run([
-                sys.executable,
-                str(apply_py),
-                "--config",
-                str(overlay_cfg_local),
-            ], cwd=project_root)
-            # apply_overlays writes to cfg.out; if you want strict behavior, define cfg.out to be out2.
-            # For now, if cfg.out exists, use it; else fallback.
+            overlay_cfg_path: Path
+            if args.overlay_config_s3:
+                overlay_cfg_local = work / "overlays.config"
+                s3_download_file(s3, args.overlay_config_s3, overlay_cfg_local)
+                overlay_cfg_path = overlay_cfg_local
+            else:
+                overlay_cfg_path = project_root / "scripts" / "apply_overlays.config.json"
+            run(
+                [
+                    sys.executable,
+                    str(apply_py),
+                    "--config",
+                    str(overlay_cfg_path),
+                    "--script",
+                    str(script_local),
+                    "--director",
+                    str(director_local),
+                    "--base",
+                    str(base_out),
+                    "--out",
+                    str(out2),
+                    *(["--generator_inputs_json", str(gen_inputs_local)] if gen_inputs_local.exists() else []),
+                    *(["--project_id", project_id] if project_id else []),
+                ],
+                cwd=project_root,
+            )
             if out2.exists():
                 final_out = out2
 

@@ -33,6 +33,10 @@ from typing import Any, Dict
 import shutil
 import math
 
+# Stable project root for in-image assets (AWS/Docker) even when workdir differs.
+# Override via env when needed (e.g., VPG_REPO_ROOT=/app).
+REPO_ROOT = Path(os.environ.get("VPG_REPO_ROOT") or Path(__file__).resolve().parents[1]).resolve()
+
 
 def parse_timecode_to_seconds(tc: str) -> float:
     tc = (tc or "").strip()
@@ -44,6 +48,7 @@ def parse_timecode_to_seconds(tc: str) -> float:
 
 SPEAKER_LINE = re.compile(r'^\s*([A-Z0-9 ]+?)(?:\s*\(([A-Z \.]+)\))?\s*(?:\{[^}]*\})?\s*$')
 OVERLAY_MARKER = re.compile(r'^\[OVERLAY(\d+)?\]$', re.IGNORECASE)
+PREOVERLAY_MARKER = re.compile(r'^\[PREOVERLAY(\d+)?\]$', re.IGNORECASE)
 
 
 def parse_script_tokens(script_text: str) -> list[str]:
@@ -68,6 +73,10 @@ def parse_script_tokens(script_text: str) -> list[str]:
             continue
         if OVERLAY_MARKER.match(stripped):
             tokens.append("overlay")
+            i += 1
+            continue
+        if PREOVERLAY_MARKER.match(stripped):
+            tokens.append("preoverlay")
             i += 1
             continue
         if stripped == "[ProcessFormSwap]":
@@ -195,6 +204,111 @@ def map_overlays_to_times(script_tokens: list[str], beat_tokens: list[BeatToken]
     return overlay_times
 
 
+def map_preoverlays_to_times(script_tokens: list[str], beat_tokens: list[BeatToken], anchor: str = "prev_end") -> list[float]:
+    """
+    Same as map_overlays_to_times, but for [PREOVERLAY] markers.
+    """
+    times: list[float] = []
+    beat_has_pause = any(bt.kind == "pause" for bt in beat_tokens)
+    si = 0
+    bi = 0
+    while si < len(script_tokens):
+        st = script_tokens[si]
+        if st in ("line", "pause"):
+            if st == "pause" and not beat_has_pause:
+                si += 1
+                continue
+            while bi < len(beat_tokens) and beat_tokens[bi].kind != st:
+                bi += 1
+            if bi < len(beat_tokens):
+                bi += 1
+            si += 1
+            continue
+        if st == "preoverlay":
+            if bi < len(beat_tokens):
+                times.append(beat_tokens[bi].tc_in_sec)
+            else:
+                print(f"[apply_overlays] Warning: preoverlay at script token {si} dropped (no remaining beats to anchor)")
+            si += 1
+            continue
+        si += 1
+    return times
+
+
+def map_overlay_marker_events(
+    script_tokens: list[str],
+    beat_tokens: list[BeatToken],
+    overlay_ids: list[int | None],
+    preoverlay_ids: list[int | None],
+    *,
+    allow_pause_alignment: bool = True,
+) -> list[dict]:
+    """
+    Build an ordered list of overlay insertion events by walking script tokens in order
+    while advancing a beat cursor.
+
+    - Advances beat cursor on script "line"
+    - Optionally advances beat cursor on script "pause" (if allow_pause_alignment)
+    - Does NOT advance beat cursor on overlay markers (they anchor to the next beat start)
+
+    Returns list of dicts: {"kind": "overlay"|"preoverlay", "id": int|None, "time": float}
+    """
+    events: list[dict] = []
+    beat_has_pause = any(bt.kind == "pause" for bt in beat_tokens)
+    beats = beat_tokens if allow_pause_alignment else [bt for bt in beat_tokens if bt.kind == "line"]
+
+    oi = 0
+    pi = 0
+    bi = 0
+
+    def _consume(kind: str) -> None:
+        nonlocal bi
+        if not beats:
+            return
+        if not allow_pause_alignment:
+            # beats is line-only in this mode; only consume on "line"
+            if kind == "line" and bi < len(beats):
+                bi += 1
+            return
+        # advance beats until we match requested kind
+        while bi < len(beats) and beats[bi].kind != kind:
+            bi += 1
+        if bi < len(beats):
+            bi += 1
+
+    for si, st in enumerate(script_tokens):
+        if st == "line":
+            _consume("line")
+            continue
+        if st == "pause":
+            if not allow_pause_alignment:
+                continue
+            if not beat_has_pause:
+                continue
+            _consume("pause")
+            continue
+        if st == "overlay":
+            oid = overlay_ids[oi] if oi < len(overlay_ids) else None
+            oi += 1
+            if bi < len(beats):
+                events.append({"kind": "overlay", "id": oid, "time": float(beats[bi].tc_in_sec)})
+            else:
+                print(f"[apply_overlays] Warning: overlay at script token {si} dropped (no remaining beats to anchor)")
+            continue
+        if st == "preoverlay":
+            pid = preoverlay_ids[pi] if pi < len(preoverlay_ids) else None
+            pi += 1
+            if bi < len(beats):
+                events.append({"kind": "preoverlay", "id": pid, "time": float(beats[bi].tc_in_sec)})
+            else:
+                print(f"[apply_overlays] Warning: preoverlay at script token {si} dropped (no remaining beats to anchor)")
+            continue
+        # other tokens: section_change, pf_swap, etc.
+        continue
+
+    return events
+
+
 def map_pf_swaps_to_times(script_tokens: list[str], beat_tokens: list[BeatToken], anchor: str = "prev_end") -> list[float]:
     """
     Align script token sequence to beat token sequence; collect times for [ProcessFormSwap] markers.
@@ -219,6 +333,33 @@ def map_pf_swaps_to_times(script_tokens: list[str], beat_tokens: list[BeatToken]
         if st == "pf_swap":
             if bi < len(beat_tokens):
                 times.append(beat_tokens[bi].tc_in_sec)
+            si += 1
+            continue
+        si += 1
+    return times
+
+
+def map_pf_swaps_to_times_line_only(script_tokens: list[str], beat_tokens: list[BeatToken]) -> list[float]:
+    """
+    ProcessFormSwap timing aligned only to spoken beats (ignores pause alignment).
+    Uses the same anchoring strategy as overlays: swap anchors to the next spoken beat start.
+    """
+    times: list[float] = []
+    beats_line = [bt for bt in beat_tokens if bt.kind == "line"]
+    si = 0
+    bi = 0
+    while si < len(script_tokens):
+        st = script_tokens[si]
+        if st == "line":
+            if bi < len(beats_line):
+                bi += 1
+            si += 1
+            continue
+        if st == "pf_swap":
+            if bi < len(beats_line):
+                times.append(beats_line[bi].tc_in_sec)
+            else:
+                print(f"[apply_overlays] Warning: pf_swap at script token {si} dropped (no remaining beats to anchor)")
             si += 1
             continue
         si += 1
@@ -257,6 +398,34 @@ def map_section_changes_to_times(script_tokens: list[str], beat_tokens: list[Bea
     return times
 
 
+def map_section_changes_to_times_line_only(script_tokens: list[str], beat_tokens: list[BeatToken]) -> list[float]:
+    """
+    Section-change timing aligned only to spoken beats (ignores pause alignment).
+    Useful when scripts contain [PAUSE] markers that are not represented as director pause beats.
+    """
+    times: list[float] = []
+    beats_line = [bt for bt in beat_tokens if bt.kind == "line"]
+    si = 0
+    bi = 0
+    while si < len(script_tokens):
+        st = script_tokens[si]
+        if st == "line":
+            if bi < len(beats_line):
+                bi += 1
+            si += 1
+            continue
+        if st == "section_change":
+            if bi < len(beats_line):
+                times.append(beats_line[bi].tc_in_sec)
+            else:
+                print(f"[apply_overlays] Warning: section change at script token {si} dropped (no remaining beats to anchor)")
+            si += 1
+            continue
+        # ignore pause/pf_swap/overlay/etc for cursor movement in line-only mode
+        si += 1
+    return times
+
+
 def parse_overlay_ids(script_text: str) -> list[int | None]:
     """
     Extract overlay numeric IDs in order of appearance in the script:
@@ -270,6 +439,43 @@ def parse_overlay_ids(script_text: str) -> list[int | None]:
             g = m.group(1)
             ids.append(int(g) if g and g.isdigit() else None)
     return ids
+
+
+def parse_preoverlay_ids(script_text: str) -> list[int | None]:
+    """
+    Extract preoverlay numeric IDs in order of appearance in the script:
+    - [PREOVERLAY] => None
+    - [PREOVERLAY7] => 7
+    """
+    ids: list[int | None] = []
+    for line in script_text.splitlines():
+        m = PREOVERLAY_MARKER.match(line.strip())
+        if m:
+            g = m.group(1)
+            ids.append(int(g) if g and g.isdigit() else None)
+    return ids
+
+
+def parse_overlay_marker_sequence(script_text: str) -> list[tuple[str, int | None]]:
+    """
+    Return marker sequence in order of appearance:
+      - ("overlay", id_or_None) for [OVERLAY] / [OVERLAYn]
+      - ("preoverlay", id_or_None) for [PREOVERLAY] / [PREOVERLAYn]
+    """
+    seq: list[tuple[str, int | None]] = []
+    for line in script_text.splitlines():
+        s = line.strip()
+        m1 = OVERLAY_MARKER.match(s)
+        if m1:
+            g = m1.group(1)
+            seq.append(("overlay", int(g) if g and g.isdigit() else None))
+            continue
+        m2 = PREOVERLAY_MARKER.match(s)
+        if m2:
+            g = m2.group(1)
+            seq.append(("preoverlay", int(g) if g and g.isdigit() else None))
+            continue
+    return seq
 
 
 def _load_yaml(path: Path) -> Dict[str, Any]:
@@ -305,45 +511,80 @@ def _resolve_path(base_dir: Path, value: Any) -> Any:
     return value
 
 
+def _resolve_path_multi(base_dirs: list[Path], value: Any) -> Any:
+    """
+    Resolve relative paths against multiple possible roots.
+
+    This is important for AWS runs where a config may be downloaded into a temp
+    workdir, but the referenced assets live inside the container image under
+    REPO_ROOT/{scenes,assets}.
+    """
+    if isinstance(value, str):
+        p = Path(value)
+        if p.is_absolute():
+            return str(p)
+        for bd in base_dirs:
+            try:
+                cand = bd / p
+                if cand.exists():
+                    return str(cand)
+            except Exception:
+                continue
+        return str(base_dirs[0] / p)
+    if isinstance(value, list):
+        return [_resolve_path_multi(base_dirs, v) for v in value]
+    return value
+
+
 def resolve_paths_in_config(cfg: Dict[str, Any], cfg_dir: Path) -> Dict[str, Any]:
     """
     Resolve relative paths in known path-like fields relative to the config file directory.
     """
-    path_keys = {
-        "script", "director", "base", "overlay_image", "out",
-        "pf_icon", "pf_pen", "labels_bubble", "labels_fontfile",
-        "intro_fontfile", "final_overlay"
+    # Inputs/outputs that should stay relative to the config location (often a temp workdir).
+    io_keys = {"script", "director", "base", "out"}
+    # Asset-like paths can safely fall back to in-image repo roots.
+    asset_bases = [cfg_dir, REPO_ROOT / "scripts", REPO_ROOT]
+    asset_keys = {
+        "overlay_image",
+        "pf_icon",
+        "pf_pen",
+        "labels_bubble",
+        "labels_fontfile",
+        "intro_fontfile",
+        "final_overlay",
     }
     # intro_bg is a list of paths
     resolved = dict(cfg)
     for k in list(resolved.keys()):
-        if k in path_keys:
+        if k in io_keys:
             resolved[k] = _resolve_path(cfg_dir, resolved[k])
+        if k in asset_keys:
+            resolved[k] = _resolve_path_multi(asset_bases, resolved[k])
         if k == "step_overlays":
-            resolved[k] = _resolve_path(cfg_dir, resolved[k])
+            resolved[k] = _resolve_path_multi(asset_bases, resolved[k])
         if k == "intro_bg":
-            resolved[k] = _resolve_path(cfg_dir, resolved[k])
+            resolved[k] = _resolve_path_multi(asset_bases, resolved[k])
         # Resolve new intro2 nested assets
         if k == "intro2" and isinstance(resolved[k], dict):
             intro2 = dict(resolved[k])
             if "bg" in intro2:
-                intro2["bg"] = _resolve_path(cfg_dir, intro2.get("bg"))
+                intro2["bg"] = _resolve_path_multi(asset_bases, intro2.get("bg"))
             if "title_slide" in intro2:
-                intro2["title_slide"] = _resolve_path(cfg_dir, intro2.get("title_slide"))
+                intro2["title_slide"] = _resolve_path_multi(asset_bases, intro2.get("title_slide"))
             if "process_form_overlay" in intro2:
-                intro2["process_form_overlay"] = _resolve_path(cfg_dir, intro2.get("process_form_overlay"))
+                intro2["process_form_overlay"] = _resolve_path_multi(asset_bases, intro2.get("process_form_overlay"))
             if "process_form_pen" in intro2:
-                intro2["process_form_pen"] = _resolve_path(cfg_dir, intro2.get("process_form_pen"))
+                intro2["process_form_pen"] = _resolve_path_multi(asset_bases, intro2.get("process_form_pen"))
             if "table_overlay" in intro2:
-                intro2["table_overlay"] = _resolve_path(cfg_dir, intro2.get("table_overlay"))
+                intro2["table_overlay"] = _resolve_path_multi(asset_bases, intro2.get("table_overlay"))
             if "conflict_description_overlay" in intro2:
-                intro2["conflict_description_overlay"] = _resolve_path(cfg_dir, intro2.get("conflict_description_overlay"))
+                intro2["conflict_description_overlay"] = _resolve_path_multi(asset_bases, intro2.get("conflict_description_overlay"))
             if "chars" in intro2 and isinstance(intro2["chars"], list):
                 new_chars = []
                 for item in intro2["chars"]:
                     if isinstance(item, dict) and "image" in item:
                         it = dict(item)
-                        it["image"] = _resolve_path(cfg_dir, it.get("image"))
+                        it["image"] = _resolve_path_multi(asset_bases, it.get("image"))
                         new_chars.append(it)
                     else:
                         new_chars.append(item)
@@ -354,7 +595,17 @@ def resolve_paths_in_config(cfg: Dict[str, Any], cfg_dir: Path) -> Dict[str, Any
             for item in resolved[k]:
                 if isinstance(item, dict) and "image" in item:
                     it = dict(item)
-                    it["image"] = _resolve_path(cfg_dir, item.get("image"))
+                    it["image"] = _resolve_path_multi(asset_bases, item.get("image"))
+                    new_list.append(it)
+                else:
+                    new_list.append(item)
+            resolved[k] = new_list
+        if k == "pre_overlays" and isinstance(resolved[k], list):
+            new_list = []
+            for item in resolved[k]:
+                if isinstance(item, dict) and "image" in item:
+                    it = dict(item)
+                    it["image"] = _resolve_path_multi(asset_bases, item.get("image"))
                     new_list.append(it)
                 else:
                     new_list.append(item)
@@ -504,6 +755,18 @@ def _apply_project_prefixed_assets(args: argparse.Namespace, project_id: str) ->
             else:
                 new_list.append(item)
         setattr(args, "overlays", new_list)
+    # pre_overlays list
+    pre_overlays = getattr(args, "pre_overlays", None)
+    if isinstance(pre_overlays, list):
+        new_list = []
+        for item in pre_overlays:
+            if isinstance(item, dict) and isinstance(item.get("image"), str):
+                it = dict(item)
+                it["image"] = _prefer_project_prefixed_path(str(it.get("image") or ""), pid)
+                new_list.append(it)
+            else:
+                new_list.append(item)
+        setattr(args, "pre_overlays", new_list)
     # step overlays (if present)
     step_overlays = getattr(args, "step_overlays", None)
     if isinstance(step_overlays, list):
@@ -534,6 +797,8 @@ def _overlay_candidate_dirs(
         script_path.parent / "scenes",
         base_path.parent / "assets",
         base_path.parent / "scenes",
+        REPO_ROOT / "assets",
+        REPO_ROOT / "scenes",
     ]
     if cfg_dir:
         dirs += [cfg_dir, cfg_dir / "assets", cfg_dir / "scenes"]
@@ -572,7 +837,7 @@ def _project_has_prefixed_numbered_overlays(project_id: str, dirs: list[Path]) -
     return False
 
 
-def build_overlay_config_lookup(cfg: Dict[str, Any]) -> Dict[str, Any]:
+def build_overlay_config_lookup(cfg: Dict[str, Any], key: str = "overlays") -> Dict[str, Any]:
     """
     Build a lookup:
       - 'by_id': {int -> dict(settings)}
@@ -581,7 +846,7 @@ def build_overlay_config_lookup(cfg: Dict[str, Any]) -> Dict[str, Any]:
       overlays: [{id: 1, image: "...", duration: 10.0, fade: 0.5, overlay_alpha: 0.9, pre_roll_sec: 0.0}, ...]
     """
     result = {"by_id": {}, "default": {}}
-    lst = cfg.get("overlays")
+    lst = cfg.get(key)
     if not isinstance(lst, list):
         return result
     for item in lst:
@@ -604,6 +869,7 @@ def find_overlay_image_for_id(
     base_path: Path,
     project_id: str = "",
     unified_numbered_overlay: str = "",
+    auto_discovery_stem: str = "Overlay",
 ) -> str:
     """
     Resolve the overlay image path for a given overlay_id.
@@ -643,7 +909,7 @@ def find_overlay_image_for_id(
             return str(Path(str(img)))
     # 3) auto-discovery Overlay{n}.png
     if overlay_id is not None:
-        name = f"Overlay{overlay_id}.png"
+        name = f"{str(auto_discovery_stem)}{overlay_id}.png"
         dirs: list[Path] = []
         args_img_dir = Path(args_overlay_image).parent
         dirs += [
@@ -652,6 +918,8 @@ def find_overlay_image_for_id(
             script_path.parent / "scenes",
             base_path.parent / "assets",
             base_path.parent / "scenes",
+            REPO_ROOT / "assets",
+            REPO_ROOT / "scenes",
         ]
         if cfg_dir:
             dirs += [cfg_dir, cfg_dir / "assets", cfg_dir / "scenes"]
@@ -859,7 +1127,11 @@ def main():
     # Count overlays
     try:
         script_text_raw = Path(args.script).read_text()
-        num_overlays = script_text_raw.count("[OVERLAY]")
+        num_overlays = 0
+        for line in script_text_raw.splitlines():
+            s = line.strip()
+            if OVERLAY_MARKER.match(s) or PREOVERLAY_MARKER.match(s):
+                num_overlays += 1
     except Exception:
         num_overlays = None
     est_added = (float(args.duration) * (num_overlays or 0)) + (float(args.intro_duration) if (args.intro_bg and len(args.intro_bg) >= 1) else 0.0)
@@ -886,11 +1158,9 @@ def main():
     overlay_alpha = max(0.0, min(1.0, float(args.overlay_alpha)))
     # Always-on logo config (hardcoded)
     # Prefer top-level assets; fallback to common project subfolders if needed
-    primary_logo = Path("/Users/michaelmahoney/Desktop/MediatorSPARK/assets/SPARKLogoFinal.png")
+    primary_logo = REPO_ROOT / "assets" / "SPARKLogoFinal.png"
     fallback_logos = [
-        Path("/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing/assets/SPARKLogoFinal.png"),
-        Path("/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/assets/SPARKLogoFinal.png"),
-        Path("/Users/michaelmahoney/Desktop/MediatorSPARK/MockMediationGenerator/Testing_FourHeads/scenes/SPARKLogoFinal.png"),
+        REPO_ROOT / "scenes" / "SPARKLogoFinal.png",
     ]
     logo_path = str(primary_logo if primary_logo.exists() else next((p for p in fallback_logos if p.exists()), primary_logo))
     have_logo = Path(logo_path).exists()
@@ -942,20 +1212,71 @@ def main():
 
     script_tokens = parse_script_tokens(script_text)
     beat_tokens = build_beats_tokens(director)
-    overlay_times = map_overlays_to_times(script_tokens, beat_tokens, anchor=args.anchor)
     pf_swap_times = map_pf_swaps_to_times(script_tokens, beat_tokens, anchor=args.anchor)
+    expected_pf_swaps = script_tokens.count("pf_swap")
+    if expected_pf_swaps and len(pf_swap_times) < expected_pf_swaps:
+        print(
+            f"[apply_overlays] Warning: pf_swap alignment dropped markers "
+            f"({len(pf_swap_times)}/{expected_pf_swaps}); retrying with line-only alignment."
+        )
+        pf_swaps_line = map_pf_swaps_to_times_line_only(script_tokens, beat_tokens)
+        if len(pf_swaps_line) >= len(pf_swap_times):
+            pf_swap_times = pf_swaps_line
     section_change_times = map_section_changes_to_times(script_tokens, beat_tokens, anchor=args.anchor)
+    expected_section_changes = script_tokens.count("section_change")
+    if expected_section_changes and len(section_change_times) < expected_section_changes:
+        print(
+            f"[apply_overlays] Warning: section-change alignment dropped markers "
+            f"({len(section_change_times)}/{expected_section_changes}); retrying with line-only alignment."
+        )
+        section_change_times_line = map_section_changes_to_times_line_only(script_tokens, beat_tokens)
+        if len(section_change_times_line) >= len(section_change_times):
+            section_change_times = section_change_times_line
     overlay_ids = parse_overlay_ids(script_text)
+    preoverlay_ids = parse_preoverlay_ids(script_text)
+
+    # Build overlay events (OVERLAY + PREOVERLAY), preserving script order.
+    # If pause alignment causes marker drops, fall back to line-only alignment
+    # (common when scripts contain many [PAUSE] markers that don't exist as director beats).
+    desired_marker_count = len(overlay_ids) + len(preoverlay_ids)
+    events = map_overlay_marker_events(
+        script_tokens,
+        beat_tokens,
+        overlay_ids,
+        preoverlay_ids,
+        allow_pause_alignment=True,
+    )
+    if desired_marker_count and len(events) < desired_marker_count:
+        print(
+            f"[apply_overlays] Warning: overlay alignment dropped markers "
+            f"({len(events)}/{desired_marker_count}); retrying with line-only alignment."
+        )
+        events_line_only = map_overlay_marker_events(
+            script_tokens,
+            beat_tokens,
+            overlay_ids,
+            preoverlay_ids,
+            allow_pause_alignment=False,
+        )
+        if len(events_line_only) >= len(events):
+            events = events_line_only
 
     # Optional section-step overlays (Step1Overlay..StepNOverlay): can be provided
     # explicitly in config as "step_overlays", otherwise auto-discovered in scenes/.
     step_overlays: list[str] = []
     if isinstance(cfg.get("step_overlays"), list):
         for p in cfg.get("step_overlays") or []:
-            if p and Path(str(p)).exists():
-                step_overlays.append(str(Path(str(p))))
+            if not p:
+                continue
+            pp = Path(str(p))
+            if pp.exists():
+                step_overlays.append(str(pp))
+                continue
+            cand = REPO_ROOT / "scenes" / pp.name
+            if cand.exists():
+                step_overlays.append(str(cand))
     if not step_overlays:
-        scenes_dir = Path(args.script).parent / "scenes"
+        scenes_dir = REPO_ROOT / "scenes"
         found_any = False
         for n in range(1, 21):
             cand = None
@@ -1193,11 +1514,11 @@ def main():
         base_for_pause = base_labels
 
     # Phase 2: pause slate insertion (top-most layer)
-    if not overlay_times:
+    if not events:
         _dur_cap = base_video_s or base_format_s
         _logo_limit = ["-t", f"{_dur_cap + 2.0:.3f}"] if _dur_cap else ["-shortest"]
         if have_logo:
-            print("[apply_overlays] No [OVERLAY] markers; applying permanent logo overlay → out")
+            print("[apply_overlays] No overlay markers; applying permanent logo overlay → out")
             no_overlay_filter = (
                 f"[1:v]scale={logo_w}:-1,format=rgba[lg];"
                 f"[0:v][lg]overlay=x=(main_w-overlay_w-{logo_mx}):y=(main_h-overlay_h-{logo_my}):format=auto[v]"
@@ -1246,12 +1567,16 @@ def main():
             with concat_list.open("a") as f:
                 f.write(f"file '{p.as_posix()}'\n")
 
-        print(f"[apply_overlays] Inserting {len(overlay_times)} overlay pause(s)")
+        print(f"[apply_overlays] Inserting {len(events)} overlay pause(s)")
 
         # Prepare per-overlay config lookup
-        cfg_lookup = build_overlay_config_lookup(cfg)
-        for idx, t_overlay in enumerate(overlay_times):
-            ov_id = overlay_ids[idx] if idx < len(overlay_ids) else None
+        cfg_lookup_overlay = build_overlay_config_lookup(cfg, key="overlays")
+        cfg_lookup_pre = build_overlay_config_lookup(cfg, key="pre_overlays")
+        for idx, ev in enumerate(events):
+            kind = str(ev.get("kind") or "overlay")
+            t_overlay = float(ev.get("time") or 0.0)
+            ov_id = ev.get("id")
+            cfg_lookup = cfg_lookup_pre if kind == "preoverlay" else cfg_lookup_overlay
             # Resolve per-overlay parameters
             # Base defaults from global args
             this_duration = float(args.duration)
@@ -1298,7 +1623,8 @@ def main():
                 Path(args.script),
                 Path(args.base),
                 project_id,
-                unified_numbered_overlay,
+                unified_numbered_overlay if kind != "preoverlay" else "",
+                "PreOverlay" if kind == "preoverlay" else "Overlay",
             )
             # Apply pre-roll (shift earlier)
             t_ins = max(0.0, t_overlay - this_pre_roll)
@@ -1382,7 +1708,7 @@ def main():
             run(cmd_pause)
             # Optional: overlay countdown timer (TimerCircle + NumbersBold) during dwell (post fade-in to pre fade-out)
             try:
-                scenes_dir = Path(args.script).parent / "scenes"
+                scenes_dir = REPO_ROOT / "scenes"
                 timer_circle_path = scenes_dir / "TimerCircle.png"
                 numbers_dir = scenes_dir / "NumbersBold"
                 digit_files = {str(d): numbers_dir / f"{d}.png" for d in range(10)}
@@ -2203,7 +2529,7 @@ def main():
     final_overlay_cfg = str(cfg.get("final_overlay") or "").strip() if cfg else ""
     final_overlay_duration = float(cfg.get("final_overlay_duration", 6.0) or 6.0) if cfg else 6.0
     final_overlay_fade = float(cfg.get("final_overlay_fade", 0.6) or 0.6) if cfg else 0.6
-    final_overlay_path = Path(final_overlay_cfg) if final_overlay_cfg else (Path(args.script).parent / "scenes" / "FinalOverlay.png")
+    final_overlay_path = Path(final_overlay_cfg) if final_overlay_cfg else (REPO_ROOT / "scenes" / "FinalOverlay.png")
     if final_overlay_duration > 0.0 and final_overlay_path.exists():
         try:
             render_res = director.get("render", {}).get("resolution", [1920, 1080])

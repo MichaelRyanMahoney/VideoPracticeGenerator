@@ -2,7 +2,8 @@ FROM python:3.11-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    VPG_DATA_DIR=/data
+    VPG_DATA_DIR=/data \
+    VPG_REPO_ROOT=/app
 
 WORKDIR /app
 
@@ -17,6 +18,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app app
 COPY scripts scripts
 COPY assets assets
+COPY scenes scenes
 COPY manifests manifests
 
 EXPOSE 8000

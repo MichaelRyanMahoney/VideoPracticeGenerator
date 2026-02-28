@@ -263,6 +263,23 @@ def write_status(s3, status_uri: str, job_id: str, state: str, extra: dict[str, 
     _s3_put_json(s3, status_uri, payload)
 
 
+def _load_local_run_config(project_root: Path) -> dict[str, Any]:
+    """
+    Load local run configuration so AWS uses the same knobs as local runs.
+
+    We intentionally mirror `scripts/run_full_video_creation_sequence.py`'s config keys so
+    TTS (smartprompt vs preset) behaves identically between local and AWS runs.
+    """
+    cfg_path = project_root / "run_full_video_creation_sequence.config.json"
+    if not cfg_path.exists():
+        return {}
+    try:
+        data = json.loads(cfg_path.read_text(encoding="utf-8"))
+        return data if isinstance(data, dict) else {}
+    except Exception:
+        return {}
+
+
 def submit_full_job(project_root: Path, project_id: str, job_id: str, script_txt: Path, generator_inputs_json: Path) -> dict[str, Any]:
     """
     CPU-side orchestrator (runs on the CPU EC2 instance):
@@ -314,16 +331,34 @@ def submit_full_job(project_root: Path, project_id: str, job_id: str, script_txt
 
     # Generate any missing audio (uploads to S3 as needed)
     write_status(s3, paths["status"], job_id, "tts")
-    tts_py = project_root / "scripts" / "tts_typecast_from_manifest.py"
+    local_cfg = _load_local_run_config(project_root)
+    use_smart_prompt_tts = bool(local_cfg.get("use_smart_prompt_tts", False))
+    smart_prompt_context_char_limit = int(local_cfg.get("smart_prompt_context_char_limit", 2000))
+    smart_prompt_include_speaker_labels = bool(local_cfg.get("smart_prompt_include_speaker_labels", True))
+
+    tts_script_name = (
+        "tts_typecast_smartprompt_from_manifest.py"
+        if use_smart_prompt_tts
+        else "tts_typecast_from_manifest.py"
+    )
+    tts_py = project_root / "scripts" / tts_script_name
+    tts_cmd = [
+        sys.executable,
+        str(tts_py),
+        "--manifest_csv",
+        str(manifest_local),
+        "--generator_inputs_json",
+        str(generator_inputs_json.resolve()),
+    ]
+    if use_smart_prompt_tts:
+        tts_cmd += [
+            "--context_char_limit",
+            str(smart_prompt_context_char_limit),
+            "--include_speaker_labels",
+            "true" if smart_prompt_include_speaker_labels else "false",
+        ]
     _run(
-        [
-            sys.executable,
-            str(tts_py),
-            "--manifest_csv",
-            str(manifest_local),
-            "--generator_inputs_json",
-            str(generator_inputs_json.resolve()),
-        ],
+        tts_cmd,
         cwd=project_root,
         env=os.environ.copy(),
     )
@@ -770,6 +805,8 @@ def _run_finalize(project_root: Path, cfg: AwsJobConfig, paths: dict[str, str], 
         "--out_mp4_s3",
         paths["out_mp4"],
     ]
+    if paths.get("generator_inputs"):
+        cmd += ["--generator_inputs_s3", paths["generator_inputs"]]
     # Pass script for overlays alignment (optional)
     if paths.get("script"):
         cmd += ["--script_s3", paths["script"]]

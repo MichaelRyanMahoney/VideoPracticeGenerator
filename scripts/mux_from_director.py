@@ -201,10 +201,15 @@ def main():
                 if "fps" in run_cfg:
                     fps = int(run_cfg["fps"])
                 project_id = _load_project_id_from_generator_inputs(gen_inputs_path)
+                print(f"[mux] FPS source: generator_inputs_json={gen_inputs_path} fps={fps}")
         except Exception:
             fps = None
         if fps is None:
             fps = int(data.get("fps", 24))
+            print(f"[mux] FPS source: director fps={fps}")
+    if fps is None:
+        fps = 24
+        print(f"[mux] FPS source: fallback fps={fps}")
 
     # Prefer project-prefixed background/patch assets when present.
     if project_id:
@@ -212,6 +217,33 @@ def main():
             args.background = _prefer_project_prefixed_path(str(args.background), project_id)
         if args.patch_image:
             args.patch_image = _prefer_project_prefixed_path(str(args.patch_image), project_id)
+
+    # Resolve background/patch paths robustly across local runs vs AWS/Docker.
+    repo_root = Path(os.environ.get("VPG_REPO_ROOT") or Path(__file__).resolve().parents[1]).resolve()
+
+    def _resolve_runtime_asset(p: str | None) -> str | None:
+        s = (p or "").strip()
+        if not s:
+            return None
+        pp = Path(s)
+        if pp.is_absolute():
+            return str(pp)
+        # First try relative to the director/job folder (common in AWS finalizer workdirs).
+        cand = (director_path.parent / pp).resolve()
+        if cand.exists():
+            return str(cand)
+        # Then try relative to the repo root (in-image assets: scenes/, assets/).
+        cand2 = (repo_root / pp).resolve()
+        if cand2.exists():
+            return str(cand2)
+        # Finally, try "as if" the path was written relative to scripts/ (e.g. ../scenes/...).
+        cand3 = (repo_root / "scripts" / pp).resolve()
+        if cand3.exists():
+            return str(cand3)
+        return s
+
+    args.background = _resolve_runtime_asset(args.background)
+    args.patch_image = _resolve_runtime_asset(args.patch_image)
     # Resolution (for background scaling/cropping if needed)
     try:
         render_res = data.get("render", {}).get("resolution", [1920, 1080])
