@@ -380,6 +380,7 @@ def main() -> None:
         shard_env = _blender_env(tmp_dir / f"shard_run_{ts}_{idx}")
 
         def _render_span(ss: int, ee: int) -> None:
+            force_configure_roles = (os.environ.get("VPG_FORCE_CONFIGURE_ROLES") or "").strip() == "1"
             shard_cmd = [
                 blender_bin,
                 "-b",
@@ -393,7 +394,6 @@ def main() -> None:
                 str(generator_inputs),
                 "--input_scene",
                 str(prepared_scene),
-                "--run_configure_roles",
                 "--director_json",
                 str(director_json),
                 "--out_video",
@@ -409,6 +409,8 @@ def main() -> None:
                 "--hdri_from_config",
                 str(cfg_path),
             ]
+            if force_configure_roles:
+                shard_cmd += ["--run_configure_roles"]
             if hdri_path_cfg:
                 shard_cmd += ["--hdri_path", str(hdri_path_cfg)]
             if hdri_strength_cfg is not None:

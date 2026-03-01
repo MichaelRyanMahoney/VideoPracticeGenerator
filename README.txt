@@ -162,8 +162,13 @@ Notes:
 - The pause clip uses the exact video frame at the insertion time as the background under your overlay image.
 - You can adjust --duration and --fade as needed.
 
-7.2) Add moving ProcessForm icon tied to [ProcessFormSwap]
-- To overlay a small icon that starts on the right and swaps horizontally by ~300px on every [ProcessFormSwap] tag, add these flags:
+7.2) Add moving ProcessForm icon tied to explicit ProcessFormSwap markers
+- To overlay a small icon that starts on Mediator B (right) and moves smoothly to the target at each marker, add these flags.
+- Supported markers in script.txt:
+  - [ProcessFormSwapMA] (Mediator A)
+  - [ProcessFormSwapMB] (Mediator B)
+  - [ProcessFormSwapD1] (Disputant 1)
+  - [ProcessFormSwapD2] (Disputant 2)
 POSIX:
   python3 "$PROJ/scripts/apply_overlays.py" \
     --script "$PROJ/script.txt" \
@@ -175,7 +180,7 @@ POSIX:
     --pf_icon "$PROJ/scenes/ProcessFormIcon.png" --pf_width 200 --pf_dx 300 --pf_margin 60 --pf_y 60 --pf_anim_sec 0.5 \
     --out "$PROJ/out/four_heads_demo_with_overlays.mp4"
 Notes:
-- The icon is visible for the entire video, starts on the right, and moves smoothly (0.5s) between right/left at each [ProcessFormSwap].
+- The icon is visible for the entire video, starts on Mediator B (right), and moves smoothly (0.5s) to each requested target marker.
 - Adjust --pf_dx for the horizontal distance, --pf_y for vertical position, and --pf_width for icon size.
 
 8) Realtime preview workflow (screen record)

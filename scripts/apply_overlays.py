@@ -4,7 +4,7 @@ Insert freeze + slate overlay pauses into a base MP4, driven by [OVERLAY] marker
 in script.txt and aligned to the director_visemes.json timeline.
 
 What it does
-- Scans script.txt for tokens: spoken blocks, [PAUSE], [OVERLAY], and [ProcessFormSwap].
+- Scans script.txt for tokens: spoken blocks, [PAUSE], [OVERLAY], and ProcessForm swap markers.
 - Aligns token order to director_visemes.json beats (speech vs pause).
 - For each [OVERLAY], picks the tc_in (seconds) of the next beat as insertion time.
 - Builds a final MP4 by:
@@ -57,7 +57,10 @@ def parse_script_tokens(script_text: str) -> list[str]:
       - "line" for a spoken block (speaker line followed by 1+ text lines)
       - "pause" for a standalone [PAUSE]
       - "overlay" for a standalone [OVERLAY] or [OVERLAYn]
-      - "pf_swap" for a standalone [ProcessFormSwap]
+      - "pf_swap_d1" for a standalone [ProcessFormSwapD1]
+      - "pf_swap_d2" for a standalone [ProcessFormSwapD2]
+      - "pf_swap_ma" for a standalone [ProcessFormSwapMA]
+      - "pf_swap_mb" for a standalone [ProcessFormSwapMB]
       - "section_change" for a standalone markdown section header line (### ...)
     """
     lines = script_text.splitlines()
@@ -79,8 +82,20 @@ def parse_script_tokens(script_text: str) -> list[str]:
             tokens.append("preoverlay")
             i += 1
             continue
-        if stripped == "[ProcessFormSwap]":
-            tokens.append("pf_swap")
+        if stripped == "[ProcessFormSwapD1]":
+            tokens.append("pf_swap_d1")
+            i += 1
+            continue
+        if stripped == "[ProcessFormSwapD2]":
+            tokens.append("pf_swap_d2")
+            i += 1
+            continue
+        if stripped == "[ProcessFormSwapMA]":
+            tokens.append("pf_swap_ma")
+            i += 1
+            continue
+        if stripped == "[ProcessFormSwapMB]":
+            tokens.append("pf_swap_mb")
             i += 1
             continue
         if stripped.startswith("###"):
@@ -303,18 +318,18 @@ def map_overlay_marker_events(
             else:
                 print(f"[apply_overlays] Warning: preoverlay at script token {si} dropped (no remaining beats to anchor)")
             continue
-        # other tokens: section_change, pf_swap, etc.
+        # other tokens: section_change, process-form moves, etc.
         continue
 
     return events
 
 
-def map_pf_swaps_to_times(script_tokens: list[str], beat_tokens: list[BeatToken], anchor: str = "prev_end") -> list[float]:
+def map_pf_moves_to_events(script_tokens: list[str], beat_tokens: list[BeatToken], anchor: str = "prev_end") -> list[dict]:
     """
-    Align script token sequence to beat token sequence; collect times for [ProcessFormSwap] markers.
+    Align script token sequence to beat token sequence; collect times for ProcessForm swap markers.
     Uses same anchoring strategy as overlays.
     """
-    times: list[float] = []
+    events: list[dict] = []
     beat_has_pause = any(bt.kind == "pause" for bt in beat_tokens)
     si = 0
     bi = 0
@@ -330,21 +345,21 @@ def map_pf_swaps_to_times(script_tokens: list[str], beat_tokens: list[BeatToken]
                 bi += 1
             si += 1
             continue
-        if st == "pf_swap":
+        if st in ("pf_swap_d1", "pf_swap_d2", "pf_swap_ma", "pf_swap_mb"):
             if bi < len(beat_tokens):
-                times.append(beat_tokens[bi].tc_in_sec)
+                events.append({"kind": st, "time": float(beat_tokens[bi].tc_in_sec)})
             si += 1
             continue
         si += 1
-    return times
+    return events
 
 
-def map_pf_swaps_to_times_line_only(script_tokens: list[str], beat_tokens: list[BeatToken]) -> list[float]:
+def map_pf_moves_to_events_line_only(script_tokens: list[str], beat_tokens: list[BeatToken]) -> list[dict]:
     """
     ProcessFormSwap timing aligned only to spoken beats (ignores pause alignment).
-    Uses the same anchoring strategy as overlays: swap anchors to the next spoken beat start.
+    Uses the same anchoring strategy as overlays: marker anchors to the next spoken beat start.
     """
-    times: list[float] = []
+    events: list[dict] = []
     beats_line = [bt for bt in beat_tokens if bt.kind == "line"]
     si = 0
     bi = 0
@@ -355,15 +370,15 @@ def map_pf_swaps_to_times_line_only(script_tokens: list[str], beat_tokens: list[
                 bi += 1
             si += 1
             continue
-        if st == "pf_swap":
+        if st in ("pf_swap_d1", "pf_swap_d2", "pf_swap_ma", "pf_swap_mb"):
             if bi < len(beats_line):
-                times.append(beats_line[bi].tc_in_sec)
+                events.append({"kind": st, "time": float(beats_line[bi].tc_in_sec)})
             else:
-                print(f"[apply_overlays] Warning: pf_swap at script token {si} dropped (no remaining beats to anchor)")
+                print(f"[apply_overlays] Warning: ProcessFormSwap at script token {si} dropped (no remaining beats to anchor)")
             si += 1
             continue
         si += 1
-    return times
+    return events
 
 
 def map_section_changes_to_times(script_tokens: list[str], beat_tokens: list[BeatToken], anchor: str = "prev_end") -> list[float]:
@@ -421,7 +436,7 @@ def map_section_changes_to_times_line_only(script_tokens: list[str], beat_tokens
                 print(f"[apply_overlays] Warning: section change at script token {si} dropped (no remaining beats to anchor)")
             si += 1
             continue
-        # ignore pause/pf_swap/overlay/etc for cursor movement in line-only mode
+        # ignore pause/process-form/overlay/etc for cursor movement in line-only mode
         si += 1
     return times
 
@@ -1212,16 +1227,16 @@ def main():
 
     script_tokens = parse_script_tokens(script_text)
     beat_tokens = build_beats_tokens(director)
-    pf_swap_times = map_pf_swaps_to_times(script_tokens, beat_tokens, anchor=args.anchor)
-    expected_pf_swaps = script_tokens.count("pf_swap")
-    if expected_pf_swaps and len(pf_swap_times) < expected_pf_swaps:
+    pf_move_events = map_pf_moves_to_events(script_tokens, beat_tokens, anchor=args.anchor)
+    expected_pf_moves = sum(script_tokens.count(k) for k in ("pf_swap_d1", "pf_swap_d2", "pf_swap_ma", "pf_swap_mb"))
+    if expected_pf_moves and len(pf_move_events) < expected_pf_moves:
         print(
-            f"[apply_overlays] Warning: pf_swap alignment dropped markers "
-            f"({len(pf_swap_times)}/{expected_pf_swaps}); retrying with line-only alignment."
+            f"[apply_overlays] Warning: ProcessFormSwap alignment dropped markers "
+            f"({len(pf_move_events)}/{expected_pf_moves}); retrying with line-only alignment."
         )
-        pf_swaps_line = map_pf_swaps_to_times_line_only(script_tokens, beat_tokens)
-        if len(pf_swaps_line) >= len(pf_swap_times):
-            pf_swap_times = pf_swaps_line
+        pf_moves_line = map_pf_moves_to_events_line_only(script_tokens, beat_tokens)
+        if len(pf_moves_line) >= len(pf_move_events):
+            pf_move_events = pf_moves_line
     section_change_times = map_section_changes_to_times(script_tokens, beat_tokens, anchor=args.anchor)
     expected_section_changes = script_tokens.count("section_change")
     if expected_section_changes and len(section_change_times) < expected_section_changes:
@@ -1295,39 +1310,63 @@ def main():
 
     # Phase 1: optional pre-slate compositing (ProcessForm icon + labels)
     base_for_pause = base
-    if (args.pf_icon and pf_swap_times) or args.labels or num_step_overlays > 0:
+    if (args.pf_icon and pf_move_events) or args.labels or num_step_overlays > 0:
         # Build x(t) expression for right<->left moves with animation (will be overridden below)
         ANIM = max(0.01, float(args.pf_anim_sec))
         # Process Form icon positions and animation:
         # Absolute X positions for left/right, and Y = 75px from bottom
         left_px = 694
         right_px = 1035
+        # Additional targets for new explicit swap markers (estimated from scene layout)
+        # These are overlay X (left edge) values in pixels.
+        d1_px = 406
+        d2_px = 1354
         def right_x():
             return f"{right_px}"
         def left_x():
             return f"{left_px}"
-        def ramp_rl(t0: float):
-            # move from right -> left
-            return f"({right_px} + (t - {t0:.3f})/{ANIM} * ({left_px - right_px}))"
-        def ramp_lr(t0: float):
-            # move from left -> right
-            return f"({left_px} + (t - {t0:.3f})/{ANIM} * ({right_px - left_px}))"
+        def ramp_x(t0: float, x_from: int, x_to: int):
+            dx = x_to - x_from
+            return f"({x_from} + (t - {t0:.3f})/{ANIM} * ({dx}))"
 
         # Build icon animation expression only if icon requested
         xexpr = None
-        if args.pf_icon and pf_swap_times:
-            swaps = sorted(float(t) for t in pf_swap_times)
-            end_state = "left" if (len(swaps) % 2 == 1) else "right"
-            end_expr = left_x() if end_state == "left" else right_x()
-            nested = end_expr
-            state = end_state
-            for t0 in reversed(swaps):
-                prev_state = "right" if state == "left" else "left"
-                anim_expr = ramp_rl(t0) if prev_state == "right" else ramp_lr(t0)
+        if args.pf_icon and pf_move_events:
+            # Build a generalized x(t) that can move between:
+            # - explicit targets: D1, D2, Mediator A, Mediator B
+            moves = sorted(
+                [{"t": float(ev.get("time") or 0.0), "kind": str(ev.get("kind") or "")} for ev in pf_move_events],
+                key=lambda e: e["t"],
+            )
+            # Forward-simulate to compute from/to for each move.
+            cur_x = int(right_px)  # existing behavior: starts on the right
+            move_segments: list[dict] = []
+            for m in moves:
+                t0 = float(m["t"])
+                kind = m["kind"]
+                x_from = int(cur_x)
+                if kind == "pf_swap_ma":
+                    x_to = int(left_px)
+                elif kind == "pf_swap_mb":
+                    x_to = int(right_px)
+                elif kind == "pf_swap_d1":
+                    x_to = int(d1_px)
+                elif kind == "pf_swap_d2":
+                    x_to = int(d2_px)
+                else:
+                    # Unknown marker kind; ignore gracefully
+                    continue
+                move_segments.append({"t0": t0, "x_from": x_from, "x_to": x_to})
+                cur_x = x_to
+            # Build nested if() expression (in reverse) for ffmpeg overlay x=...
+            nested = f"{int(cur_x)}"
+            for seg in reversed(move_segments):
+                t0 = float(seg["t0"])
+                x_from = int(seg["x_from"])
+                x_to = int(seg["x_to"])
+                anim_expr = ramp_x(t0, x_from, x_to)
                 nested = f"if(between(t,{t0:.3f},{t0+ANIM:.3f}), {anim_expr}, {nested})"
-                hold_expr = right_x() if prev_state == "right" else left_x()
-                nested = f"if(lt(t,{t0:.3f}), {hold_expr}, {nested})"
-                state = prev_state
+                nested = f"if(lt(t,{t0:.3f}), {x_from}, {nested})"
             xexpr = nested.replace(",", r"\,")
         # Y position expression: 75px from bottom
         pf_y_expr = f"(main_h - overlay_h - 75)"
@@ -1379,7 +1418,7 @@ def main():
         input_args = ["ffmpeg", "-y", "-i", base]
         next_input_idx = 1
         # Optional icon input
-        if args.pf_icon and pf_swap_times:
+        if args.pf_icon and pf_move_events:
             input_args += ["-loop", "1", "-i", str(Path(args.pf_icon))]
             filter_parts.append(f"[{next_input_idx}:v]scale={int(args.pf_width)}:-1,format=rgba[ic]")
             filter_parts.append(f"[0:v][ic]overlay=x={xexpr}:y={pf_y_expr}:format=auto[v0]")

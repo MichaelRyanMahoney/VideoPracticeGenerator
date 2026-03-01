@@ -1,7 +1,7 @@
 {
   "run": {
-    "project_name": "VIDEO-03",
-    "fps": 1,
+    "project_name": "VIDEO-01",
+    "fps": 12,
     "resolution": {
       "width": 1920,
       "height": 1080
@@ -17,82 +17,102 @@
   },
   "characters": {
     "MediatorB": {
-      "name": "Alex",
+      "name": "Michael",
       "typecast": {
-        "voice_name": "Aaron",
-        "voice_id": "tc_67b6985d4d5d632d97478263",
+        "voice_name": "Logan",
+        "voice_id": "tc_6791c4a4c79515dea68b4a75",
         "languages": [
-          "English"
+          "English",
+          "Spanish",
+          "Korean",
+          "Japanese",
+          "Chinese (Mandarin)",
+          "Vietnamese"
         ]
       },
       "blender": {
         "gender": "M",
-        "skin_hex": "A47561",
-        "hair_hex": "5A4832",
+        "skin_hex": "643E33",
+        "hair_hex": "2A2417",
         "selectors": {
-          "hair": "hair.004",
+          "hair": "hair",
           "shirt": "sweater_boy",
           "pants": "black_pants"
         }
       }
     },
     "MediatorA": {
-      "name": "Maria",
+      "name": "Emily",
       "typecast": {
-        "voice_name": "Liz",
-        "voice_id": "tc_639ad2972cce84809db3cfd3",
+        "voice_name": "Tina",
+        "voice_id": "tc_6347828cd3835443f0fcd572",
         "languages": [
-          "English"
+          "English",
+          "Spanish",
+          "Korean",
+          "Japanese",
+          "Chinese (Mandarin)",
+          "Vietnamese"
         ]
       },
       "blender": {
         "gender": "F",
-        "skin_hex": "A3634D",
-        "hair_hex": "675A3D",
+        "skin_hex": "FD9D6F",
+        "hair_hex": "261F1B",
         "selectors": {
-          "hair": "hair.013",
-          "shirt": "sweater_boy",
-          "pants": "black_pants"
+          "hair": "hair.014",
+          "shirt": "geo_girl_sweater",
+          "pants": "slacks_pants_girl"
         }
       }
     },
     "Disputant1": {
-      "name": "Jordan",
+      "name": "Caleb",
       "typecast": {
-        "voice_name": "Kevin",
-        "voice_id": "tc_61095f50876293488937d5db",
+        "voice_name": "Tim",
+        "voice_id": "tc_62ce546661d31a90a0f786d0",
         "languages": [
-          "English"
+          "English",
+          "Spanish",
+          "Korean",
+          "Japanese",
+          "Chinese (Mandarin)",
+          "Vietnamese"
         ]
       },
       "blender": {
         "gender": "M",
-        "skin_hex": "E3A387",
-        "hair_hex": "DFBB79",
+        "skin_hex": "B9725F",
+        "hair_hex": "9B8755",
         "selectors": {
-          "hair": "hair.006",
+          "hair": "hair.009",
           "shirt": "sweater_boy",
           "pants": "black_pants"
         }
       }
     },
     "Disputant2": {
-      "name": "Daniel",
+      "name": "Aria",
       "typecast": {
-        "voice_name": "Owen",
-        "voice_id": "tc_62e8f1e86627e27dcffd8884",
+        "voice_name": "Kelly",
+        "voice_id": "tc_627ae5cd14dc32608fdaffa8",
         "languages": [
-          "English"
+          "English",
+          "Spanish",
+          "Korean",
+          "Japanese",
+          "Chinese (Mandarin)",
+          "Vietnamese"
         ]
       },
       "blender": {
-        "gender": "M",
-        "skin_hex": "6D4234",
-        "hair_hex": "342515",
+        "gender": "F",
+        "skin_hex": "FD9C82",
+        "hair_hex": "846D5E",
         "selectors": {
-          "hair": "hair.002",
-          "shirt": "sweater_boy",
-          "pants": "black_pants"
+          "hair": "hair.019",
+          "shirt": "geo_girl_sweater",
+          "pants": "slacks_pants_girl"
         }
       }
     }

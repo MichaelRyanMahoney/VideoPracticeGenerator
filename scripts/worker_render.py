@@ -154,13 +154,17 @@ def main():
             shutil.rmtree(frames_dir, ignore_errors=True)
         start_ts = time.time()
         single_blender_py = project_root / "scripts" / "blender_pipeline_single_process.py"
+        # If a prepared scene was provided, role collections + selectors/materials should already be configured.
+        # Re-running configuration on every shard can be slow and can occasionally produce bad materials
+        # (e.g., unlinking a Base Color input but failing to set a replacement value).
+        force_configure_roles = (os.environ.get("VPG_FORCE_CONFIGURE_ROLES") or "").strip() == "1"
+        should_configure_roles = (not bool(args.scene_s3)) or force_configure_roles
         render_cmd = pre + [
             str(blender_bin), "-b", str((input_scene or base_scene_path or ts_scene)),
             "--python-exit-code", "1",
             "--python", str(single_blender_py),
             "--",
             "--generator_inputs_json", str(local_gen_inputs),
-            "--run_configure_roles",
             "--hdri_from_config", str(cfg_path),
             "--director_json", str(local_director),
             "--out_video", str(out_video),
@@ -168,6 +172,8 @@ def main():
             "--frame_end", str(int(args.frame_end)),
             "--no_audio",
         ]
+        if should_configure_roles:
+            render_cmd += ["--run_configure_roles"]
         if input_scene:
             render_cmd += ["--input_scene", str(input_scene)]
         else:
