@@ -28,6 +28,32 @@ def file_exists(p: str | Path) -> bool:
 def load_json(path: Path) -> dict:
     return json.loads(Path(path).read_text())
 
+def _project_id_from_generator_inputs(generator_inputs_json: Path) -> str:
+    try:
+        gi = load_json(generator_inputs_json)
+        run_cfg = gi.get("run") or {}
+        pid = (
+            (run_cfg.get("project_name") or "")
+            or (run_cfg.get("projectId") or "")
+            or (run_cfg.get("project_id") or "")
+            or (run_cfg.get("project") or "")
+        )
+        return str(pid).strip()
+    except Exception:
+        return ""
+
+def _project_id_from_script(script_txt: Path) -> str:
+    try:
+        for line in script_txt.read_text().splitlines():
+            if line.strip().upper().startswith("PROJECT:"):
+                return line.split(":", 1)[1].strip()
+    except Exception:
+        pass
+    return ""
+
+def _resolve_project_id(generator_inputs_json: Path, script_txt: Path) -> str:
+    return _project_id_from_generator_inputs(generator_inputs_json) or _project_id_from_script(script_txt)
+
 
 def ensure_parent(path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -97,6 +123,13 @@ def parse_args() -> argparse.Namespace:
         "--config",
         default=str(Path(__file__).resolve().parents[1] / "run_full_video_creation_sequence.config.json"),
         help="Path to run_full_video_creation_sequence.config.json",
+    )
+    ap.add_argument("--frame_start", type=int, default=0, help="Optional render start frame override (0 = auto)")
+    ap.add_argument("--frame_end", type=int, default=0, help="Optional render end frame override (0 = auto/guarded)")
+    ap.add_argument(
+        "--no_clean_frames",
+        action="store_true",
+        help="Do not delete existing PNG frames in the output frames folder (useful for partial rerenders).",
     )
     return ap.parse_args()
 
@@ -212,6 +245,7 @@ def main():
     parse_script_py = project_root / "scripts" / "parse_screenplay_to_manifest.py"
     if not parse_script_py.exists():
         raise SystemExit(f"Missing script: {parse_script_py}")
+    project_id = _resolve_project_id(generator_inputs_json, script_txt)
     ensure_parent(manifest_csv_out)
     run_cmd(
         [
@@ -221,6 +255,8 @@ def main():
             str(script_txt),
             "--out_csv",
             str(manifest_csv_out),
+            "--project_id",
+            project_id,
         ]
     )
 
@@ -272,6 +308,8 @@ def main():
                 str(generator_inputs_json),
                 "--out",
                 str(director_json_out),
+                "--script_txt",
+                str(script_txt),
             ]
         )
     else:
@@ -359,6 +397,12 @@ def main():
             "--out_video",
             str(out_video),
         ]
+        if int(args.frame_start) > 0:
+            cmd_blender_pipeline += ["--frame_start", str(int(args.frame_start))]
+        if int(args.frame_end) > 0:
+            cmd_blender_pipeline += ["--frame_end", str(int(args.frame_end))]
+        if bool(args.no_clean_frames):
+            cmd_blender_pipeline += ["--no_clean_frames"]
         if enforce_render_frame_guard and director_json_out.exists() and generator_inputs_json.exists():
             try:
                 d = load_json(director_json_out)
@@ -366,7 +410,9 @@ def main():
                 fps_guard = int(((gi.get("run") or {}).get("fps")) or d.get("fps") or 24)
                 est_end_s = _estimate_end_seconds_from_director(d)
                 guard_frame_end = max(1, int(round((est_end_s + render_frame_guard_pad_sec) * fps_guard)))
-                cmd_blender_pipeline += ["--frame_end", str(guard_frame_end)]
+                # Only apply guard when the caller did not specify an explicit end frame.
+                if int(args.frame_end) <= 0:
+                    cmd_blender_pipeline += ["--frame_end", str(guard_frame_end)]
                 print(f"[info] render frame guard enabled: frame_end={guard_frame_end} (fps={fps_guard}, est_end_s={est_end_s:.3f})")
             except Exception as ex:
                 print(f"[warn] failed to compute render frame guard; continuing without it: {ex}")

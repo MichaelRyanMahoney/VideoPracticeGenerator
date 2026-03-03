@@ -25,11 +25,15 @@ This repo supports a **CPU-first Flask API** that queues jobs and runs **directo
 ### Audio caching (stable hashing)
 `scripts/parse_screenplay_to_manifest.py` now writes:
 - `audio_hash`: sha256 derived from role + transcript + delivery attrs + (if available) voice_id
-- `audio`: either a local path (legacy) or an `s3://...` URI if you pass `--audio_s3_prefix`
+- `audio`: either a local `audio/<project>/<hash>.wav` path (when `--project_id` is set) or an `s3://...` URI if you pass `--audio_s3_prefix`
 
 When `audio` is an S3 URI, `scripts/tts_typecast_from_manifest.py`:
 - **skips** synthesis if the object already exists in S3
 - otherwise generates WAV and uploads to that URI
+
+### Migrating existing local audio (optional)
+If you have legacy local WAVs named like `audio/MEDIATORB_057.wav`, you can copy them into the new hash-based cache layout so you don’t have to re-synthesize everything once:
+- `scripts/migrate_legacy_audio_to_hashed.py` copies any matching legacy audio into `audio/<project>/<hash>.wav` based on speaker + transcript + delivery settings.
 
 ### Typecast model + delivery controls
 The TTS pipeline uses Typecast `ssfm-v30` (`POST /v1/text-to-speech`) with preset emotion prompts.
@@ -89,6 +93,25 @@ When enabled (`VPG_ENABLE_RENDER_CACHE=1`, default), single-node GPU mode and th
 
 To force a new cached render even if inputs are the same:
 - bump `VPG_RENDER_CACHE_VERSION` (default: `1`)
+
+## Incremental local rerenders (only changed frames)
+For local iteration where you tweak `script.txt` and want to avoid re-rendering the entire project, use:
+
+```bash
+python scripts/run_local_sharded_render.py --smart_resume --shards 4
+```
+
+This will:
+- keep any existing `out/<project_id>/blender_render_frames/*.png`
+- regenerate the manifest + director (unless you pass `--render_only`)
+- rerender only the frame spans whose beats changed (plus any missing frames)
+
+### Force rerender a specific frame range (same inputs)
+If you saw a brief render glitch and just want to rerun those exact frames:
+
+```bash
+python scripts/run_local_sharded_render.py --force_range --frame_start 250 --frame_end 320 --shards 2
+```
 
 ### Quick disk cleanup (host)
 If you do run out of disk on the EC2 host, Docker artifacts are often the culprit:

@@ -3,7 +3,7 @@
 # Build a director.json that carries viseme events using your rig's viseme
 # shape key names (e.g., "viseme_PP","FF","TH","DD","kk","CH","SS","nn","RR","aa","E","I","O").
 #
-import argparse, json, wave, csv, re, os, tempfile
+import argparse, json, wave, csv, re, os, tempfile, hashlib
 from pathlib import Path
 import boto3
 
@@ -454,6 +454,10 @@ def batch_mode_with_stage(manifest_csv, generator_inputs_json, fps, out_path, sc
         speaker = (row.get("speaker") or "").strip()
         transcript = (row.get("transcript") or "").strip()
         audio_ref = (row.get("audio") or "").strip()
+        manifest_id = str(row.get("id") or "").strip()
+        audio_hash = str(row.get("audio_hash") or "").strip()
+        # Stable transcript hash (useful for change detection without bloating director JSON).
+        transcript_hash = hashlib.sha256(transcript.encode("utf-8")).hexdigest() if transcript else ""
         # Allow explicit pauses in the manifest:
         # - speaker "PAUSE" or "BREAK"
         # - transcript contains [PAUSE]
@@ -469,7 +473,8 @@ def batch_mode_with_stage(manifest_csv, generator_inputs_json, fps, out_path, sc
             beats.append({
                 "type": "pause",
                 "tc_in": f"00:00:{t_cursor:06.3f}",
-                "duration": float(dur)
+                "duration": float(dur),
+                "manifest_id": manifest_id or None,
             })
             t_cursor += float(dur)
             # Do not increment speech_idx for pause rows
@@ -514,6 +519,9 @@ def batch_mode_with_stage(manifest_csv, generator_inputs_json, fps, out_path, sc
             "tc_in": f"00:00:{t_cursor:06.3f}",
             "char": speaker,
             "audio": audio_ref,
+            "manifest_id": manifest_id or None,
+            "audio_hash": audio_hash or None,
+            "transcript_hash": transcript_hash or None,
             "visemes": vis,
         })
 

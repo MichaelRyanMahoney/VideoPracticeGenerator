@@ -42,6 +42,18 @@ PAUSE_TOKEN = re.compile(r'\[PAUSE\]', re.IGNORECASE)
 VALID_EMOTION_PRESETS = {"normal", "happy", "sad", "angry", "whisper", "toneup", "tonedown"}
 EMOTION_KEYS = {"emotion", "emotion_preset"}
 
+def _safe_path_segment(value: str) -> str:
+    """
+    Make a string safe to use as a single path segment.
+    Keeps common project ids like 'VIDEO-01' intact.
+    """
+    s = (value or "").strip()
+    if not s:
+        return ""
+    s = re.sub(r"[\\/]+", "_", s)
+    s = re.sub(r"[^A-Za-z0-9._-]+", "_", s)
+    return s.strip("._-")
+
 def normalize_speaker(raw_role, raw_name):
     """
     Return canonical role key strictly in {MediatorA, MediatorB, Disputant1, Disputant2}.
@@ -234,7 +246,11 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--in_txt", required=True)
     ap.add_argument("--out_csv", required=True)
-    ap.add_argument("--project_id", default="", help="Optional project id like Video-01. Used for stable S3 keying.")
+    ap.add_argument(
+        "--project_id",
+        default="",
+        help="Optional project id like VIDEO-01. Included in audio_hash to isolate caches per-project.",
+    )
     ap.add_argument("--audio_s3_prefix", default="", help="Optional S3 prefix like s3://bucket/projects/Video-01/audio (no trailing slash required). If set, manifest audio will be written as S3 URIs.")
     args = ap.parse_args()
 
@@ -244,6 +260,7 @@ def main():
 
     Path(args.out_csv).parent.mkdir(parents=True, exist_ok=True)
     project_id = (args.project_id or "").strip()
+    safe_project_id = _safe_path_segment(project_id)
     audio_s3_prefix = (args.audio_s3_prefix or "").strip()
     if audio_s3_prefix and not audio_s3_prefix.startswith("s3://"):
         raise SystemExit("--audio_s3_prefix must be an s3:// URI")
@@ -365,8 +382,12 @@ def main():
                     # Store as audio/<hash>.wav (hash-only naming prevents renumber churn across edits)
                     audio = f"{audio_s3_prefix.rstrip('/')}/{ah}.wav"
                 else:
-                    # Local default: keep legacy name for human readability, but include hash for caching/migration
-                    audio = f"audio/{spk.upper()}_{rid}.wav"
+                    # Local default: content-addressed naming for robust caching across script edits.
+                    # If project_id is provided, use a per-project subfolder for cleanliness.
+                    if safe_project_id:
+                        audio = f"audio/{safe_project_id}/{ah}.wav"
+                    else:
+                        audio = f"audio/{ah}.wav"
             # Keep the manifest aligned with the actual synthesis behavior: if a character has an emotion
             # override in generator_inputs.json, the smartprompt TTS pipeline will use preset mode.
             typecast_mode_out = attrs.get("typecast_mode","smart") if kind != "pause" else ""

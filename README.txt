@@ -47,9 +47,10 @@ This creates manifests/scene1.csv with rows: id,speaker,audio,transcript
 POSIX:
   python3 "scripts/parse_screenplay_to_manifest.py" \
     --in_txt "script.txt" \
-    --out_csv "manifests/scene1.csv"
+    --out_csv "manifests/scene1.csv" \
+    --project_id "VIDEO-01"
 PowerShell:
-  python "$env:PROJ/scripts/parse_screenplay_to_manifest.py" --in_txt "$env:PROJ/script.txt" --out_csv "$env:PROJ/manifests/scene1.csv"
+  python "$env:PROJ/scripts/parse_screenplay_to_manifest.py" --in_txt "$env:PROJ/script.txt" --out_csv "$env:PROJ/manifests/scene1.csv" --project_id "VIDEO-01"
 
 4) Generate audio files (Typecast `ssfm-v30`)
 - Prefer `manifests/generator_inputs.json` for speaker -> `voice_id` mappings (`characters.<Role>.typecast.voice_id`).

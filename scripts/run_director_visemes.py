@@ -1047,6 +1047,19 @@ def main(director_path, outpath):
         raise RuntimeError(f"Failed to read generator inputs at {gen_inputs_path}")
     # Apply run settings (fps, resolution, engine) if present
     run_cfg = gen_inputs.get("run") or {}
+    # Make any randomized animation (e.g., idle blinks) deterministic per-project.
+    # This is important for incremental rerenders: unchanged inputs should not cause
+    # different frames solely due to RNG.
+    try:
+        seed_raw = run_cfg.get("seed", None)
+        if seed_raw is None or str(seed_raw).strip() == "":
+            # Stable default seed if none provided.
+            random.seed(0)
+        else:
+            random.seed(int(seed_raw))
+    except Exception:
+        # If seed is malformed, fall back to a stable default.
+        random.seed(0)
     try:
         if "fps" in run_cfg:
             fps = int(run_cfg["fps"])
