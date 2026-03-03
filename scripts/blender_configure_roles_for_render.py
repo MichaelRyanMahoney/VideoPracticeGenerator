@@ -531,18 +531,42 @@ def apply_rgba_to_material(mat: bpy.types.Material, rgba: Tuple[float, float, fl
             return False
 
     def set_on_socket(sock):
+        """
+        Set a socket default value safely.
+
+        IMPORTANT: Never unlink first. If we unlink and then fail to assign a default value,
+        the socket can fall back to its default (often black), producing intermittent black
+        materials when this runs in different processes/shards.
+        """
+        # 1) Try to set a default value while still linked (harmless; has effect once unlinked).
+        set_ok = False
         try:
-            if sock.is_linked:
+            sock.default_value = rgba
+            set_ok = True
+        except Exception:
+            # Some sockets may be RGB (len=3) or scalar. Try best-effort fallbacks.
+            try:
+                sock.default_value = (rgba[0], rgba[1], rgba[2])
+                set_ok = True
+            except Exception:
+                try:
+                    sock.default_value = float(rgba[0])
+                    set_ok = True
+                except Exception:
+                    set_ok = False
+        if not set_ok:
+            return False
+
+        # 2) Only now, unlink any incoming links so the default value drives the input.
+        try:
+            if getattr(sock, "is_linked", False):
                 for link in list(nt.links):
                     if link.to_socket == sock:
                         nt.links.remove(link)
         except Exception:
+            # Even if unlink fails, we've at least avoided the "unlink then fail to set" case.
             pass
-        try:
-            sock.default_value = rgba
-            return True
-        except Exception:
-            return False
+        return True
 
     # Principled BSDF
     changed_any = False

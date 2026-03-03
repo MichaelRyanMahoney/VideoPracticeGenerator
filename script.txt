@@ -1,53 +1,52 @@
-TITLE: Jordan & Daniel
-PROJECT: VIDEO-03
+TITLE: Caleb & Aria
+PROJECT: VIDEO-01
 
-DISPUTANT 1 NAME: Jordan
-DISPUTANT 2 NAME: Daniel
-MEDIATOR A NAME: Maria
-MEDIATOR B NAME: Alex
+DISPUTANT 1 NAME: Caleb
+DISPUTANT 2 NAME: Aria
+MEDIATOR A NAME: Emily
+MEDIATOR B NAME: Michael
 
-CONFLICT DESCRIPTION: During a history group project, Jordan started assigning roles to other students in the group. Daniel told Jordan to stop "trying to run everything" in front of the group, which led the two students to start arguing.
+CONFLICT DESCRIPTION: When music class was starting, Caleb and Aria started arguing about who should sit in a seat by the instruments cart while other students were watching. The music teacher had stepped into the storage room to grab drumsticks, and neither of them would move.
 CONFLICT BEHAVIORS: Insulting, Arguing in class
 
 ### STEP 1: PRESENT YOURSELF AND PEER MEDIATION
 
-MEDIATOR A (MARIA)
-“Hello. My name is Maria. This is Alex, and we are your peer mediators. What are your names?”
+MEDIATOR A (EMILY)
+“Hello. My name is Emily. This is Michael and we are your peer mediators. What are your names?”
 
 [PAUSE]
 
-DISPUTANT 1 (JORDAN) {hesitant=true}
-“Jordan.”
+DISPUTANT 1 (CALEB) {hesitant=true}
+“Ummm… I’m Caleb.”
 
 [PAUSE]
 
-DISPUTANT 2 (DANIEL) {hesitant=true}
-“Daniel.”
+DISPUTANT 2 (ARIA) {hesitant=true}
+“I’m Aria.”
 
 [PAUSE]
 
-MEDIATOR A (MARIA)
+MEDIATOR A (EMILY)
 “You’re not in trouble. We heard you had a disagreement.”
 
-MEDIATOR A (MARIA)
+MEDIATOR A (EMILY)
 “And this is peer mediation, where students can work things out together. We won’t share what you say with other students.”
 
-MEDIATOR A (MARIA)
+MEDIATOR A (EMILY)
 “We won’t take sides. We’ll help you find a solution that gives you both something you want.”
 
-MEDIATOR A (MARIA)
+MEDIATOR A (EMILY)
 “We can help you resolve things here, instead of in the office. Does that sound okay?”
 
 [PAUSE]
 
-DISPUTANT 1 (JORDAN) {hesitant=true}
+DISPUTANT 1 (CALEB) {hesitant=true}
 “Yeah, I guess…”
 
 [PAUSE]
 
-DISPUTANT 2 (DANIEL) {hesitant=true}
-“Sure…”
-
+DISPUTANT 2 (ARIA) {hesitant=true}
+“Okay…”
 
 ### STEP 2: EXPLAIN THE RULES
 
@@ -55,32 +54,30 @@ DISPUTANT 2 (DANIEL) {hesitant=true}
 [ProcessFormSwapMA]
 [PAUSE]
 [PAUSE]
-
-MEDIATOR B (ALEX)
+MEDIATOR B (MICHAEL)
 “To have a good mediation, there are a few rules we all need to follow.”
 
-MEDIATOR B (ALEX)
+MEDIATOR B (MICHAEL)
 “The Confidentiality Rule is for us mediators. We won’t share what you say with other students.”
 
-MEDIATOR B (ALEX)
+MEDIATOR B (MICHAEL)
 “The One Mic Rule is for both of you. It means that one person speaks at a time.”
 
-MEDIATOR B (ALEX)
+MEDIATOR B (MICHAEL)
 “The Respect Rule is for all of us. We have to speak respectfully.”
 
-MEDIATOR B (ALEX)
+MEDIATOR B (MICHAEL)
 “Do you both agree to follow the rules?”
 
 [PAUSE]
 
-DISPUTANT 1 (JORDAN) {hesitant=true}
-“Okay…”
+DISPUTANT 1 (CALEB) {hesitant=true}
+“Fine…”
 
 [PAUSE]
 
-DISPUTANT 2 (DANIEL) {hesitant=true}
-“Yeah, I guess…”
-
+DISPUTANT 2 (ARIA) {hesitant=true}
+“Ummm… okay”
 
 ### STEP 3: ASK BOTH SIDES TO SHARE
 
@@ -88,172 +85,183 @@ DISPUTANT 2 (DANIEL) {hesitant=true}
 [ProcessFormSwapMB]
 [PAUSE]
 [PAUSE]
+MEDIATOR A (EMILY)
+“We want to hear both of your perspectives on what we were told:”
 
-MEDIATOR A (MARIA)
-“We want to hear both of your perspectives on what we were told.”
-
-MEDIATOR A (MARIA)
-“Alex, could you read out loud the conflict description we were given?”
-
-[PAUSE]
-
-MEDIATOR B (ALEX)
-“Sure.”
-
-[PAUSE]
-[PAUSE]
-
-MEDIATOR B (ALEX)
-“During a history group project, Jordan started assigning roles to other students in the group. Daniel told Jordan to stop trying to run everything in front of the group, which led the two students to start arguing.”
+MEDIATOR A (EMILY)
+“Michael, could you read out loud the conflict description we were given?”
 
 [PAUSE]
 
-MEDIATOR A (MARIA)
-“Jordan, from your perspective, what happened between you two?”
+MEDIATOR B (MICHAEL)
+“Here it is.”
+
+[PAUSE]
+[PAUSE]
+MEDIATOR B (MICHAEL)
+“When music class was starting, Caleb and Aria started arguing about who should sit in a seat by the instruments cart while other students were watching. The music teacher had stepped into the storage room to grab drumsticks, and neither of them would move.”
+
+[PAUSE]
+
+MEDIATOR A (EMILY)
+“Caleb, from your perspective, what happened between you two?”
 
 [PAUSE]
 [PAUSE]
 [PREOVERLAY1]
 [PAUSE]
 [PAUSE]
+DISPUTANT 1 (CALEB)
+“Okay, so… I sat down by the instruments cart.”
 
-DISPUTANT 1 (JORDAN)
-“I was just trying to help us finish before class ended.”
+DISPUTANT 1 (CALEB)
+“Then Aria was like, I’m in her seat, and she called me annoying.”
 
-DISPUTANT 1 (JORDAN)
-“Like, nobody else was really stepping up to assign roles, so I started doing it.”
+DISPUTANT 1 (CALEB)
+“And she said I always sit in the wrong spot.”
+
+DISPUTANT 1 (CALEB)
+“I didn’t even know she usually sits there. I thought you could sit anywhere if you got there first.”
 
 [PAUSE]
 [PAUSE]
+MEDIATOR A (EMILY)
+“What I heard you say is Aria called you annoying and said you always sit in the wrong spot.”
 
-MEDIATOR A (MARIA)
-“What I heard you say is you were trying to help the group finish on time.”
+MEDIATOR A (EMILY)
+“And then you didn’t know it was her usual seat.”
 
-MEDIATOR A (MARIA)
-“And since no one else was really assigning roles, you stepped in and did it.”
+MEDIATOR A (EMILY)
+“You thought you could sit anywhere if you got there first.”
 
-MEDIATOR A (MARIA)
+MEDIATOR A (EMILY)
 “Is that right?”
 
 [PAUSE]
 
-DISPUTANT 1 (JORDAN)
+DISPUTANT 1 (CALEB)
 “Yeah.”
 
 [PAUSE]
 
-MEDIATOR A (MARIA)
+MEDIATOR A (EMILY)
 “Is there anything else you want to share?”
 
 [PAUSE]
 
-DISPUTANT 1 (JORDAN)
-“And then Daniel called me out in front of the whole group, when I was just trying to help.”
+DISPUTANT 1 (CALEB)
+“No, that’s it.”
 
 [PAUSE]
 [PAUSE]
 [OVERLAY1]
 [PAUSE]
 [PAUSE]
-
-MEDIATOR A (MARIA)
-“Daniel, from your perspective, what happened between you two?”
+MEDIATOR A (EMILY)
+“Aria, from your perspective, what happened between you two?”
 
 [PAUSE]
 [PAUSE]
 [PREOVERLAY2]
 [PAUSE]
 [PAUSE]
+DISPUTANT 2 (ARIA)
+“So, I always sit in that seat in music, like basically every time.”
 
-DISPUTANT 2 (DANIEL)
-“Jordan started picking roles without asking.”
+DISPUTANT 2 (ARIA)
+“Caleb sat there, and I told him it’s my normal spot.”
 
-DISPUTANT 2 (DANIEL)
-“And he told me to print the outline for the project.”
-
-DISPUTANT 2 (DANIEL)
-“My printer at home is broken, so I couldn’t just do that.”
+[PAUSE]
+DISPUTANT 2 (ARIA)
+“He wasn’t listening to me, and he wouldn’t move.”
 
 [PAUSE]
 [PAUSE]
+MEDIATOR A (EMILY)
+“What I heard you say is Caleb took the seat you usually sit in during music class.”
 
-MEDIATOR A (MARIA)
-“What I heard you say is Jordan started picking roles without checking with the group first.”
+MEDIATOR A (EMILY)
+“And then he wasn’t listening when you tried to tell him it was your normal spot.”
 
-MEDIATOR A (MARIA)
-“And then he told you to print the outline for the project, but your printer is broken, so that wasn’t really possible.”
-
-MEDIATOR A (MARIA)
+MEDIATOR A (EMILY)
 “Is that right?”
 
 [PAUSE]
 
-DISPUTANT 2 (DANIEL)
+DISPUTANT 2 (ARIA)
 “Yeah.”
 
 [PAUSE]
 
-MEDIATOR A (MARIA)
+MEDIATOR A (EMILY)
 “Is there anything else you want to share?”
 
 [PAUSE]
 
-DISPUTANT 2 (DANIEL)
-“I mean, I got annoyed and then we started arguing.”
+DISPUTANT 2 (ARIA)
+“No.”
 
 [PAUSE]
 [PAUSE]
 [OVERLAY2]
 [PAUSE]
 [PAUSE]
-
-MEDIATOR A (MARIA)
-“Jordan, what bothered you most in this situation?”
-
-[PAUSE]
-
-DISPUTANT 1 (JORDAN)
-“Getting called out in front of everyone.”
+MEDIATOR A (EMILY)
+“Caleb, what bothered you most in this situation?”
 
 [PAUSE]
 
-MEDIATOR A (MARIA)
-“How did you feel when Daniel called you out?”
+DISPUTANT 1 (CALEB)
+“Being called out in front of the whole class.”
 
 [PAUSE]
 
-DISPUTANT 1 (JORDAN)
-“Mad.”
+MEDIATOR A (EMILY)
+“How did you feel when Aria called you out?”
 
 [PAUSE]
 
-MEDIATOR A (MARIA)
+DISPUTANT 1 (CALEB)
+“I felt put on the spot.”
+
+DISPUTANT 1 (CALEB)
+“And embarrassed.”
+
+[PAUSE]
+
+MEDIATOR A (EMILY)
 “Thank you for sharing.”
 
 [PAUSE]
 [PAUSE]
 
-MEDIATOR A (MARIA)
-“Daniel, what bothered you most in this situation?”
+MEDIATOR A (EMILY)
+“Aria, what bothered you most in this situation?”
 
 [PAUSE]
 
-DISPUTANT 2 (DANIEL)
-“That he was deciding roles without checking with the group first.”
+DISPUTANT 2 (ARIA)
+“That he wouldn’t move.”
+
+DISPUTANT 2 (ARIA)
+“And he wasn’t listening when I said it’s my regular seat.”
 
 [PAUSE]
 
-MEDIATOR A (MARIA)
-“How did you feel when Jordan was deciding roles?”
+MEDIATOR A (EMILY)
+“How did you feel when Caleb stayed in the seat?”
 
 [PAUSE]
 
-DISPUTANT 2 (DANIEL)
-“I was irritated, because I can’t print it at home.”
+DISPUTANT 2 (ARIA)
+“Frustrated.”
+
+DISPUTANT 2 (ARIA)
+“Like, I was trying to tell him and he just kept sitting there.”
 
 [PAUSE]
 
-MEDIATOR A (MARIA)
+MEDIATOR A (EMILY)
 “Thank you for sharing.”
 
 [PAUSE]
@@ -261,63 +269,56 @@ MEDIATOR A (MARIA)
 [PREOVERLAY3]
 [PAUSE]
 [PAUSE]
-
-MEDIATOR A (MARIA)
-“Jordan, what’s something you want Daniel to do, or to stop doing?”
-
-[PAUSE]
-
-DISPUTANT 1 (JORDAN)
-“I want him to not call me out in front of everyone during group work.”
+MEDIATOR A (EMILY)
+“Caleb, what’s something you want Aria to do, or to stop doing?”
 
 [PAUSE]
 
-MEDIATOR A (MARIA)
-“Daniel, what’s something you want Jordan to do, or to stop doing?”
+DISPUTANT 1 (CALEB)
+“I want her to not insult me in front of other people.”
 
 [PAUSE]
 
-DISPUTANT 2 (DANIEL)
-“I want him to ask the group before picking roles.”
+MEDIATOR A (EMILY)
+“Aria, what’s something you want Caleb to do, or to stop doing?”
 
-DISPUTANT 2 (DANIEL)
-“And like, let people choose.”
+[PAUSE]
+
+DISPUTANT 2 (ARIA)
+“I want him to let me have my usual seat, because it’s near my friends.”
 
 [PAUSE]
 [PAUSE]
 [OVERLAY3]
 [PAUSE]
 [PAUSE]
-
-
 ### STEP 4: CREATE A WIN-WIN SOLUTION
 
 [PAUSE]
 [ProcessFormSwapMA]
 [PAUSE]
 [PAUSE]
-
-MEDIATOR B (ALEX)
-“Jordan, it sounds like you want Daniel to not call you out in front of everyone during group work. Is that right?”
+MEDIATOR B (MICHAEL)
+“Caleb, it sounds like you want Aria to not insult you in front of other people. Is that right?”
 
 [PAUSE]
 
-DISPUTANT 1 (JORDAN)
+DISPUTANT 1 (CALEB)
 “Yeah.”
 
 [PAUSE]
 
-MEDIATOR B (ALEX)
-“Daniel, it sounds like you want Jordan to ask the group before picking roles and let people choose when possible. Is that right?”
+MEDIATOR B (MICHAEL)
+“Aria, it sounds like you want Caleb to let you have your usual seat since it’s near your friends. Is that right?”
 
 [PAUSE]
 
-DISPUTANT 2 (DANIEL)
+DISPUTANT 2 (ARIA)
 “Yeah.”
 
 [PAUSE]
 
-MEDIATOR B (ALEX)
+MEDIATOR B (MICHAEL)
 “Now let’s think about what you can both do differently, so you each get something you want.”
 
 [PAUSE]
@@ -325,95 +326,81 @@ MEDIATOR B (ALEX)
 [PREOVERLAY4]
 [PAUSE]
 [PAUSE]
+MEDIATOR B (MICHAEL)
+“Caleb, what’s one thing you could do differently to help this work for both of you?”
 
-MEDIATOR B (ALEX)
-“Jordan, what’s one thing you could do differently to help this work for both of you?”
+[PAUSE]
+DISPUTANT 1 (CALEB)
+“I can ask if someone usually sits in a seat before I take it and listen if someone tries to explain something.”
+
+
+[PAUSE]
+MEDIATOR B (MICHAEL)
+“Aria, what’s one thing you could do differently to help this work?”
+
+[PAUSE]
+DISPUTANT 2 (ARIA)
+“I can explain it calmly that it’s my seat.”
+
+DISPUTANT 2 (ARIA)
+“And not call names.”
 
 [PAUSE]
 
-DISPUTANT 1 (JORDAN) {hesitant=true}
-“Ummm... I don’t know...”
+MEDIATOR B (MICHAEL)
+“Caleb, is there anything else you’d like Aria to do differently?”
 
 [PAUSE]
-[PAUSE]
-
-MEDIATOR B (ALEX)
-“Okay, Daniel, what’s one thing you could do differently to help this work?”
+DISPUTANT 1 (CALEB)
+“Just don’t say stuff like that in front of people.”
 
 [PAUSE]
 
-DISPUTANT 2 (DANIEL)
-“I can say what I think calmly.”
-
-DISPUTANT 2 (DANIEL)
-“Like not call him out in front of everyone.”
+MEDIATOR B (MICHAEL)
+“Aria, is there anything else you’d like Caleb to do differently?”
 
 [PAUSE]
 
-MEDIATOR B (ALEX)
-“Jordan, is there anything else you’d like Daniel to do differently?”
+DISPUTANT 2 (ARIA)
+“If I tell him it’s my usual seat, I want him to move to another open seat.”
 
 [PAUSE]
 
-DISPUTANT 1 (JORDAN)
-“Just don’t say negative stuff about me in front of the group.”
-
-[PAUSE]
-
-MEDIATOR B (ALEX)
-“Daniel, is there anything else you’d like Jordan to do differently?”
-
-[PAUSE]
-
-DISPUTANT 2 (DANIEL)
-“Ask the group before he assigns roles.”
-
-[PAUSE]
-
-MEDIATOR B (ALEX)
+MEDIATOR B (MICHAEL)
 “Is there something you could both do differently?”
 
 [PAUSE]
 
-DISPUTANT 1 (JORDAN)
-“Ummm... we can both listen more and not talk over each other.”
+DISPUTANT 1 (CALEB)
+“I guess we can speak calmly.”
 
 [PAUSE]
 
-DISPUTANT 2 (DANIEL)
-“Yeah. And try to decide stuff together, instead of just one person doing it.”
+DISPUTANT 2 (ARIA)
+“And if it’s not working, maybe we can ask the teacher for help instead of arguing.”
+
+[PAUSE]
+MEDIATOR B (MICHAEL)
+“So how about if Caleb asks if someone usually sits in a seat and listens if Aria tells him it’s her usual spot, and Aria explains it calmly without calling him annoying. And if there’s still a problem, you both ask the teacher for help instead of arguing. Would that work?”
 
 [PAUSE]
 
-MEDIATOR B (ALEX)
-“So what I’m hearing for the plan is: Jordan, you’ll ask the group before assigning roles and listen to what roles people want.”
-
-MEDIATOR B (ALEX)
-“And Daniel, you’ll say what you think calmly and not call Jordan out or say negative things about him in front of the group.”
-
-MEDIATOR B (ALEX)
-“And both of you will listen to each other and try to make decisions together. Would that work?”
+DISPUTANT 1 (CALEB)
+“Yeah, that works.”
 
 [PAUSE]
 
-DISPUTANT 1 (JORDAN)
-“Yeah, that’s fine.”
-
-[PAUSE]
-
-DISPUTANT 2 (DANIEL)
-“That’s okay.”
+DISPUTANT 2 (ARIA)
+“Okay.”
 
 [PAUSE]
 [PAUSE]
 [OVERLAY4]
 [PAUSE]
 [PAUSE]
-
-
 ### STEP 5: ESTABLISH AN AGREEMENT
 
-MEDIATOR A (MARIA)
+MEDIATOR A (EMILY)
 “Now we’re going to write an agreement using what you both shared, so that this doesn’t happen again.”
 
 [PAUSE]
@@ -421,51 +408,44 @@ MEDIATOR A (MARIA)
 [OVERLAY5]
 [PAUSE]
 [PAUSE]
-
-MEDIATOR A (MARIA)
-“Alex, here’s what I wrote based on what we discussed as a group. What do you think?”
+MEDIATOR A (EMILY)
+“Michael, here’s what I wrote down. What do you think?”
 
 [PAUSE]
 [ProcessFormSwapMB]
 [PAUSE]
 [PAUSE]
-
-MEDIATOR B (ALEX)
+MEDIATOR B (MICHAEL)
 “Yeah, I think that summarizes everything we discussed.”
 
-[PAUSE]
-[ProcessFormSwapMA]
-[PAUSE]
-[PAUSE]
-
-MEDIATOR A (MARIA)
+MEDIATOR B (MICHAEL)
 “Okay, here’s what we have.”
 
-MEDIATOR A (MARIA)
-“Jordan agrees to ask the group before assigning roles so that group members can discuss which roles they want.”
+MEDIATOR B (MICHAEL)
+“Caleb agrees to move to a different open seat in music class if Aria asks to have a seat that is close to her friends.”
 
-MEDIATOR A (MARIA)
-“Daniel agrees to not call Jordan out or say negative things about him in front of the group.”
+MEDIATOR B (MICHAEL)
+“Aria agrees to tell Caleb it’s her usual seat without calling him annoying or insulting him in front of others.”
 
-MEDIATOR A (MARIA)
-“Both Jordan and Daniel agree to go together to the library to print the outline if no one else in the group can print it.”
+MEDIATOR B (MICHAEL)
+“Both Caleb and Aria agree to ask the teacher for help next time if there is a problem with seats instead of arguing in front of the class.”
 
-MEDIATOR A (MARIA)
+MEDIATOR B (MICHAEL)
 “Do you both agree to do these things?”
 
 [PAUSE]
 
-DISPUTANT 1 (JORDAN)
+DISPUTANT 1 (CALEB)
 “Yeah.”
 
 [PAUSE]
 
-DISPUTANT 2 (DANIEL)
+DISPUTANT 2 (ARIA)
 “Yeah.”
 
 [PAUSE]
 
-MEDIATOR A (MARIA)
+MEDIATOR B (MICHAEL)
 “Please read it and sign below.”
 
 [PAUSE]
@@ -483,22 +463,20 @@ MEDIATOR A (MARIA)
 [ProcessFormSwapMA]
 [PAUSE]
 [PAUSE]
-
-MEDIATOR A (MARIA)
+MEDIATOR A (EMILY)
 “Is there anything you want to say to each other before we finish?”
 
 [PAUSE]
 
-DISPUTANT 2 (DANIEL)
-“Not really… I’ll just say it calmer next time.”
+DISPUTANT 1 (CALEB)
+“Sorry I didn’t listen. I didn’t know it was your seat.”
 
 [PAUSE]
 
-DISPUTANT 1 (JORDAN)
-“Yeah, thanks.”
+DISPUTANT 2 (ARIA)
+“Okay… sorry I called you annoying.”
 
 [PAUSE]
 
-MEDIATOR A (MARIA)
+MEDIATOR A (EMILY)
 “Thanks for doing this mediation with us. We’ll walk you back to class now.”
-

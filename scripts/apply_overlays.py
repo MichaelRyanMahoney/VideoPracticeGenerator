@@ -37,6 +37,39 @@ import math
 # Override via env when needed (e.g., VPG_REPO_ROOT=/app).
 REPO_ROOT = Path(os.environ.get("VPG_REPO_ROOT") or Path(__file__).resolve().parents[1]).resolve()
 
+def _resolve_media_tool(tool: str) -> str | None:
+    """
+    Resolve ffmpeg/ffprobe paths deterministically so terminal PATH changes
+    don't break runs.
+
+    Priority:
+      1) VPG_FFMPEG / VPG_FFPROBE (or FFMPEG / FFPROBE)
+      2) Homebrew keg-only ffmpeg-full (if installed)
+      3) First match in PATH
+    """
+    env_key = f"VPG_{tool.upper()}"
+    env = os.environ.get(env_key) or os.environ.get(tool.upper())
+    if env:
+        try:
+            p = Path(env).expanduser()
+            if p.exists():
+                return str(p)
+        except Exception:
+            pass
+
+    # Prefer Homebrew's ffmpeg-full if present (keg-only; not always on PATH).
+    if tool in ("ffmpeg", "ffprobe"):
+        for prefix in ("/opt/homebrew", "/usr/local"):
+            candidate = Path(prefix) / "opt" / "ffmpeg-full" / "bin" / tool
+            if candidate.exists():
+                return str(candidate)
+
+    return shutil.which(tool)
+
+
+FFMPEG_BIN = _resolve_media_tool("ffmpeg")
+FFPROBE_BIN = _resolve_media_tool("ffprobe")
+
 
 def parse_timecode_to_seconds(tc: str) -> float:
     tc = (tc or "").strip()
@@ -954,6 +987,10 @@ def find_overlay_image_for_id(
 
 
 def run(cmd: list[str]) -> None:
+    if cmd and cmd[0] == "ffmpeg" and FFMPEG_BIN:
+        cmd = [FFMPEG_BIN, *cmd[1:]]
+    if cmd and cmd[0] == "ffprobe" and FFPROBE_BIN:
+        cmd = [FFPROBE_BIN, *cmd[1:]]
     print(" ", shlex.join(cmd))
     proc = subprocess.run(cmd)
     if proc.returncode != 0:
@@ -964,12 +1001,12 @@ def ffprobe_stream_durations(path: str) -> dict:
     """
     Return {'video': seconds_or_None, 'audio': seconds_or_None, 'format': seconds_or_None}
     """
-    if not shutil.which("ffprobe"):
+    if not FFPROBE_BIN:
         return {"video": None, "audio": None, "format": None}
     try:
         # Get per-stream durations
         p = subprocess.run(
-            ["ffprobe", "-v", "error", "-show_entries", "stream=codec_type,duration", "-of", "json", path],
+            [FFPROBE_BIN, "-v", "error", "-show_entries", "stream=codec_type,duration", "-of", "json", path],
             capture_output=True, text=True
         )
         info = json.loads(p.stdout or "{}")
@@ -986,7 +1023,7 @@ def ffprobe_stream_durations(path: str) -> dict:
                 adur = d if adur is None else adur
         # Fallback to format duration
         pf = subprocess.run(
-            ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=nw=1:nk=1", path],
+            [FFPROBE_BIN, "-v", "error", "-show_entries", "format=duration", "-of", "default=nw=1:nk=1", path],
             capture_output=True, text=True
         )
         try:
@@ -999,11 +1036,11 @@ def ffprobe_stream_durations(path: str) -> dict:
 
 
 def ffmpeg_has_filter(filter_name: str) -> bool:
-    if not shutil.which("ffmpeg"):
+    if not FFMPEG_BIN:
         return False
     try:
         p = subprocess.run(
-            ["ffmpeg", "-hide_banner", "-filters"],
+            [FFMPEG_BIN, "-hide_banner", "-filters"],
             capture_output=True,
             text=True,
         )
@@ -1085,10 +1122,13 @@ def main():
     can_drawtext = ffmpeg_has_filter("drawtext")
     if not can_drawtext:
         if not args.allow_no_drawtext:
+            ffmpeg_path = FFMPEG_BIN or "(not found)"
             raise SystemExit(
                 "ffmpeg 'drawtext' filter is required for overlays/labels/intro text, but it is not available.\n"
-                "Install an ffmpeg build with libfreetype/fontconfig enabled, then verify with:\n"
-                "  ffmpeg -hide_banner -filters | rg drawtext"
+                f"ffmpeg detected at: {ffmpeg_path}\n"
+                "Install an ffmpeg build with libfreetype/fontconfig enabled, then verify with either:\n"
+                "  ffmpeg -hide_banner -filters | rg drawtext\n"
+                "  ffmpeg -hide_banner -filters | grep drawtext"
             )
         if args.labels:
             print("[apply_overlays] Warning: drawtext unavailable and allow_no_drawtext=true; disabling labels.")
